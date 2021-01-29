@@ -8,13 +8,12 @@ public class IndustryTrack
 {
     private final String trackName;
     private final int maximumNumberOfCars;
-    private final ArrayList<FreightCar> carsAtIndustry;
+    private final ArrayList<FreightCar> carsAtIndustry = new ArrayList<>();
 
     public IndustryTrack(String trackName, int maximumNumberOfCars)
     {
         this.trackName = trackName;
         this.maximumNumberOfCars = maximumNumberOfCars;
-        carsAtIndustry = new ArrayList<>();
     }
 
     public String name()
@@ -30,5 +29,15 @@ public class IndustryTrack
     public void setOutCar(FreightCar freightCar)
     {
         carsAtIndustry.add(freightCar);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "IndustryTrack{" +
+                "trackName='" + trackName + '\'' +
+                ", maximumNumberOfCars=" + maximumNumberOfCars +
+                ", carsAtIndustry=" + carsAtIndustry +
+                '}';
     }
 }
