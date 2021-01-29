@@ -1,4 +1,4 @@
-package models.layout;
+package dev.paigewatson.layoutmaster.models.layout;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;

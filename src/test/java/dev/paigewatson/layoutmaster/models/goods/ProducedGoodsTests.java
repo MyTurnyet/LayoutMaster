@@ -1,11 +1,11 @@
-package models.goods;
+package dev.paigewatson.layoutmaster.models.goods;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static models.goods.GoodsType.Paper;
-import static models.goods.GoodsType.Parts;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class ProducedGoodsTests

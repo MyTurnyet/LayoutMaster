@@ -1,4 +1,4 @@
-package models.rollingstock;
+package dev.paigewatson.layoutmaster.models.rollingstock;
 
 public enum CarType
 {

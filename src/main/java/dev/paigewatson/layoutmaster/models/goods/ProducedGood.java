@@ -1,12 +1,9 @@
-package models.goods;
-
-import models.goods.DeliverableGood;
-import models.goods.GoodsType;
+package dev.paigewatson.layoutmaster.models.goods;
 
 public class ProducedGood implements DeliverableGood
 {
     private final GoodsType goodsType;
-    private boolean isAssigned;
+    private final boolean isAssigned;
 
     public ProducedGood(GoodsType goodsType)
     {

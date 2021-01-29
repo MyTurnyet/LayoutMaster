@@ -1,6 +1,6 @@
-package models.layout;
+package dev.paigewatson.layoutmaster.models.layout;
 
-import models.rollingstock.FreightCar;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 
 import java.util.ArrayList;
 

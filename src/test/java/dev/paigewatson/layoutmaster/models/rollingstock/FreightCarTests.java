@@ -1,16 +1,16 @@
-package models.rollingstock;
+package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import models.goods.GoodsType;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static models.goods.GoodsType.Ingredients;
-import static models.goods.GoodsType.Lumber;
-import static models.goods.GoodsType.Paper;
-import static models.rollingstock.CarType.Boxcar;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
+import static dev.paigewatson.layoutmaster.models.rollingstock.CarType.Boxcar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class FreightCarTests

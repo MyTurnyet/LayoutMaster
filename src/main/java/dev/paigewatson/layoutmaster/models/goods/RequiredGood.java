@@ -1,4 +1,4 @@
-package models.goods;
+package dev.paigewatson.layoutmaster.models.goods;
 
 /**
  * RequiredGood

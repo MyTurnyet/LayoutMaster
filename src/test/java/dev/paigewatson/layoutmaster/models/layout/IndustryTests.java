@@ -1,9 +1,9 @@
-package models.layout;
+package dev.paigewatson.layoutmaster.models.layout;
 
-import models.goods.GoodsType;
-import models.goods.ProducedGood;
-import models.goods.RequiredGood;
-import models.rollingstock.FreightCar;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import dev.paigewatson.layoutmaster.models.goods.ProducedGood;
+import dev.paigewatson.layoutmaster.models.goods.RequiredGood;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static models.goods.GoodsType.Chemicals;
-import static models.goods.GoodsType.Ingredients;
-import static models.goods.GoodsType.MetalParts;
-import static models.goods.GoodsType.Oil;
-import static models.goods.GoodsType.Paper;
-import static models.goods.GoodsType.Parts;
-import static models.goods.GoodsType.ScrapMetal;
-import static models.goods.GoodsType.SheetMetal;
-import static models.rollingstock.CarType.Boxcar;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Chemicals;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.MetalParts;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Oil;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
+import static dev.paigewatson.layoutmaster.models.rollingstock.CarType.Boxcar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class IndustryTests

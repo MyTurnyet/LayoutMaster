@@ -1,6 +1,6 @@
-package models.rollingstock;
+package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import models.goods.GoodsType;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,9 @@
-package models.layout;
+package dev.paigewatson.layoutmaster.models.layout;
 
-import models.goods.GoodsType;
-import models.goods.ProducedGood;
-import models.goods.RequiredGood;
-import models.rollingstock.FreightCar;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import dev.paigewatson.layoutmaster.models.goods.ProducedGood;
+import dev.paigewatson.layoutmaster.models.goods.RequiredGood;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 
 import java.util.ArrayList;
 

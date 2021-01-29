@@ -1,6 +1,4 @@
-package models.goods;
-
-import java.awt.print.Paper;
+package dev.paigewatson.layoutmaster.models.goods;
 
 public enum GoodsType
 {
