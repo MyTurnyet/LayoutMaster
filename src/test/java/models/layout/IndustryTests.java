@@ -1,16 +1,17 @@
-package models;
+package models.layout;
 
+import models.goods.GoodsType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static models.GoodsType.Chemicals;
-import static models.GoodsType.MetalParts;
-import static models.GoodsType.MetalScraps;
-import static models.GoodsType.Parts;
-import static models.GoodsType.SheetMetal;
+import static models.goods.GoodsType.Chemicals;
+import static models.goods.GoodsType.MetalParts;
+import static models.goods.GoodsType.MetalScraps;
+import static models.goods.GoodsType.Parts;
+import static models.goods.GoodsType.SheetMetal;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class IndustryTests
@@ -39,7 +40,6 @@ public class IndustryTests
             assertThat(cogFactory.needs(Parts)).isTrue();
             assertThat(cogFactory.needs(MetalParts)).isFalse();
             assertThat(cogFactory.Name()).isEqualTo("Cog Factory");
-
         }
     }
 }

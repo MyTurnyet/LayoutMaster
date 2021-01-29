@@ -1,4 +1,4 @@
-package models;
+package models.layout;
 
 public class Layout
 {

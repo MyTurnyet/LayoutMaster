@@ -1,4 +1,7 @@
-package models;
+package models.goods;
+
+import models.goods.DeliverableGood;
+import models.goods.GoodsType;
 
 public class ProducedGood implements DeliverableGood
 {
@@ -19,12 +22,6 @@ public class ProducedGood implements DeliverableGood
     public boolean isOfType(GoodsType expectedType)
     {
         return expectedType == this.goodsType;
-    }
-
-    @Override
-    public void markAssignedToDeliver()
-    {
-        this.isAssigned = true;
     }
 
     public boolean isAssigned()

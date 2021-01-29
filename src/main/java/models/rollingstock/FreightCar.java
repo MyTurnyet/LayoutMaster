@@ -1,7 +1,15 @@
-package models;
+package models.rollingstock;
+
+import models.goods.GoodsType;
 
 import java.util.ArrayList;
 
+/**
+ * FreightCar
+ * Should know it's state
+ * road name, road number, car type, what goods it can carry
+ * if loaded or not
+ */
 public class FreightCar
 {
     private final String roadName;

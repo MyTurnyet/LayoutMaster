@@ -1,4 +1,4 @@
-package models;
+package models.rollingstock;
 
 public enum CarType
 {

@@ -1,7 +1,16 @@
-package models;
+package models.layout;
+
+import models.goods.GoodsType;
 
 import java.util.ArrayList;
 
+/**
+ * Industry
+ * Should know it's name and take in goods,
+ * can produce goods
+ * knows what rolling stock are at it's location and can load/unload them
+ * knows how many cars it can hold
+ */
 public class Industry
 {
 

@@ -1,16 +1,17 @@
-package models;
+package models.rollingstock;
 
+import models.goods.GoodsType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static models.CarType.Boxcar;
-import static models.GoodsType.Ingredients;
-import static models.GoodsType.Lumber;
-import static models.GoodsType.Oil;
-import static models.GoodsType.Paper;
+import static models.rollingstock.CarType.Boxcar;
+import static models.goods.GoodsType.Ingredients;
+import static models.goods.GoodsType.Lumber;
+import static models.goods.GoodsType.Oil;
+import static models.goods.GoodsType.Paper;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -27,7 +28,7 @@ public class FreightCarTests
             final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
             carriedGoodsList.add(Ingredients);
             carriedGoodsList.add(Paper);
-            final FreightCar freightCar = new FreightCar("PNWR 1234",Boxcar, carriedGoodsList);
+            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, carriedGoodsList);
 
             //act
             final boolean canCarryIngredients = freightCar.canCarry(Ingredients);
@@ -55,15 +56,13 @@ public class FreightCarTests
         }
 
         @Test
-        public void should_ThrowWhenTryingToLoadGoodsThat_cantHold() throws Exception
+        public void should_ThrowWhenTryingToLoadGoodsThat_cantHold()
         {
             //assign
             final ArrayList<GoodsType> goods = new ArrayList<>();
             goods.add(Ingredients);
             final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, goods);
 
-            //act
-            //assert
             assertThatThrownBy(() ->
             {
                 freightCar.load(Oil);

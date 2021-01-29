@@ -1,11 +1,13 @@
-package models;
+package models.goods;
 
+import models.goods.DeliverableGood;
+import models.goods.RequiredGood;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static models.GoodsType.Oil;
-import static models.GoodsType.Parts;
+import static models.goods.GoodsType.Oil;
+import static models.goods.GoodsType.Parts;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class RequiredGoodTests
@@ -34,17 +36,6 @@ public class RequiredGoodTests
             //act
             final DeliverableGood requiredGood = new RequiredGood(Parts, true);
 
-            //assert
-            assertThat(requiredGood.isAssigned()).isTrue();
-        }
-
-        @Test
-        public void should_beAssigned_whenMarkAsAssignedToDeliver()
-        {
-            //assign
-            final DeliverableGood requiredGood = new RequiredGood(Parts);
-            //act
-            requiredGood.markAssignedToDeliver();
             //assert
             assertThat(requiredGood.isAssigned()).isTrue();
         }

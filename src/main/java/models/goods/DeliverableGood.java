@@ -1,8 +1,7 @@
-package models;
+package models.goods;
 
 public interface DeliverableGood
 {
-    void markAssignedToDeliver();
 
     boolean isAssigned();
 }
