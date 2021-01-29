@@ -1,7 +1,5 @@
 package models.goods;
 
-import models.goods.DeliverableGood;
-import models.goods.ProducedGood;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,17 +26,6 @@ public class ProducedGoodsTests
             assertThat(producedGood.isOfType(Paper)).isTrue();
             assertThat(producedGood.isOfType(Parts)).isFalse();
             assertThat(producedGood.isAssigned()).isFalse();
-        }
-
-        @Test
-        public void should_beAssigned_inConstructor()
-        {
-            //assign
-            final DeliverableGood producedGood = new ProducedGood(Paper, true);
-
-            //act
-            //assert
-            assertThat(producedGood.isAssigned()).isTrue();
         }
     }
 }

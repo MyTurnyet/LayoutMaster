@@ -1,6 +1,8 @@
 package models.layout;
 
 import models.goods.GoodsType;
+import models.goods.ProducedGood;
+import models.goods.RequiredGood;
 
 import java.util.ArrayList;
 
@@ -15,10 +17,10 @@ public class Industry
 {
 
     private final String industryName;
-    private final ArrayList<GoodsType> acceptedGoodsList;
-    private final ArrayList<GoodsType> returnedGoodsList;
+    private final ArrayList<RequiredGood> acceptedGoodsList;
+    private final ArrayList<ProducedGood> returnedGoodsList;
 
-    public Industry(String industryName, ArrayList<GoodsType> acceptedGoodsList, ArrayList<GoodsType> returnedGoodsList)
+    public Industry(String industryName, ArrayList<RequiredGood> acceptedGoodsList, ArrayList<ProducedGood> returnedGoodsList)
     {
 
         this.industryName = industryName;
@@ -26,13 +28,18 @@ public class Industry
         this.returnedGoodsList = returnedGoodsList;
     }
 
-    public String Name()
+    public String name()
     {
         return industryName;
     }
 
     public boolean needs(GoodsType goodsType)
     {
-        return acceptedGoodsList.contains(goodsType);
+        return acceptedGoodsList.stream().anyMatch(requiredGood -> requiredGood.needs(goodsType));
+    }
+
+    public boolean produces(GoodsType goodsType)
+    {
+        return returnedGoodsList.stream().anyMatch(producedGood -> producedGood.isOfType(goodsType));
     }
 }

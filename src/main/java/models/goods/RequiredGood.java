@@ -1,8 +1,5 @@
 package models.goods;
 
-import models.goods.DeliverableGood;
-import models.goods.GoodsType;
-
 /**
  * RequiredGood
  * Know what type it needs
@@ -10,7 +7,7 @@ import models.goods.GoodsType;
 public class RequiredGood implements DeliverableGood
 {
     private final GoodsType neededGoodsType;
-    private boolean isAssigned;
+    private final boolean isAssigned;
 
     public RequiredGood(GoodsType neededGoodsType)
     {
@@ -25,12 +22,6 @@ public class RequiredGood implements DeliverableGood
 
     public boolean needs(GoodsType goodsType)
     {
-        return goodsType == neededGoodsType;
-    }
-
-
-    public boolean isAssigned()
-    {
-        return isAssigned;
+        return goodsType == neededGoodsType && !this.isAssigned;
     }
 }
