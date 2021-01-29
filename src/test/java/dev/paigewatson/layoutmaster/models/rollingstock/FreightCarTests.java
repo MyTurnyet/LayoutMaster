@@ -9,12 +9,20 @@ import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarType.Boxcar;
+import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.Boxcar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class FreightCarTests
 {
+    public static FreightCar createTestFreightCar()
+    {
+        final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+        carriedGoodsList.add(Ingredients);
+
+        final CarType boxCarType = new CarType(Boxcar, carriedGoodsList);
+        return new FreightCar("PNWR", 1234, boxCarType);
+    }
+
     @Nested
     @Tag("Unit")
     class UnitTests
@@ -69,15 +77,12 @@ public class FreightCarTests
             //act
             final String freightCarAsString = freightCar.toString();
             //assert
-            assertThat(freightCarAsString).isEqualTo("FreightCar{roadName='PNWR', roadNumber=1234, carType=Boxcar, goodsThatCanBeCarried=[Ingredients, Paper], currentlyCarriedGoods=EMPTY}");
+            assertThat(freightCarAsString)
+                    .isEqualTo(
+                            "FreightCar{roadName='PNWR', roadNumber=1234, " +
+                                    "carType=CarType{id='null', carTypeDesignation=Boxcar, carriedGoodsList=[Ingredients]}," +
+                                    " currentlyCarriedGoods=EMPTY}");
         }
 
-        private FreightCar createTestFreightCar()
-        {
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
-            carriedGoodsList.add(Paper);
-            return new FreightCar("PNWR", 1234, Boxcar, carriedGoodsList);
-        }
     }
 }

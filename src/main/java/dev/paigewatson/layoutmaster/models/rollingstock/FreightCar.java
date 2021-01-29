@@ -2,8 +2,6 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
-import java.util.ArrayList;
-
 /**
  * FreightCar
  * Should know it's state
@@ -16,20 +14,19 @@ public class FreightCar
     private final String roadName;
     private final int roadNumber;
     private final CarType carType;
-    private final ArrayList<GoodsType> goodsThatCanBeCarried;
     private GoodsType currentlyCarriedGoods = GoodsType.EMPTY;
 
-    public FreightCar(String roadName, int roadNumber, CarType carType, ArrayList<GoodsType> goodsThatCanBeCarried)
+    public FreightCar(String roadName, int roadNumber, CarType carType)
     {
         this.roadName = roadName;
         this.roadNumber = roadNumber;
         this.carType = carType;
-        this.goodsThatCanBeCarried = goodsThatCanBeCarried;
     }
 
     public boolean canCarry(GoodsType expectedGood)
     {
-        return goodsThatCanBeCarried.contains(expectedGood);
+
+        return carType.canCarry(expectedGood);
     }
 
     public boolean isLoaded()
@@ -39,14 +36,14 @@ public class FreightCar
 
     public void load(GoodsType goodsToLoad)
     {
-        if (!goodsThatCanBeCarried.contains(goodsToLoad)) return;
+        if (!canCarry(goodsToLoad)) return;
         this.currentlyCarriedGoods = goodsToLoad;
     }
 
     public String displayName()
     {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(carType.name());
+        stringBuilder.append(carType.displayName());
         stringBuilder.append(" - ");
         stringBuilder.append(roadName);
         stringBuilder.append(" ");
@@ -60,8 +57,7 @@ public class FreightCar
         return "FreightCar{" +
                 "roadName='" + roadName + '\'' +
                 ", roadNumber=" + roadNumber +
-                ", carType=" + carType +
-                ", goodsThatCanBeCarried=" + goodsThatCanBeCarried +
+                ", carType=" + carType.toString() +
                 ", currentlyCarriedGoods=" + currentlyCarriedGoods +
                 '}';
     }
