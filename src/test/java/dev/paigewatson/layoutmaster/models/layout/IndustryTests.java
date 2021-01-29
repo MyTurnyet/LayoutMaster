@@ -54,8 +54,13 @@ public class IndustryTests
             assertThat(cogFactory.toString()).isEqualTo(
                     "Industry{" +
                             "id='null', industryName='Cog Factory', " +
-                            "acceptedGoodsList=[dev.paigewatson.layoutmaster.models.goods.RequiredGood@15aab8c6, dev.paigewatson.layoutmaster.models.goods.RequiredGood@33990a0c, dev.paigewatson.layoutmaster.models.goods.RequiredGood@4de4b452], " +
-                            "producedGoods=[dev.paigewatson.layoutmaster.models.goods.ProducedGood@50b5ac82, dev.paigewatson.layoutmaster.models.goods.ProducedGood@101952da], " +
+                            "acceptedGoodsList=[" +
+                            "RequiredGood{neededGoodsType=Chemicals, isAssigned=false}, " +
+                            "RequiredGood{neededGoodsType=Parts, isAssigned=false}, " +
+                            "RequiredGood{neededGoodsType=SheetMetal, isAssigned=true}], " +
+                            "producedGoods=[" +
+                            "ProducedGood{goodsType=MetalParts, isAssigned=false}, " +
+                            "ProducedGood{goodsType=ScrapMetal, isAssigned=false}], " +
                             "industryTracks=[" +
                             "IndustryTrack{trackName='Lone Siding', maximumNumberOfCars=2, carsAtIndustry=[]}" +
                             "]}");

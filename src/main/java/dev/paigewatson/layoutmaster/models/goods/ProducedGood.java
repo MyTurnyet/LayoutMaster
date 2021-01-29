@@ -25,4 +25,13 @@ public class ProducedGood implements DeliverableGood
     {
         return isAssigned;
     }
+
+    @Override
+    public String toString()
+    {
+        return "ProducedGood{" +
+                "goodsType=" + goodsType +
+                ", isAssigned=" + isAssigned +
+                '}';
+    }
 }
