@@ -34,10 +34,9 @@ public class FreightCar
         return currentlyCarriedGoods != GoodsType.EMPTY;
     }
 
-    public void load(GoodsType goodsToLoad) throws Exception
+    public void load(GoodsType goodsToLoad)
     {
-        if (!goodsThatCanBeCarried.contains(goodsToLoad))
-            throw new Exception("This car cannot carry " + goodsToLoad.name());
+        if (!goodsThatCanBeCarried.contains(goodsToLoad)) return;
         this.currentlyCarriedGoods = goodsToLoad;
     }
 

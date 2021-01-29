@@ -7,13 +7,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static models.rollingstock.CarType.Boxcar;
 import static models.goods.GoodsType.Ingredients;
 import static models.goods.GoodsType.Lumber;
-import static models.goods.GoodsType.Oil;
 import static models.goods.GoodsType.Paper;
+import static models.rollingstock.CarType.Boxcar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class FreightCarTests
 {
@@ -53,20 +51,6 @@ public class FreightCarTests
             freightCar.load(Ingredients);
             //assert
             assertThat(freightCar.isLoaded()).isTrue();
-        }
-
-        @Test
-        public void should_ThrowWhenTryingToLoadGoodsThat_cantHold()
-        {
-            //assign
-            final ArrayList<GoodsType> goods = new ArrayList<>();
-            goods.add(Ingredients);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, goods);
-
-            assertThatThrownBy(() ->
-            {
-                freightCar.load(Oil);
-            }).hasMessage("This car cannot carry Oil");
         }
 
         @Test
