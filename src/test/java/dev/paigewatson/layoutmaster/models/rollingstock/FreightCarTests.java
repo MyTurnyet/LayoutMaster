@@ -23,10 +23,7 @@ public class FreightCarTests
         public void should_returnListOfGoods()
         {
             //assign
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
-            carriedGoodsList.add(Paper);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, carriedGoodsList);
+            final FreightCar freightCar = createTestFreightCar();
 
             //act
             final boolean canCarryIngredients = freightCar.canCarry(Ingredients);
@@ -39,12 +36,10 @@ public class FreightCarTests
         }
 
         @Test
-        public void should_returnLoadFreightCar() throws Exception
+        public void should_LoadFreightCar()
         {
             //assign
-            final ArrayList<GoodsType> goods = new ArrayList<>();
-            goods.add(Ingredients);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, goods);
+            final FreightCar freightCar = createTestFreightCar();
 
             //act
             assertThat(freightCar.isLoaded()).isFalse();
@@ -57,14 +52,32 @@ public class FreightCarTests
         public void should_returnDisplayName_asType_andRoadName()
         {
             //assign
-            final ArrayList<GoodsType> goods = new ArrayList<>();
-            goods.add(Ingredients);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, goods);
+            final FreightCar freightCar = createTestFreightCar();
 
             //act
             final String displayName = freightCar.displayName();
             //assert
             assertThat(displayName).isEqualTo("Boxcar - PNWR 1234");
+        }
+
+        @Test
+        public void should_produceItselfAsString()
+        {
+            //assign
+            final FreightCar freightCar = createTestFreightCar();
+
+            //act
+            final String freightCarAsString = freightCar.toString();
+            //assert
+            assertThat(freightCarAsString).isEqualTo("FreightCar{roadName='PNWR', roadNumber=1234, carType=Boxcar, goodsThatCanBeCarried=[Ingredients, Paper], currentlyCarriedGoods=EMPTY}");
+        }
+
+        private FreightCar createTestFreightCar()
+        {
+            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+            carriedGoodsList.add(Ingredients);
+            carriedGoodsList.add(Paper);
+            return new FreightCar("PNWR", 1234, Boxcar, carriedGoodsList);
         }
     }
 }

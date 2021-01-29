@@ -10,16 +10,19 @@ import java.util.ArrayList;
  * road name, road number, car type, what goods it can carry
  * if loaded or not
  */
+
 public class FreightCar
 {
     private final String roadName;
+    private final int roadNumber;
     private final CarType carType;
     private final ArrayList<GoodsType> goodsThatCanBeCarried;
     private GoodsType currentlyCarriedGoods = GoodsType.EMPTY;
 
-    public FreightCar(String roadName, CarType carType, ArrayList<GoodsType> goodsThatCanBeCarried)
+    public FreightCar(String roadName, int roadNumber, CarType carType, ArrayList<GoodsType> goodsThatCanBeCarried)
     {
         this.roadName = roadName;
+        this.roadNumber = roadNumber;
         this.carType = carType;
         this.goodsThatCanBeCarried = goodsThatCanBeCarried;
     }
@@ -46,6 +49,20 @@ public class FreightCar
         stringBuilder.append(carType.name());
         stringBuilder.append(" - ");
         stringBuilder.append(roadName);
+        stringBuilder.append(" ");
+        stringBuilder.append(roadNumber);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "FreightCar{" +
+                "roadName='" + roadName + '\'' +
+                ", roadNumber=" + roadNumber +
+                ", carType=" + carType +
+                ", goodsThatCanBeCarried=" + goodsThatCanBeCarried +
+                ", currentlyCarriedGoods=" + currentlyCarriedGoods +
+                '}';
     }
 }
