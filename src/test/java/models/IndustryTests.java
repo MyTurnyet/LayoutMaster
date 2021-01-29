@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import static models.GoodsType.Chemicals;
 import static models.GoodsType.MetalParts;
+import static models.GoodsType.MetalScraps;
 import static models.GoodsType.Parts;
 import static models.GoodsType.SheetMetal;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -29,13 +30,15 @@ public class IndustryTests
 
             final ArrayList<GoodsType> returnedGoodsList = new ArrayList<>();
             returnedGoodsList.add(MetalParts);
-            returnedGoodsList.add(SheetMetal);
+            returnedGoodsList.add(MetalScraps);
 
             final Industry cogFactory = new Industry("Cog Factory", acceptedGoodsList, returnedGoodsList);
 
             //act
-
             //assert
+            assertThat(cogFactory.needs(Parts)).isTrue();
+            assertThat(cogFactory.needs(MetalParts)).isFalse();
+            assertThat(cogFactory.Name()).isEqualTo("Cog Factory");
 
         }
     }

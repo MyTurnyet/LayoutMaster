@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static models.GoodsType.Oil;
+import static models.GoodsType.Paper;
 import static models.GoodsType.Parts;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class RequiredGoodTests
+public class ProducedGoodsTests
 {
     @Nested
     @Tag("Unit")
@@ -18,35 +18,37 @@ public class RequiredGoodTests
         public void should_haveGoodsType_andNotBeAssigned()
         {
             //assign
-            final RequiredGood requiredGood = new RequiredGood(Parts);
+            final ProducedGood producedGood = new ProducedGood(Paper);
 
             //act
+
             //assert
-            assertThat(requiredGood.needs(Parts)).isTrue();
-            assertThat(requiredGood.needs(Oil)).isFalse();
-            assertThat(requiredGood.isAssigned()).isFalse();
+            assertThat(producedGood.isOfType(Paper)).isTrue();
+            assertThat(producedGood.isOfType(Parts)).isFalse();
+            assertThat(producedGood.isAssigned()).isFalse();
         }
 
         @Test
-        public void should_beAssigned_fromConstructor()
+        public void should_beAssigned_inConstructor()
         {
             //assign
-            //act
-            final DeliverableGood requiredGood = new RequiredGood(Parts, true);
+            final DeliverableGood producedGood = new ProducedGood(Paper, true);
 
+            //act
             //assert
-            assertThat(requiredGood.isAssigned()).isTrue();
+            assertThat(producedGood.isAssigned()).isTrue();
         }
 
         @Test
         public void should_beAssigned_whenMarkAsAssignedToDeliver()
         {
             //assign
-            final DeliverableGood requiredGood = new RequiredGood(Parts);
+            final DeliverableGood requiredGood = new ProducedGood(Parts);
             //act
             requiredGood.markAssignedToDeliver();
             //assert
             assertThat(requiredGood.isAssigned()).isTrue();
         }
+
     }
 }

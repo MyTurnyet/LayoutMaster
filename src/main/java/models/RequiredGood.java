@@ -1,6 +1,6 @@
 package models;
 
-public class RequiredGood
+public class RequiredGood implements DeliverableGood
 {
     private final GoodsType neededGoodsType;
     private boolean isAssigned;

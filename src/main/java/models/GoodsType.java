@@ -8,6 +8,7 @@ public enum GoodsType
     Chemicals,
     Coal,
     MetalParts,
+    MetalScraps,
     Ingredients,
     Logs,
     Lumber,
