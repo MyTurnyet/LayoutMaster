@@ -1,9 +1,7 @@
 package dev.paigewatson.layoutmaster.models.layout;
 
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.goods.ProducedGood;
 import dev.paigewatson.layoutmaster.models.goods.RequiredGood;
-import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -12,14 +10,11 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Chemicals;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.MetalParts;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Oil;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarType.Boxcar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class IndustryTests
@@ -52,36 +47,18 @@ public class IndustryTests
             assertThat(cogFactory.name()).isEqualTo("Cog Factory");
         }
 
-        @Test
-        public void should_returnNumberOfEmptyLocations_as1()
-        {
-            //assign
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
-            carriedGoodsList.add(Paper);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, carriedGoodsList);
-            freightCar.load(Paper);
-
-            //act
-            final int emptyLocations = cogFactory.emptyLocations();
-            //assert
-            assertThat(emptyLocations).isEqualTo(1);
-        }
 
         @Test
-        public void should_setAddCarToIndustry_andReturnNumberOfEmptyLocations_as0()
+        public void should_representItselfAsString()
         {
-            //assign
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
-            carriedGoodsList.add(Paper);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, carriedGoodsList);
-            freightCar.load(Paper);
-
-            //act
-            cogFactory.setOutCar(freightCar);
-            //assert
-            assertThat(cogFactory.emptyLocations()).isEqualTo(0);
+            assertThat(cogFactory.toString()).isEqualTo(
+                    "Industry{" +
+                            "id='null', industryName='Cog Factory', " +
+                            "acceptedGoodsList=[dev.paigewatson.layoutmaster.models.goods.RequiredGood@15aab8c6, dev.paigewatson.layoutmaster.models.goods.RequiredGood@33990a0c, dev.paigewatson.layoutmaster.models.goods.RequiredGood@4de4b452], " +
+                            "producedGoods=[dev.paigewatson.layoutmaster.models.goods.ProducedGood@50b5ac82, dev.paigewatson.layoutmaster.models.goods.ProducedGood@101952da], " +
+                            "industryTracks=[" +
+                            "IndustryTrack{trackName='Lone Siding', maximumNumberOfCars=2, carsAtIndustry=[]}" +
+                            "]}");
         }
 
         private void createCogFactoryForTests()
@@ -95,8 +72,13 @@ public class IndustryTests
             final ArrayList<ProducedGood> returnedGoodsList = new ArrayList<>();
             returnedGoodsList.add(new ProducedGood(MetalParts));
             returnedGoodsList.add(new ProducedGood(ScrapMetal));
+            final IndustryTrack siding = new IndustryTrack("Lone Siding", 2);
 
-            cogFactory = new Industry("Cog Factory", acceptedGoodsList, returnedGoodsList);
+            ArrayList<IndustryTrack> industryTracks = new ArrayList<>();
+            industryTracks.add(siding);
+
+            cogFactory = new Industry("Cog Factory", acceptedGoodsList, returnedGoodsList, industryTracks);
         }
+
     }
 }
