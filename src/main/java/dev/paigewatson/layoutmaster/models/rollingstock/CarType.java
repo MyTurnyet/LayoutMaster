@@ -9,20 +9,20 @@ import java.util.ArrayList;
 @Document(collection = "CarTypes")
 public class CarType
 {
-    private final CarTypeDesignation carTypeDesignation;
+    private final AARDesignation AARDesignation;
     private final ArrayList<GoodsType> carriedGoodsList;
     @Id
     private final String id = "";
 
-    public CarType(CarTypeDesignation carTypeDesignation, ArrayList<GoodsType> carriedGoodsList)
+    public CarType(AARDesignation AARDesignation, ArrayList<GoodsType> carriedGoodsList)
     {
-        this.carTypeDesignation = carTypeDesignation;
+        this.AARDesignation = AARDesignation;
         this.carriedGoodsList = carriedGoodsList;
     }
 
-    public boolean isOfType(CarTypeDesignation expectedTypeDesignation)
+    public boolean isOfType(AARDesignation expectedTypeDesignation)
     {
-        return expectedTypeDesignation == carTypeDesignation;
+        return expectedTypeDesignation == AARDesignation;
     }
 
     public boolean canCarry(GoodsType expectedGoodsType)
@@ -35,13 +35,13 @@ public class CarType
     {
         return "CarType{" +
                 "id='" + id + '\'' +
-                ", carTypeDesignation=" + carTypeDesignation +
+                ", carTypeDesignation=" + AARDesignation +
                 ", carriedGoodsList=" + carriedGoodsList +
                 '}';
     }
 
     public String displayName()
     {
-        return carTypeDesignation.name();
+        return AARDesignation.name();
     }
 }

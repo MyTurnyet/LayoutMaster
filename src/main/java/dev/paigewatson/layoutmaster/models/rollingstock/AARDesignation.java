@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-public enum CarTypeDesignation
+public enum AARDesignation
 {
     XA,
     XM,

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.FA;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.XM;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FA;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CarTypeTests
