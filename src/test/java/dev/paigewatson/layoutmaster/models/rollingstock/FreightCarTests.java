@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.Boxcar;
+import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class FreightCarTests
@@ -19,7 +19,7 @@ public class FreightCarTests
         final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
         carriedGoodsList.add(Ingredients);
 
-        final CarType boxCarType = new CarType(Boxcar, carriedGoodsList);
+        final CarType boxCarType = new CarType(XM, carriedGoodsList);
         return new FreightCar("PNWR", 1234, boxCarType);
     }
 
@@ -65,7 +65,7 @@ public class FreightCarTests
             //act
             final String displayName = freightCar.displayName();
             //assert
-            assertThat(displayName).isEqualTo("Boxcar - PNWR 1234");
+            assertThat(displayName).isEqualTo("XM - PNWR 1234");
         }
 
         @Test
@@ -80,7 +80,7 @@ public class FreightCarTests
             assertThat(freightCarAsString)
                     .isEqualTo(
                             "FreightCar{roadName='PNWR', roadNumber=1234, " +
-                                    "carType=CarType{id='null', carTypeDesignation=Boxcar, carriedGoodsList=[Ingredients]}," +
+                                    "carType=CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}," +
                                     " currentlyCarriedGoods=EMPTY}");
         }
 

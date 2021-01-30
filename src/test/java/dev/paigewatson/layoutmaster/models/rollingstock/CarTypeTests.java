@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.Boxcar;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.Flatcar;
+import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.FA;
+import static dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CarTypeTests
@@ -26,15 +26,15 @@ public class CarTypeTests
             final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
             carriedGoodsList.add(Ingredients);
 
-            final CarType boxCarType = new CarType(Boxcar, carriedGoodsList);
+            final CarType boxCarType = new CarType(XM, carriedGoodsList);
 
             //act
             //assert
             assertThat(boxCarType.canCarry(Ingredients)).isTrue();
             assertThat(boxCarType.canCarry(ScrapMetal)).isFalse();
-            assertThat(boxCarType.isOfType(Boxcar)).isTrue();
-            assertThat(boxCarType.isOfType(Flatcar)).isFalse();
-            assertThat(boxCarType.displayName()).isEqualTo("Boxcar");
+            assertThat(boxCarType.isOfType(XM)).isTrue();
+            assertThat(boxCarType.isOfType(FA)).isFalse();
+            assertThat(boxCarType.displayName()).isEqualTo("XM");
         }
 
         @Test
@@ -44,12 +44,12 @@ public class CarTypeTests
             final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
             carriedGoodsList.add(Ingredients);
 
-            final CarType boxCarType = new CarType(Boxcar, carriedGoodsList);
+            final CarType boxCarType = new CarType(XM, carriedGoodsList);
 
             //act
             final String toString = boxCarType.toString();
             //assert
-            assertThat(toString).isEqualTo("CarType{id='null', carTypeDesignation=Boxcar, carriedGoodsList=[Ingredients]}");
+            assertThat(toString).isEqualTo("CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}");
         }
     }
 }

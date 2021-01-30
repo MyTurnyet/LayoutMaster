@@ -2,15 +2,17 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
+@Document(collection = "CarTypes")
 public class CarType
 {
     private final CarTypeDesignation carTypeDesignation;
     private final ArrayList<GoodsType> carriedGoodsList;
     @Id
-    private String id;
+    private final String id = "";
 
     public CarType(CarTypeDesignation carTypeDesignation, ArrayList<GoodsType> carriedGoodsList)
     {
