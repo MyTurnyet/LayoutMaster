@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CarTypeRepository extends MongoRepository<CarType, String>
+public interface MongoCarTypeRepository extends MongoRepository<CarType, String>
 {
     CarType findTopByCarriedGoodsList();
 }

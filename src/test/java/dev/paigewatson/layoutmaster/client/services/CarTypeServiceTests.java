@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.helpers.CarTypeRepositoryFake;
+import dev.paigewatson.layoutmaster.helpers.MongoCarTypeRepositoryFake;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
@@ -23,20 +23,20 @@ public class CarTypeServiceTests
     class UnitTests
     {
 
-        private CarTypeRepositoryFake repositoryFake;
+        private MongoCarTypeRepositoryFake repositoryFake;
+        private CarTypeService service;
 
         @BeforeEach
         public void beforeEachTestRuns()
         {
-            repositoryFake = new CarTypeRepositoryFake();
+            repositoryFake = new MongoCarTypeRepositoryFake();
+            service = new MongoCarTypeService(repositoryFake);
         }
 
         @Test
         public void should_returnAllAARDesignations()
         {
             //assign
-            final CarTypeService service = new MongoCarTypeService(repositoryFake);
-
             //act
             List<AARDesignation> aarDesignations = service.allAARDesignations();
             //assert
@@ -56,12 +56,25 @@ public class CarTypeServiceTests
             returnedCarTypes.add(boxCarType);
             repositoryFake.setReturnedValuesList(returnedCarTypes);
 
-            final CarTypeService service = new MongoCarTypeService(repositoryFake);
-
             //act
             List<CarType> allCarTypesList = service.allCarTypes();
             //assert
             assertThat(allCarTypesList).isEqualTo(returnedCarTypes);
+        }
+
+        @Test
+        public void should_saveCarTypeToRepositoru()
+        {
+            //assign
+            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+            carriedGoodsList.add(Ingredients);
+
+            final CarType boxCarType = new CarType(XM, carriedGoodsList);
+
+            //act
+            service.saveCarTypeToDatabase(boxCarType);
+            //assert
+            assertThat(repositoryFake.savedEntity).isEqualTo(boxCarType);
         }
     }
 }

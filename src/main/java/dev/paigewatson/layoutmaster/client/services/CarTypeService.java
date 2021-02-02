@@ -10,4 +10,6 @@ public interface CarTypeService
     List<AARDesignation> allAARDesignations();
 
     List<CarType> allCarTypes();
+
+    void saveCarTypeToDatabase(CarType carTypeToSave);
 }

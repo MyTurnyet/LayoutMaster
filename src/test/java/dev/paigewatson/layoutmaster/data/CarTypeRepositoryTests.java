@@ -23,9 +23,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Tag("Mongo")
 public class CarTypeRepositoryTests
 {
-    private final CarTypeRepository repository;
+    private final MongoCarTypeRepository repository;
 
-    public CarTypeRepositoryTests(@Autowired CarTypeRepository repository)
+    public CarTypeRepositoryTests(@Autowired MongoCarTypeRepository repository)
     {
         this.repository = repository;
     }

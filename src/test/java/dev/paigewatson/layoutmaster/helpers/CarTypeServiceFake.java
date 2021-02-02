@@ -24,6 +24,12 @@ public class CarTypeServiceFake implements CarTypeService
         return returnedCarTypes;
     }
 
+    @Override
+    public void saveCarTypeToDatabase(CarType carTypeToSave)
+    {
+
+    }
+
     public void setReturnedCarTypes(ArrayList<CarType> returnedCarTypes)
     {
 
