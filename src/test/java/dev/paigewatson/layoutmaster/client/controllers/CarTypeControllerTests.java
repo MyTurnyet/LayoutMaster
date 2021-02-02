@@ -26,6 +26,9 @@ import java.util.List;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -130,26 +133,24 @@ public class CarTypeControllerTests
 
             assertThat(contentAsString).isEqualTo("[{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"]}]");
         }
-//
-//        @Test
-//        public void should_addCarTypeToDatabase() throws Exception
-//        {
-//            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-//            carriedGoodsList.add(Ingredients);
-//            final CarType carType = new CarType(XM, carriedGoodsList);
-//
-//
-//            //assign
-//            final String content = asJsonString(carType);
-//            mockMvc.perform(MockMvcRequestBuilders.post("/models/cartypes")
-//                    .content(content)
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .accept(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isOk());
-//
-//            verify(carTypeService, times(1)).saveCarTypeToDatabase(carType);
-//
-//        }
+
+        @Test
+        public void should_addCarTypeToDatabase() throws Exception
+        {
+            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Arrays.asList("SheetMetal"));
+
+
+            //assign
+            final String content = asJsonString(carTypeDto);
+            mockMvc.perform(MockMvcRequestBuilders.post("/models/cartypes")
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
+
+        }
 
         public String asJsonString(final Object obj)
         {
