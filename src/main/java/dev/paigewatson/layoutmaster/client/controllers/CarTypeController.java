@@ -1,15 +1,15 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.data.CarTypeRepository;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,9 +38,10 @@ public class CarTypeController
         return carTypeRepository.findAll();
     }
 
-    public void addNewCarType(AARDesignation aarDesignation, ArrayList<GoodsType> carriedGoodsList)
+    @PostMapping("/cartypes")
+    public void addNewCarType(@RequestBody CarType carType)
     {
-        final CarType carType = new CarType(aarDesignation, carriedGoodsList);
+//        final CarType carType = new CarType(aarDesignation, carriedGoodsList);
         carTypeRepository.save(carType);
     }
 }
