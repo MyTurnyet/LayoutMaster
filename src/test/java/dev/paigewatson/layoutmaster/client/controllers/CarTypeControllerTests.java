@@ -1,6 +1,7 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,11 +21,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CarTypeControllerTests
@@ -97,10 +101,14 @@ public class CarTypeControllerTests
         @Autowired
         private MockMvc mockMvc;
 
+        @MockBean
+        private CarTypeService carTypeService;
+
         @Test
         public void should_returnAllAARDesignations() throws Exception
         {
-            //assign
+            when(carTypeService.allAARDesignations()).thenReturn(Arrays.asList(AARDesignation.values()));
+
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/aar")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
@@ -110,6 +118,25 @@ public class CarTypeControllerTests
             assertThat(contentAsString).isEqualTo("[\"XA\",\"XM\",\"XP\",\"XL\",\"XR\",\"XF\",\"FA\",\"FBC\",\"FC\",\"FL\",\"FM\",\"TC\",\"GA\",\"GS\",\"HK\",\"HFA\",\"HT\",\"HTA\",\"TM\",\"TP\",\"RB\",\"RBL\",\"RP\"]");
         }
 
+        @Test
+        public void should_returnAllCarTypes() throws Exception
+        {
+            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+            carriedGoodsList.add(Ingredients);
+            final CarType carType = new CarType(XM, carriedGoodsList);
+            ArrayList<CarType> carTypesReturnedList = new ArrayList<>();
+            carTypesReturnedList.add(carType);
+            when(carTypeService.allCarTypes()).thenReturn(carTypesReturnedList);
+
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            final String contentAsString = result.getResponse().getContentAsString();
+
+            assertThat(contentAsString).isEqualTo("[{\"id\":\"\",\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\"]}]");
+        }
+//
 //        @Test
 //        public void should_addCarTypeToDatabase() throws Exception
 //        {
@@ -126,7 +153,7 @@ public class CarTypeControllerTests
 //                    .accept(MediaType.APPLICATION_JSON))
 //                    .andExpect(status().isOk());
 //
-//            verify(repository, times(1)).save(any());
+//            verify(carTypeService, times(1)).saveCarTypeToDatabase(carType);
 //
 //        }
 
@@ -141,4 +168,6 @@ public class CarTypeControllerTests
             }
         }
     }
+
+
 }
