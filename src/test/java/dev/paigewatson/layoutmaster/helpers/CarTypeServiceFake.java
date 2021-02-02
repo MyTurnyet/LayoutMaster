@@ -1,16 +1,16 @@
 package dev.paigewatson.layoutmaster.helpers;
 
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
+import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CarTypeServiceFake implements CarTypeService
 {
-    private ArrayList<CarType> returnedCarTypes;
+    private List<CarTypeDto> returnedCarTypeDTOs;
+    private CarTypeDto savedDTOEntity;
 
     @Override
     public List<AARDesignation> allAARDesignations()
@@ -19,20 +19,24 @@ public class CarTypeServiceFake implements CarTypeService
     }
 
     @Override
-    public List<CarType> allCarTypes()
+    public void saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
-        return returnedCarTypes;
+        this.savedDTOEntity = carTypeToSave;
     }
 
     @Override
-    public void saveCarTypeToDatabase(CarType carTypeToSave)
+    public List<CarTypeDto> allCarTypes()
     {
-
+        return this.returnedCarTypeDTOs;
     }
 
-    public void setReturnedCarTypes(ArrayList<CarType> returnedCarTypes)
+    public void setReturnedCarTypeDTOs(List<CarTypeDto> returnedCarTypeDTOs)
     {
+        this.returnedCarTypeDTOs = returnedCarTypeDTOs;
+    }
 
-        this.returnedCarTypes = returnedCarTypes;
+    public CarTypeDto savedDtoEntity()
+    {
+        return this.savedDTOEntity;
     }
 }

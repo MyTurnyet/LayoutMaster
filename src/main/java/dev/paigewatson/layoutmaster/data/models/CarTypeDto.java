@@ -1,17 +1,12 @@
 package dev.paigewatson.layoutmaster.data.models;
 
-import dev.paigewatson.layoutmaster.data.Dto;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "CarTypes")
-public class CarTypeDto implements Dto<CarType>
+public class CarTypeDto
 {
     @Id
     public String id;
@@ -40,14 +35,4 @@ public class CarTypeDto implements Dto<CarType>
                 '}';
     }
 
-    @Override
-    public CarType getEntity()
-    {
-        ArrayList<GoodsType> goods = new ArrayList<>();
-        for (String carriedGood : carriedGoods)
-        {
-            goods.add(GoodsType.valueOf(carriedGood));
-        }
-        return new CarType(this.id, AARDesignation.valueOf(aarType), goods);
-    }
 }

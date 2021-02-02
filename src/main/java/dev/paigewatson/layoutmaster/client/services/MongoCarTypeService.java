@@ -2,6 +2,7 @@ package dev.paigewatson.layoutmaster.client.services;
 
 import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +27,32 @@ public class MongoCarTypeService implements CarTypeService
         return Arrays.asList(AARDesignation.class.getEnumConstants());
     }
 
-    public List<CarType> allCarTypes()
+    private CarType getEntity(CarTypeDto carTypeDto)
+    {
+        ArrayList<GoodsType> goods = new ArrayList<>();
+        for (String carriedGood : carTypeDto.carriedGoods)
+        {
+            goods.add(GoodsType.valueOf(carriedGood));
+        }
+        return new CarType(carTypeDto.id, AARDesignation.valueOf(carTypeDto.aarType), goods);
+    }
+
+
+    private List<CarTypeDto> getCarTypeDtoList()
     {
         final List<CarTypeDto> carTypeDtoList = carTypeRepository.findAll();
-        ArrayList<CarType> carTypeList = new ArrayList<>();
-        for (CarTypeDto carTypeDto : carTypeDtoList)
-        {
-            carTypeList.add(carTypeDto.getEntity());
-        }
-        return carTypeList;
+        return carTypeDtoList;
     }
 
     @Override
-    public void saveCarTypeToDatabase(CarType carTypeToSave)
+    public void saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
-        carTypeToSave.saveToRepository(carTypeRepository);
+        carTypeRepository.save(carTypeToSave);
     }
 
-
+    @Override
+    public List<CarTypeDto> allCarTypes()
+    {
+        return getCarTypeDtoList();
+    }
 }
