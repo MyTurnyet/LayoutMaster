@@ -35,20 +35,12 @@ public class CarTypeController
     @GetMapping("/cartypes")
     public Object getAllCarTypes()
     {
-
-        try
-        {
-            return carTypeRepository.findAll();
-        } catch (Exception e)
-        {
-            return new String[]{e.getMessage()};
-        }
+        return carTypeRepository.findAll();
     }
 
     @PostMapping("/cartypes")
     public void addNewCarType(@RequestBody CarType carType)
     {
-//        final CarType carType = new CarType(aarDesignation, carriedGoodsList);
         carTypeRepository.save(carType);
     }
 }

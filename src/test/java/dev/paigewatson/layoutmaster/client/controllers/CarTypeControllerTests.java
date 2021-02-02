@@ -27,6 +27,7 @@ import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -127,14 +128,16 @@ public class CarTypeControllerTests
             carriedGoodsList.add(Ingredients);
             final CarType carType = new CarType(XM, carriedGoodsList);
 
+
             //assign
+            final String content = asJsonString(carType);
             mockMvc.perform(MockMvcRequestBuilders.post("/models/cartypes")
-                    .content(asJsonString(carType))
+                    .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk());
 
-            verify(repository, times(1)).save(carType);
+            verify(repository, times(1)).save(any());
 
         }
 

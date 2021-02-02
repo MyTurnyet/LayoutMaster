@@ -2,6 +2,7 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -9,20 +10,52 @@ import java.util.ArrayList;
 @Document(collection = "CarTypes")
 public class CarType
 {
-    private final AARDesignation AARDesignation;
-    private final ArrayList<GoodsType> carriedGoodsList;
     @Id
-    private final String id = "";
+    public String id = "";
+    private AARDesignation aarDesignation;
+    private ArrayList<GoodsType> carriedGoodsList;
 
-    public CarType(AARDesignation AARDesignation, ArrayList<GoodsType> carriedGoodsList)
+    public CarType()
     {
-        this.AARDesignation = AARDesignation;
+    }
+
+    public CarType(AARDesignation aarDesignation, ArrayList<GoodsType> carriedGoodsList)
+    {
+        this("", aarDesignation, carriedGoodsList);
+
+    }
+
+    @PersistenceConstructor
+    public CarType(String id, AARDesignation aarDesignation, ArrayList<GoodsType> carriedGoodsList)
+    {
+        this.id = id;
+        this.aarDesignation = aarDesignation;
+        this.carriedGoodsList = carriedGoodsList;
+    }
+
+    public AARDesignation getAarDesignation()
+    {
+        return aarDesignation;
+    }
+
+    public void setAarDesignation(AARDesignation aarDesignation)
+    {
+        this.aarDesignation = aarDesignation;
+    }
+
+    public ArrayList<GoodsType> getCarriedGoodsList()
+    {
+        return carriedGoodsList;
+    }
+
+    public void setCarriedGoodsList(ArrayList<GoodsType> carriedGoodsList)
+    {
         this.carriedGoodsList = carriedGoodsList;
     }
 
     public boolean isOfType(AARDesignation expectedTypeDesignation)
     {
-        return expectedTypeDesignation == AARDesignation;
+        return expectedTypeDesignation == aarDesignation;
     }
 
     public boolean canCarry(GoodsType expectedGoodsType)
@@ -35,13 +68,13 @@ public class CarType
     {
         return "CarType{" +
                 "id='" + id + '\'' +
-                ", carTypeDesignation=" + AARDesignation +
+                ", carTypeDesignation=" + aarDesignation +
                 ", carriedGoodsList=" + carriedGoodsList +
                 '}';
     }
 
     public String displayName()
     {
-        return AARDesignation.name();
+        return aarDesignation.name();
     }
 }
