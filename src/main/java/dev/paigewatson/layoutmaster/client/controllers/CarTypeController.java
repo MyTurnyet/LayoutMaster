@@ -33,9 +33,16 @@ public class CarTypeController
     }
 
     @GetMapping("/cartypes")
-    public List<CarType> getAllCarTypes()
+    public Object getAllCarTypes()
     {
-        return carTypeRepository.findAll();
+
+        try
+        {
+            return carTypeRepository.findAll();
+        } catch (Exception e)
+        {
+            return new String[]{e.getMessage()};
+        }
     }
 
     @PostMapping("/cartypes")

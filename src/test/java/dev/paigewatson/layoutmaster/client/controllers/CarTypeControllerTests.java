@@ -73,7 +73,7 @@ public class CarTypeControllerTests
             repositoryFake.setReturnedValuesList(returnedCarTypes);
 
             //act
-            final List<CarType> allCarTypes = carTypeController.getAllCarTypes();
+            final List<CarType> allCarTypes = (List<CarType>) carTypeController.getAllCarTypes();
             //assert
             assertThat(allCarTypes).isEqualTo(returnedCarTypes);
         }
