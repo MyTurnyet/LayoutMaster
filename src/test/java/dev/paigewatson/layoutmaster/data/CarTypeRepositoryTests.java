@@ -33,7 +33,7 @@ public class CarTypeRepositoryTests
     @BeforeEach
     public void setUpRepository()
     {
-//        repository.deleteAll();
+        repository.deleteAll();
         //assign
         final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
         carriedGoodsList.add(Ingredients);
@@ -41,7 +41,7 @@ public class CarTypeRepositoryTests
         final CarType carType = new CarType(XM, carriedGoodsList);
 
         //act
-//        repository.save(carType);
+        repository.save(carType);
     }
 
     @Test
