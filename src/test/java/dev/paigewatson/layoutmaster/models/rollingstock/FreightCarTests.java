@@ -67,22 +67,22 @@ public class FreightCarTests
             //assert
             assertThat(displayName).isEqualTo("XM - PNWR 1234");
         }
-
-        @Test
-        public void should_produceItselfAsString()
-        {
-            //assign
-            final FreightCar freightCar = createTestFreightCar();
-
-            //act
-            final String freightCarAsString = freightCar.toString();
-            //assert
-            assertThat(freightCarAsString)
-                    .isEqualTo(
-                            "FreightCar{roadName='PNWR', roadNumber=1234, " +
-                                    "carType=CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}," +
-                                    " currentlyCarriedGoods=EMPTY}");
-        }
+//
+//        @Test
+//        public void should_produceItselfAsString()
+//        {
+//            //assign
+//            final FreightCar freightCar = createTestFreightCar();
+//
+//            //act
+//            final String freightCarAsString = freightCar.toString();
+//            //assert
+//            assertThat(freightCarAsString)
+//                    .isEqualTo(
+//                            "FreightCar{roadName='PNWR', roadNumber=1234, " +
+//                                    "carType=CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}," +
+//                                    " currentlyCarriedGoods=EMPTY}");
+//        }
 
     }
 }

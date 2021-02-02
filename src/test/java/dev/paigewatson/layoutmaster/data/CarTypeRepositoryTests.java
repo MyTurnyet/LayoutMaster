@@ -1,7 +1,6 @@
 package dev.paigewatson.layoutmaster.data;
 
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
+import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataMongoTest()
@@ -23,9 +20,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Tag("Mongo")
 public class CarTypeRepositoryTests
 {
-    private final CarTypeRepository repository;
+    private final MongoCarTypeRepository repository;
 
-    public CarTypeRepositoryTests(@Autowired CarTypeRepository repository)
+    public CarTypeRepositoryTests(@Autowired MongoCarTypeRepository repository)
     {
         this.repository = repository;
     }
@@ -35,20 +32,20 @@ public class CarTypeRepositoryTests
     {
         repository.deleteAll();
         //assign
-        final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-        carriedGoodsList.add(Ingredients);
+        final ArrayList<String> carriedGoodsList = new ArrayList<>();
+        carriedGoodsList.add("Ingredients");
 
-        final CarType carType = new CarType(XM, carriedGoodsList);
+        final CarTypeDto boxcarTypeDto = new CarTypeDto("", "XM", carriedGoodsList);
 
         //act
-        repository.save(carType);
+        repository.save(boxcarTypeDto);
     }
 
     @Test
     public void should_saveCarType()
     {
         //assert
-        final List<CarType> carTypeList = repository.findAll();
+        final List<CarTypeDto> carTypeList = repository.findAll();
         assertThat(carTypeList.size()).isEqualTo(1);
     }
 }

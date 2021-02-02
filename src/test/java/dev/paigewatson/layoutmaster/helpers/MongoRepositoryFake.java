@@ -12,7 +12,7 @@ import java.util.Optional;
 public class MongoRepositoryFake<T> implements MongoRepository<T, String>
 {
     public T savedEntity;
-    private List returnedValues;
+    public List returnedValues;
 
     @Override
     public <S extends T> S save(S entity)
