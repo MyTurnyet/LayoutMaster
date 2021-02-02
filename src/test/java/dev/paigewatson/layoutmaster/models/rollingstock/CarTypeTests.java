@@ -1,11 +1,15 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
+import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.helpers.MongoCarTypeRepositoryFake;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
@@ -38,7 +42,7 @@ public class CarTypeTests
         }
 
         @Test
-        public void should_representItselfAsString()
+        public void should_returnDtoOfItself()
         {
             //assign
             final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
@@ -47,9 +51,35 @@ public class CarTypeTests
             final CarType boxCarType = new CarType(XM, carriedGoodsList);
 
             //act
-            final String toString = boxCarType.toString();
+            CarTypeDto boxcarDto = boxCarType.getDto();
             //assert
-            assertThat(toString).isEqualTo("CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}");
+            assertThat(boxcarDto.aarType).isEqualTo("XM");
+            final String[] strings = {"Ingredients"};
+            assertThat(boxcarDto.carriedGoods).isEqualTo(Arrays.asList(strings));
+        }
+
+        @Test
+        public void should_saveItselfToRepository()
+        {
+            //assign
+            final MongoCarTypeRepositoryFake carTypeRepositoryFake = new MongoCarTypeRepositoryFake();
+            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+            carriedGoodsList.add(Ingredients);
+            final CarTypeDto carTypeDto = new CarTypeDto();
+            carTypeDto.aarType = "XM";
+            carTypeDto.id = "";
+            final List<String> expectedGoodsList = Arrays.asList("Ingredients");
+            carTypeDto.carriedGoods = expectedGoodsList;
+
+            final CarType carType = new CarType(XM, carriedGoodsList);
+            //act
+            carType.saveToRepository(carTypeRepositoryFake);
+
+            //assert
+            assertThat(carTypeRepositoryFake.savedEntity).isInstanceOf(CarTypeDto.class);
+            assertThat(carTypeRepositoryFake.savedEntity.aarType).isEqualTo("XM");
+            assertThat(carTypeRepositoryFake.savedEntity.id).isEqualTo("");
+            assertThat(carTypeRepositoryFake.savedEntity.carriedGoods).isEqualTo(expectedGoodsList);
         }
     }
 }
