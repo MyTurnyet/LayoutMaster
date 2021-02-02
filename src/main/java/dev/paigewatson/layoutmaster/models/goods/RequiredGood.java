@@ -24,4 +24,13 @@ public class RequiredGood implements DeliverableGood
     {
         return goodsType == neededGoodsType && !this.isAssigned;
     }
+
+    @Override
+    public String toString()
+    {
+        return "RequiredGood{" +
+                "neededGoodsType=" + neededGoodsType +
+                ", isAssigned=" + isAssigned +
+                '}';
+    }
 }

@@ -3,7 +3,7 @@ package dev.paigewatson.layoutmaster.models.layout;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.goods.ProducedGood;
 import dev.paigewatson.layoutmaster.models.goods.RequiredGood;
-import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
+import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 
@@ -17,18 +17,19 @@ import java.util.ArrayList;
 public class Industry
 {
 
+    private final ArrayList<ProducedGood> producedGoods;
     private final String industryName;
     private final ArrayList<RequiredGood> acceptedGoodsList;
-    private final ArrayList<ProducedGood> returnedGoodsList;
-    private final ArrayList<FreightCar> carsAtIndustry;
-    int maxCar = 1;
+    private final ArrayList<IndustryTrack> industryTracks;
+    @Id
+    private String id;
 
-    public Industry(String industryName, ArrayList<RequiredGood> acceptedGoodsList, ArrayList<ProducedGood> returnedGoodsList)
+    public Industry(String industryName, ArrayList<RequiredGood> acceptedGoodsList, ArrayList<ProducedGood> producedGoods, ArrayList<IndustryTrack> industryTracks)
     {
-        carsAtIndustry = new ArrayList<>(maxCar);
+        this.industryTracks = industryTracks;
         this.industryName = industryName;
         this.acceptedGoodsList = acceptedGoodsList;
-        this.returnedGoodsList = returnedGoodsList;
+        this.producedGoods = producedGoods;
     }
 
     public String name()
@@ -43,16 +44,18 @@ public class Industry
 
     public boolean produces(GoodsType goodsType)
     {
-        return returnedGoodsList.stream().anyMatch(producedGood -> producedGood.isOfType(goodsType));
+        return producedGoods.stream().anyMatch(producedGood -> producedGood.isOfType(goodsType));
     }
 
-    public int emptyLocations()
+    @Override
+    public String toString()
     {
-        return maxCar - carsAtIndustry.size();
-    }
-
-    public void setOutCar(FreightCar freightCar)
-    {
-        carsAtIndustry.add(freightCar);
+        return "Industry{" +
+                "id='" + id + '\'' +
+                ", industryName='" + industryName + '\'' +
+                ", acceptedGoodsList=" + acceptedGoodsList +
+                ", producedGoods=" + producedGoods +
+                ", industryTracks=" + industryTracks +
+                '}';
     }
 }

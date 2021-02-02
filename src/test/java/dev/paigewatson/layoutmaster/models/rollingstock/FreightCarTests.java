@@ -9,12 +9,20 @@ import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
-import static dev.paigewatson.layoutmaster.models.rollingstock.CarType.Boxcar;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class FreightCarTests
 {
+    public static FreightCar createTestFreightCar()
+    {
+        final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+        carriedGoodsList.add(Ingredients);
+
+        final CarType boxCarType = new CarType(XM, carriedGoodsList);
+        return new FreightCar("PNWR", 1234, boxCarType);
+    }
+
     @Nested
     @Tag("Unit")
     class UnitTests
@@ -23,10 +31,7 @@ public class FreightCarTests
         public void should_returnListOfGoods()
         {
             //assign
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
-            carriedGoodsList.add(Paper);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, carriedGoodsList);
+            final FreightCar freightCar = createTestFreightCar();
 
             //act
             final boolean canCarryIngredients = freightCar.canCarry(Ingredients);
@@ -39,12 +44,10 @@ public class FreightCarTests
         }
 
         @Test
-        public void should_returnLoadFreightCar() throws Exception
+        public void should_LoadFreightCar()
         {
             //assign
-            final ArrayList<GoodsType> goods = new ArrayList<>();
-            goods.add(Ingredients);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, goods);
+            final FreightCar freightCar = createTestFreightCar();
 
             //act
             assertThat(freightCar.isLoaded()).isFalse();
@@ -57,14 +60,29 @@ public class FreightCarTests
         public void should_returnDisplayName_asType_andRoadName()
         {
             //assign
-            final ArrayList<GoodsType> goods = new ArrayList<>();
-            goods.add(Ingredients);
-            final FreightCar freightCar = new FreightCar("PNWR 1234", Boxcar, goods);
+            final FreightCar freightCar = createTestFreightCar();
 
             //act
             final String displayName = freightCar.displayName();
             //assert
-            assertThat(displayName).isEqualTo("Boxcar - PNWR 1234");
+            assertThat(displayName).isEqualTo("XM - PNWR 1234");
         }
+
+        @Test
+        public void should_produceItselfAsString()
+        {
+            //assign
+            final FreightCar freightCar = createTestFreightCar();
+
+            //act
+            final String freightCarAsString = freightCar.toString();
+            //assert
+            assertThat(freightCarAsString)
+                    .isEqualTo(
+                            "FreightCar{roadName='PNWR', roadNumber=1234, " +
+                                    "carType=CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}," +
+                                    " currentlyCarriedGoods=EMPTY}");
+        }
+
     }
 }

@@ -36,5 +36,16 @@ public class RequiredGoodTests
             assertThat(requiredGood.needs(Parts)).isFalse();
             assertThat(requiredGood.needs(Oil)).isFalse();
         }
+
+        @Test
+        public void should_representItselfAsString()
+        {
+            //assign
+            final RequiredGood requiredGood = new RequiredGood(Parts);
+
+            //act
+            //assert
+            assertThat(requiredGood.toString()).isEqualTo("RequiredGood{neededGoodsType=Parts, isAssigned=false}");
+        }
     }
 }

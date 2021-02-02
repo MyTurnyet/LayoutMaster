@@ -27,5 +27,16 @@ public class ProducedGoodsTests
             assertThat(producedGood.isOfType(Parts)).isFalse();
             assertThat(producedGood.isAssigned()).isFalse();
         }
+
+        @Test
+        public void should_representItselfAsString()
+        {
+            //assign
+            final ProducedGood producedGood = new ProducedGood(Paper);
+
+            //act
+            //assert
+            assertThat(producedGood.toString()).isEqualTo("ProducedGood{goodsType=Paper, isAssigned=false}");
+        }
     }
 }
