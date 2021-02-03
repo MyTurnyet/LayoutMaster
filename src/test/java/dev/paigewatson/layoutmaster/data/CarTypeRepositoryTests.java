@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -45,6 +46,20 @@ public class CarTypeRepositoryTests
     public void should_saveCarType()
     {
         //assert
+        final CarTypeDto carTypeDto = new CarTypeDto("", "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+        final List<CarTypeDto> carTypeList = repository.findAll();
+        assertThat(carTypeList.size()).isEqualTo(1);
+
+        final CarTypeDto savesDto = repository.save(carTypeDto);
+
+        final List<CarTypeDto> carTypeList2 = repository.findAll();
+        assertThat(carTypeList2.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void should_getCarsInRepository()
+    {
+        //assign
         final List<CarTypeDto> carTypeList = repository.findAll();
         assertThat(carTypeList.size()).isEqualTo(1);
     }
