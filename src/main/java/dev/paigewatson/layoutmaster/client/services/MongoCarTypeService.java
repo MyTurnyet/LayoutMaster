@@ -47,6 +47,8 @@ public class MongoCarTypeService implements CarTypeService
     @Override
     public void saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
+//        final CarTypeDto carTypeWithMatchingAARType = carTypeRepository.findByAarTypeEquals(carTypeToSave.aarType);
+
         carTypeRepository.save(carTypeToSave);
     }
 
@@ -54,5 +56,11 @@ public class MongoCarTypeService implements CarTypeService
     public List<CarTypeDto> allCarTypes()
     {
         return getCarTypeDtoList();
+    }
+
+    @Override
+    public CarTypeDto carTypeWithAAR(String expectedAARType)
+    {
+        return carTypeRepository.findByAarTypeEquals(expectedAARType);
     }
 }

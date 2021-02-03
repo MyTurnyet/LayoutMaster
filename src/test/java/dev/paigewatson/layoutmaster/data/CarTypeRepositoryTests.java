@@ -22,6 +22,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CarTypeRepositoryTests
 {
     private final MongoCarTypeRepository repository;
+    private CarTypeDto boxcarTypeDto;
 
     public CarTypeRepositoryTests(@Autowired MongoCarTypeRepository repository)
     {
@@ -36,7 +37,7 @@ public class CarTypeRepositoryTests
         final ArrayList<String> carriedGoodsList = new ArrayList<>();
         carriedGoodsList.add("Ingredients");
 
-        final CarTypeDto boxcarTypeDto = new CarTypeDto("", "XM", carriedGoodsList);
+        boxcarTypeDto = new CarTypeDto("", "XM", carriedGoodsList);
 
         //act
         repository.save(boxcarTypeDto);
@@ -62,5 +63,22 @@ public class CarTypeRepositoryTests
         //assign
         final List<CarTypeDto> carTypeList = repository.findAll();
         assertThat(carTypeList.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void should_getCarTypeByAAR_andReturnOneCarType()
+    {
+        //assign
+        final CarTypeDto carType = repository.findByAarTypeEquals("XM");
+        assertThat(carType.aarType).isEqualTo(boxcarTypeDto.aarType);
+        assertThat(carType.carriedGoods).isEqualTo(boxcarTypeDto.carriedGoods);
+    }
+
+    @Test
+    public void should_getCarTypeByAAR_andReturnNothing()
+    {
+        //assign
+        final CarTypeDto carType = repository.findByAarTypeEquals("XB");
+        assertThat(carType).isNull();
     }
 }

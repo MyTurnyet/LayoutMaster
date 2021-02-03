@@ -12,4 +12,6 @@ public interface CarTypeService
     void saveCarTypeToDatabase(CarTypeDto carTypeToSave);
 
     List<CarTypeDto> allCarTypes();
+
+    CarTypeDto carTypeWithAAR(String expectedAARType);
 }

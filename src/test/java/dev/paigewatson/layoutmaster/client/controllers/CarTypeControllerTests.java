@@ -72,6 +72,19 @@ public class CarTypeControllerTests
         }
 
         @Test
+        public void should_returnCarTypeByAAR()
+        {
+            //assign
+            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
+            carTypeServiceFake.setReturnedCarTypeWithAAR(carTypeDto);
+
+            //act
+            final CarTypeDto carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+            //assert
+            assertThat(carTypeByAAR.toString()).isEqualTo(carTypeDto.toString());
+        }
+
+        @Test
         public void should_saveCarTypeToRepository()
         {
             //assign
@@ -85,6 +98,20 @@ public class CarTypeControllerTests
 
             assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
         }
+//        @Test
+//        public void should_saveCarTypeToRepository()
+//        {
+//            //assign
+//            final CarTypeDto carTypeDto = new CarTypeDto("", "XM", Collections.singletonList("SheetMetal"));
+//
+//
+//            //act
+//            carTypeController.addNewCarType(carTypeDto);
+//
+//            //assert
+//
+//            assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
+//        }
     }
 
     @Nested
@@ -127,6 +154,21 @@ public class CarTypeControllerTests
             final String contentAsString = result.getResponse().getContentAsString();
 
             assertThat(contentAsString).isEqualTo("[{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"]}]");
+        }
+
+        @Test
+        public void should_returnCarTypeByAARType() throws Exception
+        {
+            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
+            when(carTypeService.carTypeWithAAR("XM")).thenReturn(carTypeDto);
+
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/XM")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            final String contentAsString = result.getResponse().getContentAsString();
+
+            assertThat(contentAsString).isEqualTo("{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"]}");
         }
 
         @Test

@@ -98,5 +98,20 @@ public class CarTypeServiceTests
             assertThat(repositoryFake.savedEntity.aarType).isEqualTo(carTypeDto.aarType);
             assertThat(repositoryFake.savedEntity.carriedGoods).isEqualTo(carTypeDto.carriedGoods);
         }
+
+        @Test
+        public void should_getExistingCarTypeByAAR()
+        {
+            //assign
+            final CarTypeDto existingCarTypeDto = new CarTypeDto("", "GS", Arrays.asList("Ingredients"));
+            repositoryFake.findByAarReturned(existingCarTypeDto);
+            //act
+            final CarTypeDto carTypeForAAR = service.carTypeWithAAR("XM");
+            //assert
+
+            assertThat(carTypeForAAR.id).isEqualTo(existingCarTypeDto.id);
+            assertThat(carTypeForAAR.aarType).isEqualTo(existingCarTypeDto.aarType);
+            assertThat(carTypeForAAR.carriedGoods).isEqualTo(existingCarTypeDto.carriedGoods);
+        }
     }
 }
