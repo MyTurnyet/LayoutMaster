@@ -11,7 +11,7 @@ public class CarTypeServiceFake implements CarTypeService
 {
     private List<CarTypeDto> returnedCarTypeDTOs;
     private CarTypeDto savedDTOEntity;
-
+    private CarTypeDto returnedCarTypeWithAAR;
     @Override
     public List<AARDesignation> allAARDesignations()
     {
@@ -19,15 +19,22 @@ public class CarTypeServiceFake implements CarTypeService
     }
 
     @Override
-    public void saveCarTypeToDatabase(CarTypeDto carTypeToSave)
+    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
         this.savedDTOEntity = carTypeToSave;
+        return carTypeToSave;
     }
 
     @Override
     public List<CarTypeDto> allCarTypes()
     {
         return this.returnedCarTypeDTOs;
+    }
+
+    @Override
+    public CarTypeDto carTypeWithAAR(String expectedAARType)
+    {
+        return returnedCarTypeWithAAR;
     }
 
     public void setReturnedCarTypeDTOs(List<CarTypeDto> returnedCarTypeDTOs)
@@ -38,5 +45,10 @@ public class CarTypeServiceFake implements CarTypeService
     public CarTypeDto savedDtoEntity()
     {
         return this.savedDTOEntity;
+    }
+
+    public void setReturnedCarTypeWithAAR(CarTypeDto carTypeDto)
+    {
+        returnedCarTypeWithAAR = carTypeDto;
     }
 }

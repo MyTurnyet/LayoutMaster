@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CarTypeRepositoryTests
 {
     private final MongoCarTypeRepository repository;
+    private CarTypeDto boxcarTypeDto;
 
     public CarTypeRepositoryTests(@Autowired MongoCarTypeRepository repository)
     {
@@ -35,17 +37,48 @@ public class CarTypeRepositoryTests
         final ArrayList<String> carriedGoodsList = new ArrayList<>();
         carriedGoodsList.add("Ingredients");
 
-        final CarTypeDto boxcarTypeDto = new CarTypeDto("", "XM", carriedGoodsList);
+        boxcarTypeDto = new CarTypeDto("", "XM", carriedGoodsList);
 
         //act
-        repository.save(boxcarTypeDto);
+        repository.insert(boxcarTypeDto);
     }
 
     @Test
     public void should_saveCarType()
     {
         //assert
+        final CarTypeDto carTypeDto = new CarTypeDto("", "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
         final List<CarTypeDto> carTypeList = repository.findAll();
         assertThat(carTypeList.size()).isEqualTo(1);
+
+        final CarTypeDto savesDto = repository.insert(carTypeDto);
+        System.out.print(savesDto);
+        final List<CarTypeDto> carTypeList2 = repository.findAll();
+        assertThat(carTypeList2.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void should_getCarsInRepository()
+    {
+        //assign
+        final List<CarTypeDto> carTypeList = repository.findAll();
+        assertThat(carTypeList.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void should_getCarTypeByAAR_andReturnOneCarType()
+    {
+        //assign
+        final CarTypeDto carType = repository.findByAarTypeEquals("XM");
+        assertThat(carType.aarType).isEqualTo(boxcarTypeDto.aarType);
+        assertThat(carType.carriedGoods).isEqualTo(boxcarTypeDto.carriedGoods);
+    }
+
+    @Test
+    public void should_getCarTypeByAAR_andReturnNothing()
+    {
+        //assign
+        final CarTypeDto carType = repository.findByAarTypeEquals("XB");
+        assertThat(carType).isNull();
     }
 }

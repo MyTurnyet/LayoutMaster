@@ -5,6 +5,7 @@ import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,5 +42,11 @@ public class CarTypeController
     public void addNewCarType(@RequestBody CarTypeDto carType)
     {
         carTypeService.saveCarTypeToDatabase(carType);
+    }
+
+    @GetMapping("/cartypes/aar/{aarType}")
+    public CarTypeDto getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
+    {
+        return carTypeService.carTypeWithAAR(expectedType);
     }
 }

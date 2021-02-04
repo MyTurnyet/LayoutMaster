@@ -9,7 +9,9 @@ public interface CarTypeService
 {
     List<AARDesignation> allAARDesignations();
 
-    void saveCarTypeToDatabase(CarTypeDto carTypeToSave);
+    CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave);
 
     List<CarTypeDto> allCarTypes();
+
+    CarTypeDto carTypeWithAAR(String expectedAARType);
 }
