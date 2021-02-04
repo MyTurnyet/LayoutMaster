@@ -96,7 +96,8 @@ public class MongoRepositoryFake<T> implements MongoRepository<T, String>
     @Override
     public <S extends T> S insert(S entity)
     {
-        return null;
+        this.savedEntity = entity;
+        return entity;
     }
 
     @Override

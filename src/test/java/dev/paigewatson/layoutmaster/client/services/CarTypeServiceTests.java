@@ -113,5 +113,16 @@ public class CarTypeServiceTests
             assertThat(carTypeForAAR.aarType).isEqualTo(existingCarTypeDto.aarType);
             assertThat(carTypeForAAR.carriedGoods).isEqualTo(existingCarTypeDto.carriedGoods);
         }
+
+        @Test
+        public void should_returnNullCarTypeDtp_fromCarTypeWithAAR()
+        {
+            //assign
+            //act
+            final CarTypeDto carTypeForAAR = service.carTypeWithAAR("XM");
+            //assert
+
+            assertThat(carTypeForAAR.isNull()).isTrue();
+        }
     }
 }

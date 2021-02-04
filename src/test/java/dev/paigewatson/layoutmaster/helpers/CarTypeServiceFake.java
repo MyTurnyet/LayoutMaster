@@ -19,9 +19,10 @@ public class CarTypeServiceFake implements CarTypeService
     }
 
     @Override
-    public void saveCarTypeToDatabase(CarTypeDto carTypeToSave)
+    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
         this.savedDTOEntity = carTypeToSave;
+        return carTypeToSave;
     }
 
     @Override

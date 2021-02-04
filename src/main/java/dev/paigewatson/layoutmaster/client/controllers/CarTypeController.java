@@ -44,7 +44,7 @@ public class CarTypeController
         carTypeService.saveCarTypeToDatabase(carType);
     }
 
-    @GetMapping("/cartypes/{aarType}")
+    @GetMapping("/cartypes/aar/{aarType}")
     public CarTypeDto getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
         return carTypeService.carTypeWithAAR(expectedType);

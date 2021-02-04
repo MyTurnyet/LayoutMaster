@@ -3,6 +3,7 @@ package dev.paigewatson.layoutmaster.client.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,6 +86,18 @@ public class CarTypeControllerTests
         }
 
         @Test
+        public void should_notReturnCarTypeByAAR()
+        {
+            //assign
+            carTypeServiceFake.setReturnedCarTypeWithAAR(new NullCarTypeDto());
+
+            //act
+            final CarTypeDto carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+            //assert
+            assertThat(carTypeByAAR.isNull());
+        }
+
+        @Test
         public void should_saveCarTypeToRepository()
         {
             //assign
@@ -153,7 +166,7 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"]}]");
+            assertThat(contentAsString).isEqualTo("[{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}]");
         }
 
         @Test
@@ -162,13 +175,27 @@ public class CarTypeControllerTests
             final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
             when(carTypeService.carTypeWithAAR("XM")).thenReturn(carTypeDto);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/XM")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"]}");
+            assertThat(contentAsString).isEqualTo("{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}");
+        }
+
+        @Test
+        public void should_notReturnCarTypeByAARType() throws Exception
+        {
+            when(carTypeService.carTypeWithAAR("XM")).thenReturn(new NullCarTypeDto());
+
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            final String contentAsString = result.getResponse().getContentAsString();
+
+            assertThat(contentAsString).isEqualTo("{\"id\":\"\",\"aarType\":\"\",\"carriedGoods\":[],\"null\":true}");
         }
 
         @Test

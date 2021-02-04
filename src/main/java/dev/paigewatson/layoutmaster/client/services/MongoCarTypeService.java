@@ -2,6 +2,7 @@ package dev.paigewatson.layoutmaster.client.services;
 
 import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
@@ -45,11 +46,13 @@ public class MongoCarTypeService implements CarTypeService
     }
 
     @Override
-    public void saveCarTypeToDatabase(CarTypeDto carTypeToSave)
+    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
 //        final CarTypeDto carTypeWithMatchingAARType = carTypeRepository.findByAarTypeEquals(carTypeToSave.aarType);
 
-        carTypeRepository.save(carTypeToSave);
+        final CarTypeDto savedCarType = carTypeRepository.insert(carTypeToSave);
+        System.out.print(savedCarType);
+        return savedCarType;
     }
 
     @Override
@@ -61,6 +64,11 @@ public class MongoCarTypeService implements CarTypeService
     @Override
     public CarTypeDto carTypeWithAAR(String expectedAARType)
     {
-        return carTypeRepository.findByAarTypeEquals(expectedAARType);
+        final CarTypeDto carTypeByAAR = carTypeRepository.findByAarTypeEquals(expectedAARType);
+        if (carTypeByAAR == null)
+        {
+            return new NullCarTypeDto();
+        }
+        return carTypeByAAR;
     }
 }
