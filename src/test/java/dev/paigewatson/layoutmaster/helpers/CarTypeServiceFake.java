@@ -32,7 +32,7 @@ public class CarTypeServiceFake implements CarTypeService
     }
 
     @Override
-    public CarTypeDto carTypeWithAAR(String expectedAARType)
+    public CarTypeDto carTypeForAAR(String expectedAARType)
     {
         return returnedCarTypeWithAAR;
     }

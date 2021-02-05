@@ -46,7 +46,7 @@ public class CarType
     public CarTypeDto getDto()
     {
         final CarTypeDto carTypeDto = new CarTypeDto();
-        carTypeDto.id = this.id;
+//        carTypeDto.id = this.id;
         carTypeDto.aarType = this.aarDesignation.name();
         carTypeDto.carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
         return carTypeDto;

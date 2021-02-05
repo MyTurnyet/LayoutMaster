@@ -6,25 +6,35 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Document(collection = "CarTypes")
 public class CarTypeDto implements NullableEntity
 {
     @Id
-    public String id = "";
+    private String id = "";
     public String aarType = "";
     public List<String> carriedGoods = Collections.emptyList();
 
-
-    public CarTypeDto(String id, String aarType, List<String> carriedGoods)
+    public CarTypeDto()
     {
-        this.id = id;
+    }
+
+    public CarTypeDto(String aarType, List<String> carriedGoods)
+    {
+        this(UUID.randomUUID(), aarType, carriedGoods);
+    }
+
+    public CarTypeDto(UUID id, String aarType, List<String> carriedGoods)
+    {
+        this.id = id.toString();
         this.aarType = aarType;
         this.carriedGoods = carriedGoods;
     }
 
-    public CarTypeDto()
+    public String getId()
     {
+        return id;
     }
 
     @Override

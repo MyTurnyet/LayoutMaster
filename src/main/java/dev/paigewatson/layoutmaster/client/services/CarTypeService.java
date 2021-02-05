@@ -13,5 +13,5 @@ public interface CarTypeService
 
     List<CarTypeDto> allCarTypes();
 
-    CarTypeDto carTypeWithAAR(String expectedAARType);
+    CarTypeDto carTypeForAAR(String expectedAARType);
 }
