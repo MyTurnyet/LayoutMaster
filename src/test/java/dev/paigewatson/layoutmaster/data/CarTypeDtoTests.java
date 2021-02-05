@@ -26,7 +26,7 @@ public class CarTypeDtoTests
 
             //assert
             assertThat(nullCarTypeDto.isNull()).isTrue();
-            assertThat(nullCarTypeDto.id).isEqualTo("");
+            assertThat(nullCarTypeDto.getId()).isEqualTo("");
             assertThat(nullCarTypeDto.carriedGoods).isEqualTo(Collections.emptyList());
             assertThat(nullCarTypeDto.aarType).isEqualTo("");
         }
@@ -42,12 +42,11 @@ public class CarTypeDtoTests
             //assign
             final List<String> carriedGoods = Arrays.asList("Ingredients", "Paper", "Parts");
             final String expectedAARType = "XM";
-            final String expectedId = "FOO!";
-            final CarTypeDto carTypeDto = new CarTypeDto(expectedId, expectedAARType, carriedGoods);
+
+            final CarTypeDto carTypeDto = new CarTypeDto(expectedAARType, carriedGoods);
 
             //assert
             assertThat(carTypeDto.isNull()).isFalse();
-            assertThat(carTypeDto.id).isEqualTo(expectedId);
             assertThat(carTypeDto.carriedGoods).isEqualTo(carriedGoods);
             assertThat(carTypeDto.aarType).isEqualTo(expectedAARType);
         }

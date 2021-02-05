@@ -22,7 +22,6 @@ public class CarTypeController
 
     public CarTypeController(@Autowired CarTypeService carTypeService)
     {
-
         this.carTypeService = carTypeService;
     }
 
@@ -47,6 +46,6 @@ public class CarTypeController
     @GetMapping("/cartypes/aar/{aarType}")
     public CarTypeDto getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
-        return carTypeService.carTypeWithAAR(expectedType);
+        return carTypeService.carTypeForAAR(expectedType);
     }
 }

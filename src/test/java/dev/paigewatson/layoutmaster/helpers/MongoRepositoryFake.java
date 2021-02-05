@@ -6,13 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class MongoRepositoryFake<T> implements MongoRepository<T, String>
 {
     public T savedEntity;
-    public List returnedValues;
+    public List<T> returnedValues = Collections.emptyList();
 
     @Override
     public <S extends T> S save(S entity)

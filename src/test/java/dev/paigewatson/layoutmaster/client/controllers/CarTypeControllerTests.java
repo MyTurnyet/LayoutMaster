@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,7 +63,7 @@ public class CarTypeControllerTests
         public void should_returnAllCarTypes()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
+            final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
             List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
             carTypeServiceFake.setReturnedCarTypeDTOs(returnedCarTypes);
 
@@ -76,7 +77,7 @@ public class CarTypeControllerTests
         public void should_returnCarTypeByAAR()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
+            final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
             carTypeServiceFake.setReturnedCarTypeWithAAR(carTypeDto);
 
             //act
@@ -101,7 +102,7 @@ public class CarTypeControllerTests
         public void should_saveCarTypeToRepository()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("", "XM", Collections.singletonList("SheetMetal"));
+            final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
 
 
             //act
@@ -156,7 +157,8 @@ public class CarTypeControllerTests
         @Test
         public void should_returnAllCarTypes() throws Exception
         {
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
+            final UUID uuid = UUID.randomUUID();
+            final CarTypeDto carTypeDto = new CarTypeDto(uuid, "XM", Collections.singletonList("SheetMetal"));
             List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
             when(carTypeService.allCarTypes()).thenReturn(returnedCarTypes);
 
@@ -166,14 +168,15 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}]");
+            assertThat(contentAsString).isEqualTo("[{\"id\":\"" + uuid.toString() + "\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}]");
         }
 
         @Test
         public void should_returnCarTypeByAARType() throws Exception
         {
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
-            when(carTypeService.carTypeWithAAR("XM")).thenReturn(carTypeDto);
+            final UUID uuid = UUID.randomUUID();
+            final CarTypeDto carTypeDto = new CarTypeDto(uuid, "XM", Collections.singletonList("SheetMetal"));
+            when(carTypeService.carTypeForAAR("XM")).thenReturn(carTypeDto);
 
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
@@ -181,13 +184,13 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}");
+            assertThat(contentAsString).isEqualTo("{\"id\":\"" + uuid.toString() + "\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}");
         }
 
         @Test
         public void should_notReturnCarTypeByAARType() throws Exception
         {
-            when(carTypeService.carTypeWithAAR("XM")).thenReturn(new NullCarTypeDto());
+            when(carTypeService.carTypeForAAR("XM")).thenReturn(new NullCarTypeDto());
 
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
@@ -201,7 +204,7 @@ public class CarTypeControllerTests
         @Test
         public void should_addCarTypeToDatabase() throws Exception
         {
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
+            final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
 
 
             //assign

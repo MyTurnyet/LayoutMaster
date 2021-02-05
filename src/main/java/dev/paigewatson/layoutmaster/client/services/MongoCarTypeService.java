@@ -3,13 +3,10 @@ package dev.paigewatson.layoutmaster.client.services;
 import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,31 +25,22 @@ public class MongoCarTypeService implements CarTypeService
         return Arrays.asList(AARDesignation.class.getEnumConstants());
     }
 
-    private CarType getEntity(CarTypeDto carTypeDto)
-    {
-        ArrayList<GoodsType> goods = new ArrayList<>();
-        for (String carriedGood : carTypeDto.carriedGoods)
-        {
-            goods.add(GoodsType.valueOf(carriedGood));
-        }
-        return new CarType(carTypeDto.id, AARDesignation.valueOf(carTypeDto.aarType), goods);
-    }
-
-
     private List<CarTypeDto> getCarTypeDtoList()
     {
-        final List<CarTypeDto> carTypeDtoList = carTypeRepository.findAll();
-        return carTypeDtoList;
+        return carTypeRepository.findAll();
     }
 
     @Override
     public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
-//        final CarTypeDto carTypeWithMatchingAARType = carTypeRepository.findByAarTypeEquals(carTypeToSave.aarType);
-
-        final CarTypeDto savedCarType = carTypeRepository.insert(carTypeToSave);
-        System.out.print(savedCarType);
-        return savedCarType;
+        final CarTypeDto carTypeWithMatchingAARType = carTypeForAAR(carTypeToSave.aarType);
+        if (carTypeWithMatchingAARType.isNull())
+        {
+            return carTypeRepository.insert(carTypeToSave);
+        }
+        carTypeWithMatchingAARType.carriedGoods = carTypeToSave.carriedGoods;
+        carTypeRepository.save(carTypeWithMatchingAARType);
+        return carTypeWithMatchingAARType;
     }
 
     @Override
@@ -62,13 +50,9 @@ public class MongoCarTypeService implements CarTypeService
     }
 
     @Override
-    public CarTypeDto carTypeWithAAR(String expectedAARType)
+    public CarTypeDto carTypeForAAR(String expectedAARType)
     {
         final CarTypeDto carTypeByAAR = carTypeRepository.findByAarTypeEquals(expectedAARType);
-        if (carTypeByAAR == null)
-        {
-            return new NullCarTypeDto();
-        }
-        return carTypeByAAR;
+        return carTypeByAAR == null ? new NullCarTypeDto() : carTypeByAAR;
     }
 }

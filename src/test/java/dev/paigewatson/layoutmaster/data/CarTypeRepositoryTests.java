@@ -37,7 +37,7 @@ public class CarTypeRepositoryTests
         final ArrayList<String> carriedGoodsList = new ArrayList<>();
         carriedGoodsList.add("Ingredients");
 
-        boxcarTypeDto = new CarTypeDto("", "XM", carriedGoodsList);
+        boxcarTypeDto = new CarTypeDto("XM", carriedGoodsList);
 
         //act
         repository.insert(boxcarTypeDto);
@@ -47,12 +47,14 @@ public class CarTypeRepositoryTests
     public void should_saveCarType()
     {
         //assert
-        final CarTypeDto carTypeDto = new CarTypeDto("", "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+        final CarTypeDto carTypeDto = new CarTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
         final List<CarTypeDto> carTypeList = repository.findAll();
         assertThat(carTypeList.size()).isEqualTo(1);
 
         final CarTypeDto savesDto = repository.insert(carTypeDto);
+
         System.out.print(savesDto);
+        assertThat(savesDto.getId()).isNotEmpty();
         final List<CarTypeDto> carTypeList2 = repository.findAll();
         assertThat(carTypeList2.size()).isEqualTo(2);
     }

@@ -67,7 +67,7 @@ public class CarTypeTests
             carriedGoodsList.add(Ingredients);
             final CarTypeDto carTypeDto = new CarTypeDto();
             carTypeDto.aarType = "XM";
-            carTypeDto.id = "";
+
             final List<String> expectedGoodsList = Arrays.asList("Ingredients");
             carTypeDto.carriedGoods = expectedGoodsList;
 
@@ -78,7 +78,7 @@ public class CarTypeTests
             //assert
             assertThat(carTypeRepositoryFake.savedEntity).isInstanceOf(CarTypeDto.class);
             assertThat(carTypeRepositoryFake.savedEntity.aarType).isEqualTo("XM");
-            assertThat(carTypeRepositoryFake.savedEntity.id).isEqualTo("");
+            assertThat(carTypeRepositoryFake.savedEntity.getId()).isEqualTo("");
             assertThat(carTypeRepositoryFake.savedEntity.carriedGoods).isEqualTo(expectedGoodsList);
         }
     }
