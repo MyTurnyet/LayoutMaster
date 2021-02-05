@@ -59,26 +59,8 @@ public class CarTypeServiceTests
             assertThat(allCarTypesList.size()).isEqualTo(1);
             assertThat(allCarTypesList.get(0).carriedGoods).isEqualTo(carriedGoods);
             assertThat(allCarTypesList.get(0).aarType).isEqualTo("XM");
-//            assertThat(allCarTypesList.get(0).id).isEqualTo("FOOO!");
-
         }
 
-        @Test
-        public void should_returnAllCarTypesAsDTOs()
-        {
-            //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
-            List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
-            repositoryFake.setReturnedValuesList(returnedCarTypes);
-
-
-            //act
-            final List<CarTypeDto> allCarTypesAsDTOs = service.allCarTypes();
-
-            //assert
-            assertThat(allCarTypesAsDTOs.size()).isEqualTo(1);
-            assertThat(allCarTypesAsDTOs.get(0)).isEqualTo(carTypeDto);
-        }
 
         @Test
         public void should_updateOnSaveCarTypeToRepository()

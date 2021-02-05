@@ -25,11 +25,6 @@ public class MongoCarTypeService implements CarTypeService
         return Arrays.asList(AARDesignation.class.getEnumConstants());
     }
 
-    private List<CarTypeDto> getCarTypeDtoList()
-    {
-        return carTypeRepository.findAll();
-    }
-
     @Override
     public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
     {
@@ -46,7 +41,7 @@ public class MongoCarTypeService implements CarTypeService
     @Override
     public List<CarTypeDto> allCarTypes()
     {
-        return getCarTypeDtoList();
+        return carTypeRepository.findAll();
     }
 
     @Override
