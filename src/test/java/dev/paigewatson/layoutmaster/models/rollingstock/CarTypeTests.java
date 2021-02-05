@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.helpers.MongoCarTypeRepositoryFake;
+import dev.paigewatson.layoutmaster.helpers.CarTypeRepositoryFake;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -62,7 +62,7 @@ public class CarTypeTests
         public void should_saveItselfToRepository()
         {
             //assign
-            final MongoCarTypeRepositoryFake carTypeRepositoryFake = new MongoCarTypeRepositoryFake();
+            final CarTypeRepositoryFake carTypeRepositoryFake = new CarTypeRepositoryFake();
             final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
             carriedGoodsList.add(Ingredients);
             final CarTypeDto carTypeDto = new CarTypeDto();

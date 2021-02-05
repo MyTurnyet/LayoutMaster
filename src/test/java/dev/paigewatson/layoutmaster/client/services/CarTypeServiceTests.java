@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.client.services;
 
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.helpers.MongoCarTypeRepositoryFake;
+import dev.paigewatson.layoutmaster.helpers.CarTypeRepositoryFake;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -21,13 +21,13 @@ public class CarTypeServiceTests
     class UnitTests
     {
 
-        private MongoCarTypeRepositoryFake repositoryFake;
+        private CarTypeRepositoryFake repositoryFake;
         private CarTypeService service;
 
         @BeforeEach
         public void beforeEachTestRuns()
         {
-            repositoryFake = new MongoCarTypeRepositoryFake();
+            repositoryFake = new CarTypeRepositoryFake();
             service = new MongoCarTypeService(repositoryFake);
         }
 

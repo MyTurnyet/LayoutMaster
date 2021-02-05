@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -21,10 +21,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Tag("Mongo")
 public class CarTypeRepositoryTests
 {
-    private final MongoCarTypeRepository repository;
+    private final CarTypeRepository repository;
     private CarTypeDto boxcarTypeDto;
 
-    public CarTypeRepositoryTests(@Autowired MongoCarTypeRepository repository)
+    public CarTypeRepositoryTests(@Autowired CarTypeRepository repository)
     {
         this.repository = repository;
     }
@@ -34,10 +34,7 @@ public class CarTypeRepositoryTests
     {
         repository.deleteAll();
         //assign
-        final ArrayList<String> carriedGoodsList = new ArrayList<>();
-        carriedGoodsList.add("Ingredients");
-
-        boxcarTypeDto = new CarTypeDto("XM", carriedGoodsList);
+        boxcarTypeDto = new CarTypeDto("XM", Collections.singletonList("Ingredients"));
 
         //act
         repository.insert(boxcarTypeDto);

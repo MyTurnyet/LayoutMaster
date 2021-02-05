@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MongoCarTypeRepository extends MongoRepository<CarTypeDto, String>
+public interface CarTypeRepository extends MongoRepository<CarTypeDto, String>
 {
     List<CarTypeDto> findAllByCarriedGoodsContains(String carriedGood);
 
