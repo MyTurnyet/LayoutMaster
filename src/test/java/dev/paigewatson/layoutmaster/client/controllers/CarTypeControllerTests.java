@@ -112,20 +112,6 @@ public class CarTypeControllerTests
 
             assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
         }
-//        @Test
-//        public void should_saveCarTypeToRepository()
-//        {
-//            //assign
-//            final CarTypeDto carTypeDto = new CarTypeDto("", "XM", Collections.singletonList("SheetMetal"));
-//
-//
-//            //act
-//            carTypeController.addNewCarType(carTypeDto);
-//
-//            //assert
-//
-//            assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
-//        }
     }
 
     @Nested

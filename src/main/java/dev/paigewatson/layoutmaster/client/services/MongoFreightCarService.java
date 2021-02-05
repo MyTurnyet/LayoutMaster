@@ -3,10 +3,12 @@ package dev.paigewatson.layoutmaster.client.services;
 import dev.paigewatson.layoutmaster.data.FreightCarRepository;
 import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class MongoFreightCarService implements FreightCarService
 {
     private final FreightCarRepository freightCarRepository;
