@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
+import dev.paigewatson.layoutmaster.data.CarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
@@ -52,7 +52,7 @@ public class CarType
         return carTypeDto;
     }
 
-    public void saveToRepository(MongoCarTypeRepository carTypeRepository)
+    public void saveToRepository(CarTypeRepository carTypeRepository)
     {
         carTypeRepository.save(this.getDto());
     }

@@ -1,9 +1,5 @@
-package dev.paigewatson.layoutmaster.data;
+package dev.paigewatson.layoutmaster.data.models;
 
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
-import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
-import dev.paigewatson.layoutmaster.data.models.NullFreightCarDto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

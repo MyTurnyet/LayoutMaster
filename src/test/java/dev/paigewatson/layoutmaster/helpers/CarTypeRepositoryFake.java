@@ -1,11 +1,11 @@
 package dev.paigewatson.layoutmaster.helpers;
 
-import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
+import dev.paigewatson.layoutmaster.data.CarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 
 import java.util.List;
 
-public class MongoCarTypeRepositoryFake extends MongoRepositoryFake<CarTypeDto> implements MongoCarTypeRepository
+public class CarTypeRepositoryFake extends MongoRepositoryFake<CarTypeDto> implements CarTypeRepository
 {
 
     private CarTypeDto existingCarTypeDto;

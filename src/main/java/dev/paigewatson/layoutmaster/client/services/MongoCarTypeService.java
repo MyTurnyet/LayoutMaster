@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
+import dev.paigewatson.layoutmaster.data.CarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
@@ -13,9 +13,9 @@ import java.util.List;
 @Service
 public class MongoCarTypeService implements CarTypeService
 {
-    private final MongoCarTypeRepository carTypeRepository;
+    private final CarTypeRepository carTypeRepository;
 
-    public MongoCarTypeService(@Autowired MongoCarTypeRepository carTypeRepository)
+    public MongoCarTypeService(@Autowired CarTypeRepository carTypeRepository)
     {
         this.carTypeRepository = carTypeRepository;
     }

@@ -2,16 +2,18 @@ package dev.paigewatson.layoutmaster.data.models;
 
 import dev.paigewatson.layoutmaster.data.NullableEntity;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
+@Document(collection = "FreightCars")
 public class FreightCarDto implements NullableEntity
 {
     public String roadName = "";
     public int roadNumber = 0;
     public CarTypeDto carTypeDto;
     @Id
-    private String id;
+    public String id;
 
     public FreightCarDto()
     {
