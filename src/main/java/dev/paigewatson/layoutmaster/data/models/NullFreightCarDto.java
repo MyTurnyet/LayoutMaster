@@ -1,6 +1,4 @@
-package dev.paigewatson.layoutmaster.data;
-
-import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
+package dev.paigewatson.layoutmaster.data.models;
 
 public class NullFreightCarDto extends FreightCarDto
 {

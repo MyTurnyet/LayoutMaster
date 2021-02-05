@@ -1,6 +1,6 @@
-package dev.paigewatson.layoutmaster.data;
+package dev.paigewatson.layoutmaster.data.models;
 
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.NullableEntity;
 import org.springframework.data.annotation.Id;
 
 import java.util.UUID;
