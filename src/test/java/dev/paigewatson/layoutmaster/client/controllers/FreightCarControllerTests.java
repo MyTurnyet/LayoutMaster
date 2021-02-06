@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -226,9 +228,11 @@ public class FreightCarControllerTests
                     "\",\"null\":false}]");
         }
 
+        @Captor
+        ArgumentCaptor<FreightCarDto> dtoArgumentCaptor;
 
         @Test
-        public void should_addCFreightCarToDatabase() throws Exception
+        public void should_addFreightCarToDatabase() throws Exception
         {
             final String content = asJsonString(boxcarOne);
             mockMvc.perform(MockMvcRequestBuilders.post("/inventory/freightcars/add")
@@ -237,7 +241,8 @@ public class FreightCarControllerTests
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk());
 
-            verify(freightCarService, times(1)).saveFreightCarToDatabase(any());
+            verify(freightCarService, times(1)).saveFreightCarToDatabase(dtoArgumentCaptor.capture());
+            assertThat(dtoArgumentCaptor.getValue().toString()).isEqualTo(boxcarOne.toString());
         }
 
         private String asJsonString(final Object obj)
