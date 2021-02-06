@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
@@ -24,6 +25,8 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,14 +60,32 @@ public class FreightCarControllerTests
             boxcarTwo = new FreightCarDto("BCR", 2342, boxcarTypeDto);
             boxcarThree = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
 
-            CarTypeDto gondolatTypeDto = new CarTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
-            gondolaOne = new FreightCarDto("BNSF", 1234, gondolatTypeDto);
+            CarTypeDto gondolaTypeDto = new CarTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            gondolaOne = new FreightCarDto("BNSF", 1234, gondolaTypeDto);
             flatCarOne = new FreightCarDto("ATSF", 1232, flatcarTypeDto);
-            gondolaTwo = new FreightCarDto("PNWR", 1235, gondolatTypeDto);
-            gondolaThree = new FreightCarDto("BCR", 1237, gondolatTypeDto);
+            gondolaTwo = new FreightCarDto("PNWR", 1235, gondolaTypeDto);
+            gondolaThree = new FreightCarDto("BCR", 1237, gondolaTypeDto);
 
             freightCarController = new FreightCarController(freightCarServiceFake);
         }
+
+        @Test
+        public void should_saveFreightCar_toDatabase()
+        {
+            //assign
+            final UUID gondolaTypeUUID = UUID.randomUUID();
+            CarTypeDto gondolaTypeDto = new CarTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            final UUID gondolaToSaveUUID = UUID.randomUUID();
+            final FreightCarDto gondolaToSave = new FreightCarDto(gondolaToSaveUUID, "BNSF", 1234, gondolaTypeDto);
+
+
+            //act
+            final FreightCarDto returnedFreightCarDto = freightCarController.saveFreightCarToDatabase(gondolaToSave);
+
+            //assert
+            assertThat(returnedFreightCarDto.toString()).isEqualTo(freightCarServiceFake.savedFreightCar.toString());
+        }
+
 
         @Test
         public void should_getAllFreightCars()
@@ -203,6 +224,31 @@ public class FreightCarControllerTests
                     "\",\"aarType\":\"FC\",\"carriedGoods\":[\"Parts\",\"Logs\"],\"null\":false},\"id\":\"" +
                     flatcarUUID.toString() +
                     "\",\"null\":false}]");
+        }
+
+
+        @Test
+        public void should_addCFreightCarToDatabase() throws Exception
+        {
+            final String content = asJsonString(boxcarOne);
+            mockMvc.perform(MockMvcRequestBuilders.post("/inventory/freightcars/add")
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(freightCarService, times(1)).saveFreightCarToDatabase(any());
+        }
+
+        private String asJsonString(final Object obj)
+        {
+            try
+            {
+                return new ObjectMapper().writeValueAsString(obj);
+            } catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
         }
 
         @Test
