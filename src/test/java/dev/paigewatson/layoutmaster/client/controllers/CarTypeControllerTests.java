@@ -160,7 +160,7 @@ public class CarTypeControllerTests
             List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
             when(carTypeService.allCarTypes()).thenReturn(returnedCarTypes);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -180,7 +180,7 @@ public class CarTypeControllerTests
 
             when(carTypeService.carTypesThatCarryGoodsType(any())).thenReturn(returnedCarTypes);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/goods/Paper")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/goods/Paper")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -197,7 +197,7 @@ public class CarTypeControllerTests
             final CarTypeDto carTypeDto = new CarTypeDto(uuid, "XM", Collections.singletonList("SheetMetal"));
             when(carTypeService.carTypeForAAR("XM")).thenReturn(carTypeDto);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -211,7 +211,7 @@ public class CarTypeControllerTests
         {
             when(carTypeService.carTypeForAAR("XM")).thenReturn(new NullCarTypeDto());
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -228,7 +228,7 @@ public class CarTypeControllerTests
 
             //assign
             final String content = asJsonString(carTypeDto);
-            mockMvc.perform(MockMvcRequestBuilders.post("/models/cartypes")
+            mockMvc.perform(MockMvcRequestBuilders.post("/models/types")
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))

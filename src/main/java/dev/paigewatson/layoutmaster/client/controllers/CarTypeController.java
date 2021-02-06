@@ -31,25 +31,25 @@ public class CarTypeController
         return carTypeService.allAARDesignations();
     }
 
-    @GetMapping("/cartypes")
+    @GetMapping("/types")
     public List<CarTypeDto> getAllCarTypes()
     {
         return carTypeService.allCarTypes();
     }
 
-    @PostMapping("/cartypes")
+    @PostMapping("/types")
     public void addNewCarType(@RequestBody CarTypeDto carType)
     {
         carTypeService.saveCarTypeToDatabase(carType);
     }
 
-    @GetMapping("/cartypes/aar/{aarType}")
+    @GetMapping("/types/aar/{aarType}")
     public CarTypeDto getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
         return carTypeService.carTypeForAAR(expectedType);
     }
 
-    @GetMapping("/cartypes/goods/{goodsType}")
+    @GetMapping("/types/goods/{goodsType}")
     public List<CarTypeDto> getCarTypesThatCarry(@PathVariable(value = "goodsType") String expectedGoods)
     {
         return carTypeService.carTypesThatCarryGoodsType(expectedGoods);
