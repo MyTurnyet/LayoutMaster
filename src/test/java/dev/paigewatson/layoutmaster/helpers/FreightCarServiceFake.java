@@ -7,33 +7,40 @@ import java.util.List;
 
 public class FreightCarServiceFake implements FreightCarService
 {
+    private List<FreightCarDto> returnedFreightCarsList;
+
     @Override
     public List<FreightCarDto> allFreightCars()
     {
-        return null;
+        return returnedFreightCarsList;
     }
 
     @Override
     public List<FreightCarDto> allFreightCarsByAARType(String aarType)
     {
-        return null;
+        return returnedFreightCarsList;
     }
 
     @Override
     public List<FreightCarDto> allFreightCarsThatCarry(String goodsType)
     {
-        return null;
+        return returnedFreightCarsList;
     }
 
     @Override
     public List<FreightCarDto> allFreightCarsByRoadName(String roadName)
     {
-        return null;
+        return returnedFreightCarsList;
     }
 
     @Override
     public FreightCarDto saveFreightCarToDatabase(FreightCarDto freightCarToSave)
     {
         return null;
+    }
+
+    public void setReturnedFreightCars(List<FreightCarDto> returnedFreightCarsList)
+    {
+        this.returnedFreightCarsList = returnedFreightCarsList;
     }
 }
