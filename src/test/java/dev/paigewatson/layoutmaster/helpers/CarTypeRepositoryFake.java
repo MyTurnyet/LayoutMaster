@@ -13,7 +13,7 @@ public class CarTypeRepositoryFake extends MongoRepositoryFake<CarTypeDto> imple
     @Override
     public List<CarTypeDto> findAllByCarriedGoodsContains(String carriedGood)
     {
-        return null;
+        return this.returnedValues;
     }
 
     @Override

@@ -14,10 +14,14 @@ public class MongoRepositoryFake<T> implements MongoRepository<T, String>
 {
     public T savedEntity;
     public List<T> returnedValues = Collections.emptyList();
+    public boolean entitySaved;
+    public boolean entityInserted;
 
     @Override
     public <S extends T> S save(S entity)
     {
+        entityInserted = false;
+        entitySaved = true;
         savedEntity = entity;
         return entity;
     }
@@ -31,6 +35,10 @@ public class MongoRepositoryFake<T> implements MongoRepository<T, String>
     @Override
     public Optional<T> findById(String s)
     {
+        if (returnedValues.size() > 0)
+        {
+            return returnedValues.stream().findFirst();
+        }
         return Optional.empty();
     }
 
@@ -97,6 +105,8 @@ public class MongoRepositoryFake<T> implements MongoRepository<T, String>
     @Override
     public <S extends T> S insert(S entity)
     {
+        entityInserted = true;
+        entitySaved = false;
         this.savedEntity = entity;
         return entity;
     }
@@ -143,7 +153,7 @@ public class MongoRepositoryFake<T> implements MongoRepository<T, String>
         return false;
     }
 
-    public void setReturnedValuesList(List returnedValues)
+    public void setReturnedValuesList(List<T> returnedValues)
     {
         this.returnedValues = returnedValues;
     }

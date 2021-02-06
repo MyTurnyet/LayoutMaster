@@ -48,4 +48,10 @@ public class CarTypeController
     {
         return carTypeService.carTypeForAAR(expectedType);
     }
+
+    @GetMapping("/cartypes/goods/{goodsType}")
+    public List<CarTypeDto> getCarTypesThatCarry(@PathVariable(value = "goodsType") String expectedGoods)
+    {
+        return carTypeService.carTypesThatCarryGoodsType(expectedGoods);
+    }
 }
