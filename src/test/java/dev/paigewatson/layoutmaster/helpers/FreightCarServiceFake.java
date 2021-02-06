@@ -7,7 +7,9 @@ import java.util.List;
 
 public class FreightCarServiceFake implements FreightCarService
 {
+    public FreightCarDto savedFreightCar;
     private List<FreightCarDto> returnedFreightCarsList;
+    private FreightCarDto freightCarDtoReturnedById;
 
     @Override
     public List<FreightCarDto> allFreightCars()
@@ -36,11 +38,17 @@ public class FreightCarServiceFake implements FreightCarService
     @Override
     public FreightCarDto saveFreightCarToDatabase(FreightCarDto freightCarToSave)
     {
-        return null;
+        savedFreightCar = freightCarToSave;
+        return savedFreightCar;
     }
 
     public void setReturnedFreightCars(List<FreightCarDto> returnedFreightCarsList)
     {
         this.returnedFreightCarsList = returnedFreightCarsList;
+    }
+
+    public void setFreightCarByIdReturn(FreightCarDto existingFreightCarDto)
+    {
+        freightCarDtoReturnedById = existingFreightCarDto;
     }
 }
