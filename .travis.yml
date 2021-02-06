@@ -10,3 +10,5 @@ deploy:
   api_key:
     secure: $HEROKU_API_KEY
   app: layout-master-api-staging
+  on:
+    all_branches: true
