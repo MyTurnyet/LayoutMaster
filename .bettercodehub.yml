@@ -1,0 +1,6 @@
+component_depth: 7
+languages:
+  - java
+  production:
+    exclude:
+      - .*/test/*/helpers/.*\.java
