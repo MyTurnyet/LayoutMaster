@@ -37,6 +37,12 @@ public class CarTypeServiceFake implements CarTypeService
         return returnedCarTypeWithAAR;
     }
 
+    @Override
+    public List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType)
+    {
+        return returnedCarTypeDTOs;
+    }
+
     public void setReturnedCarTypeDTOs(List<CarTypeDto> returnedCarTypeDTOs)
     {
         this.returnedCarTypeDTOs = returnedCarTypeDTOs;

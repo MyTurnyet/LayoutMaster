@@ -99,17 +99,29 @@ public class CarTypeControllerTests
         }
 
         @Test
+        public void should_returnCarTypesT_thatCarry_goods()
+        {
+            //assign
+            final CarTypeDto boxcarTypeDto = new CarTypeDto("XM", Arrays.asList("SheetMetal", "Logs"));
+            final CarTypeDto flatcarTypeDto = new CarTypeDto("FC", Arrays.asList("Logs"));
+            carTypeServiceFake.setReturnedCarTypeDTOs(Arrays.asList(boxcarTypeDto, flatcarTypeDto));
+
+            //act
+            final List<CarTypeDto> carTypesThatCarryLogs = carTypeController.getCarTypesThatCarry("Logs");
+            //assert
+            assertThat(carTypesThatCarryLogs.size()).isEqualTo(2);
+        }
+
+        @Test
         public void should_saveCarTypeToRepository()
         {
             //assign
             final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
 
-
             //act
             carTypeController.addNewCarType(carTypeDto);
 
             //assert
-
             assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
         }
     }
@@ -155,6 +167,27 @@ public class CarTypeControllerTests
             final String contentAsString = result.getResponse().getContentAsString();
 
             assertThat(contentAsString).isEqualTo("[{\"id\":\"" + uuid.toString() + "\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}]");
+        }
+
+        @Test
+        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
+        {
+            final UUID uuidGondola = UUID.randomUUID();
+            final UUID uuidBoxcar = UUID.randomUUID();
+            final CarTypeDto boxcarTypeDto = new CarTypeDto(uuidBoxcar, "XM", Arrays.asList("Parts", "Paper"));
+            final CarTypeDto gondolaCarTypeDto = new CarTypeDto(uuidGondola, "GS", Collections.singletonList("Parts"));
+            List<CarTypeDto> returnedCarTypes = Arrays.asList(boxcarTypeDto, gondolaCarTypeDto);
+
+            when(carTypeService.carTypesThatCarryGoodsType(any())).thenReturn(returnedCarTypes);
+
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/goods/Paper")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            final String contentAsString = result.getResponse().getContentAsString();
+
+            assertThat(contentAsString).isEqualTo("[{\"id\":\"" + uuidBoxcar.toString() + "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Parts\",\"Paper\"],\"null\":false}" +
+                    ",{\"id\":\"" + uuidGondola.toString() + "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
         }
 
         @Test

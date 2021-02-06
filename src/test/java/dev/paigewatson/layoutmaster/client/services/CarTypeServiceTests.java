@@ -105,7 +105,22 @@ public class CarTypeServiceTests
         }
 
         @Test
-        public void should_returnNullCarTypeDtp_fromCarTypeWithAAR()
+        public void should_getCarTypesThatCarry_goods()
+        {
+            //assign
+            final CarTypeDto boxcarTypeDto = new CarTypeDto("XM", Arrays.asList("Parts", "Paper"));
+            final CarTypeDto gondolaCarTypeDto = new CarTypeDto("GS", Collections.singletonList("Parts"));
+            repositoryFake.returnedValues = Arrays.asList(boxcarTypeDto, gondolaCarTypeDto);
+            //act
+            final List<CarTypeDto> carTypesThatCarryGoods = service.carTypesThatCarryGoodsType("Parts");
+            //assert
+            assertThat(carTypesThatCarryGoods.size()).isEqualTo(2);
+            assertThat(carTypesThatCarryGoods.stream().anyMatch(carTypeDto -> carTypeDto.toString() == boxcarTypeDto.toString()));
+            assertThat(carTypesThatCarryGoods.stream().anyMatch(carTypeDto -> carTypeDto.toString() == gondolaCarTypeDto.toString()));
+        }
+
+        @Test
+        public void should_returnNullCarTypeDto_fromCarTypeWithAAR()
         {
             //assign
             //act

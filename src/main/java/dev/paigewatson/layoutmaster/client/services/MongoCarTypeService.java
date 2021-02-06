@@ -50,4 +50,10 @@ public class MongoCarTypeService implements CarTypeService
         final CarTypeDto carTypeByAAR = carTypeRepository.findByAarTypeEquals(expectedAARType);
         return carTypeByAAR == null ? new NullCarTypeDto() : carTypeByAAR;
     }
+
+    @Override
+    public List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType)
+    {
+        return carTypeRepository.findAllByCarriedGoodsContains(expectedGoodsType);
+    }
 }
