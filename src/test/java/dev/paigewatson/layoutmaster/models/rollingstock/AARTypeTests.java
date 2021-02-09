@@ -17,12 +17,31 @@ import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FA
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class CarTypeTests
+public class AARTypeTests
 {
     @Nested
     @Tag("Unit")
     class UnitTests
     {
+        @Test
+        public void should_evaluateTo_NullCarType()
+        {
+            //assign
+            CarType nullCarType = new NullCarType();
+            //act
+            //assert
+            final boolean ofType = nullCarType.isOfType(XM);
+            final boolean canCarry = nullCarType.canCarry(Ingredients);
+            final String displayName = nullCarType.displayName();
+            final boolean isNull = nullCarType.isNull();
+
+            assertThat(isNull).isTrue();
+            assertThat(displayName).isEqualTo("");
+            assertThat(canCarry).isFalse();
+            assertThat(ofType).isFalse();
+
+        }
+
         @Test
         public void should_haveTypeName_andGoodsCarried()
         {
@@ -30,7 +49,7 @@ public class CarTypeTests
             final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
             carriedGoodsList.add(Ingredients);
 
-            final CarType boxCarType = new CarType(XM, carriedGoodsList);
+            final CarType boxCarType = new AARType(XM, carriedGoodsList);
 
             //act
             //assert
@@ -41,22 +60,23 @@ public class CarTypeTests
             assertThat(boxCarType.displayName()).isEqualTo("XM");
         }
 
-        @Test
-        public void should_returnDtoOfItself()
-        {
-            //assign
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
 
-            final CarType boxCarType = new CarType(XM, carriedGoodsList);
-
-            //act
-            CarTypeDto boxcarDto = boxCarType.getDto();
-            //assert
-            assertThat(boxcarDto.aarType).isEqualTo("XM");
-            final String[] strings = {"Ingredients"};
-            assertThat(boxcarDto.carriedGoods).isEqualTo(Arrays.asList(strings));
-        }
+//        @Test
+//        public void should_returnDtoOfItself()
+//        {
+//            //assign
+//            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
+//            carriedGoodsList.add(Ingredients);
+//
+//            final CarType boxCarType = new AARType(XM, carriedGoodsList);
+//
+//            //act
+//            CarTypeDto boxcarDto = boxCarType.getDto();
+//            //assert
+//            assertThat(boxcarDto.aarType).isEqualTo("XM");
+//            final String[] strings = {"Ingredients"};
+//            assertThat(boxcarDto.carriedGoods).isEqualTo(Arrays.asList(strings));
+//        }
 
         @Test
         public void should_saveItselfToRepository()
@@ -71,7 +91,7 @@ public class CarTypeTests
             final List<String> expectedGoodsList = Arrays.asList("Ingredients");
             carTypeDto.carriedGoods = expectedGoodsList;
 
-            final CarType carType = new CarType(XM, carriedGoodsList);
+            final AARType carType = new AARType(XM, carriedGoodsList);
             //act
             carType.saveToRepository(carTypeRepositoryFake);
 
