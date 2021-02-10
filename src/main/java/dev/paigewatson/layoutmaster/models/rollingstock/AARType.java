@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
+import dev.paigewatson.layoutmaster.data.CarTypeDAL;
 import dev.paigewatson.layoutmaster.data.CarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
@@ -47,6 +48,17 @@ public class AARType implements CarType
     public String displayName()
     {
         return aarDesignation.name();
+    }
+
+    @Override
+    public CarType saveToDatabase(CarTypeDAL carTypeDAL)
+    {
+        final CarType byAarType = carTypeDAL.findByAarType(this.aarDesignation);
+        if (!byAarType.isNull())
+        {
+            carTypeDAL.delete(byAarType);
+        }
+        return carTypeDAL.saveCarType(this);
     }
 
     public CarTypeDto getDto()

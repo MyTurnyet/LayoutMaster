@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 public class CarTypeMongoDAL implements CarTypeDAL
@@ -21,7 +22,7 @@ public class CarTypeMongoDAL implements CarTypeDAL
     private final MongoTemplate mongoTemplate;
 
     @Value("{spring.data.mongodb.database}")
-    private final String collectionName = "";
+    private final String collectionName = "AARTypes";
 
     public CarTypeMongoDAL(@Autowired MongoTemplate mongoTemplate)
     {
@@ -32,17 +33,23 @@ public class CarTypeMongoDAL implements CarTypeDAL
     @Override
     public List<AARType> findAllByCarTypesThatCanCarry(GoodsType expectedGoods)
     {
-        return mongoTemplate.find(
-                Query.query(where(expectedGoods.toString()).in("carriedGoods")), AARType.class
-        );
+        final List<AARType> carTypesThatCarryGoods = mongoTemplate
+                .find(query(
+                        where("carriedGoodsList")
+                                .is(expectedGoods.toString())),
+                        AARType.class);
+        return carTypesThatCarryGoods;
     }
 
     @Override
     public CarType findByAarType(AARDesignation aarDesignation)
     {
-        final Query query = new Query();
-        query.addCriteria(where("aarDesignation").is(aarDesignation));
-        final AARType returnedCarType = mongoTemplate.findOne(query, AARType.class);
+        final AARType returnedCarType = mongoTemplate.findOne(
+                query(
+                        where("aarDesignation")
+                                .is(aarDesignation)),
+                AARType.class
+        );
         if (returnedCarType == null)
         {
             return new NullCarType();
@@ -57,9 +64,21 @@ public class CarTypeMongoDAL implements CarTypeDAL
     }
 
     @Override
-    public List<CarType> insertMultipleCarTypes(List<CarType> carTypeList)
+    public List<CarType> saveMultipleCarTypes(List<CarType> carTypeList)
     {
-        carTypeList.forEach(mongoTemplate::insert);
+        carTypeList.forEach(this::saveCarType);
         return carTypeList;
+    }
+
+    @Override
+    public CarType saveCarType(CarType carTypeToSave)
+    {
+        return mongoTemplate.save(carTypeToSave);
+    }
+
+    @Override
+    public void delete(CarType carTypeToDelete)
+    {
+        mongoTemplate.remove(carTypeToDelete, collectionName);
     }
 }
