@@ -1,7 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
-import dev.paigewatson.layoutmaster.data.CarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -64,15 +63,9 @@ public class AARType implements CarType
     public CarTypeDto getDto()
     {
         final CarTypeDto carTypeDto = new CarTypeDto();
-//        carTypeDto.id = this.id;
         carTypeDto.aarType = this.aarDesignation.name();
         carTypeDto.carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
         return carTypeDto;
-    }
-
-    public void saveToRepository(CarTypeRepository carTypeRepository)
-    {
-        carTypeRepository.save(this.getDto());
     }
 
     @Override

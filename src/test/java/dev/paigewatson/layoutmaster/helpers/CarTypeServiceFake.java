@@ -12,36 +12,37 @@ public class CarTypeServiceFake implements CarTypeService
     private List<CarTypeDto> returnedCarTypeDTOs;
     private CarTypeDto savedDTOEntity;
     private CarTypeDto returnedCarTypeWithAAR;
+
     @Override
     public List<AARDesignation> allAARDesignations()
     {
         return Arrays.asList(AARDesignation.class.getEnumConstants());
     }
 
-    @Override
-    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
-    {
-        this.savedDTOEntity = carTypeToSave;
-        return carTypeToSave;
-    }
+//    @Override
+//    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
+//    {
+//        this.savedDTOEntity = carTypeToSave;
+//        return carTypeToSave;
+//    }
 
-    @Override
-    public List<CarTypeDto> allCarTypes()
-    {
-        return this.returnedCarTypeDTOs;
-    }
-
-    @Override
-    public CarTypeDto carTypeForAAR(String expectedAARType)
-    {
-        return returnedCarTypeWithAAR;
-    }
-
-    @Override
-    public List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType)
-    {
-        return returnedCarTypeDTOs;
-    }
+//    @Override
+//    public List<CarTypeDto> allCarTypes()
+//    {
+//        return this.returnedCarTypeDTOs;
+//    }
+//
+//    @Override
+//    public CarTypeDto carTypeForAAR(String expectedAARType)
+//    {
+//        return returnedCarTypeWithAAR;
+//    }
+//
+//    @Override
+//    public List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType)
+//    {
+//        return returnedCarTypeDTOs;
+//    }
 
     public void setReturnedCarTypeDTOs(List<CarTypeDto> returnedCarTypeDTOs)
     {
