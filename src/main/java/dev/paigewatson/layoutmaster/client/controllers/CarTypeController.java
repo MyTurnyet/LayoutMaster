@@ -2,8 +2,8 @@ package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +34,9 @@ public class CarTypeController
     }
 
     @GetMapping("/types")
-    public List<CarTypeDto> getAllCarTypes()
+    public List<CarType> getAllCarTypes()
     {
-        return Collections.emptyList();
-        //return carTypeService.allCarTypes();
+        return carTypeService.allCarTypes();
     }
 
     @PostMapping("/types")
@@ -47,10 +46,9 @@ public class CarTypeController
     }
 
     @GetMapping("/types/aar/{aarType}")
-    public CarTypeDto getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
+    public CarType getCarTypeByAAR(@PathVariable(value = "aarType") AARDesignation expectedType)
     {
-        return new NullCarTypeDto();
-//        return carTypeService.carTypeForAAR(expectedType);
+        return carTypeService.carTypeForAAR(expectedType);
     }
 
     @GetMapping("/types/goods/{goodsType}")

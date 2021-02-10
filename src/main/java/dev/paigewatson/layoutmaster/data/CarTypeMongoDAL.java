@@ -29,14 +29,14 @@ public class CarTypeMongoDAL implements CarTypeDAL
     }
 
     @Override
-    public List<AARType> findAllByCarTypesThatCanCarry(GoodsType expectedGoods)
+    public List<CarType> findAllByCarTypesThatCanCarry(GoodsType expectedGoods)
     {
         final List<AARType> carTypesThatCarryGoods = mongoTemplate
                 .find(query(
                         where("carriedGoodsList")
                                 .is(expectedGoods.toString())),
                         AARType.class);
-        return carTypesThatCarryGoods;
+        return Collections.unmodifiableList(carTypesThatCarryGoods);
     }
 
     @Override
@@ -49,11 +49,7 @@ public class CarTypeMongoDAL implements CarTypeDAL
                 AARType.class,
                 collectionName
         );
-        if (returnedCarType == null)
-        {
-            return new NullCarType();
-        }
-        return returnedCarType;
+        return returnedCarType == null ? new NullCarType() : returnedCarType;
     }
 
     @Override
