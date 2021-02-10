@@ -3,26 +3,32 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 import dev.paigewatson.layoutmaster.data.CarTypeRepository;
 import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-
+@Document(collection = "AARTypes")
 public class AARType implements CarType
 {
-    private final AARDesignation aarDesignation;
-    private final List<GoodsType> carriedGoodsList;
+    private AARDesignation aarDesignation;
+    private List<GoodsType> carriedGoodsList;
     private String id = "";
+
+    public AARType()
+    {
+    }
 
     public AARType(AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
     {
-        this("", aarDesignation, carriedGoodsList);
+        this(UUID.randomUUID(), aarDesignation, carriedGoodsList);
     }
 
-    public AARType(String id, AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
+    public AARType(UUID uuid, AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
     {
-        this.id = id;
+        this.id = uuid.toString();
         this.aarDesignation = aarDesignation;
         this.carriedGoodsList = carriedGoodsList;
     }
@@ -60,7 +66,7 @@ public class AARType implements CarType
     @Override
     public String toString()
     {
-        return "CarType{" +
+        return "AARType{" +
                 "id='" + id + '\'' +
                 ", aarDesignation=" + aarDesignation +
                 ", carriedGoodsList=" + carriedGoodsList +

@@ -13,10 +13,10 @@ public class FreightCar
 {
     private final String roadName;
     private final int roadNumber;
-    private final CarType carType;
+    private final AARType carType;
     private GoodsType currentlyCarriedGoods = GoodsType.EMPTY;
 
-    public FreightCar(String roadName, int roadNumber, CarType carType)
+    public FreightCar(String roadName, int roadNumber, AARType carType)
     {
         this.roadName = roadName;
         this.roadNumber = roadNumber;

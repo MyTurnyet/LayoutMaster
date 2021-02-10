@@ -16,7 +16,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataMongoTest()
 @ExtendWith(SpringExtension.class)
-
 @Tag("Mongo")
 public class CarTypeRepositoryTests
 {

@@ -19,7 +19,7 @@ public class FreightCarTests
         final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
         carriedGoodsList.add(Ingredients);
 
-        final CarType boxCarType = new CarType(XM, carriedGoodsList);
+        final AARType boxCarType = new AARType(XM, carriedGoodsList);
         return new FreightCar("PNWR", 1234, boxCarType);
     }
 
