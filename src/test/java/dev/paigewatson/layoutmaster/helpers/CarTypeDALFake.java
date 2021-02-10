@@ -3,20 +3,22 @@ package dev.paigewatson.layoutmaster.helpers;
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
+import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CarTypeDALFake implements CarTypeDAL
 {
     private CarType carTypeSavedEntity;
-    private CarType returnedEntity;
+    private CarType returnedEntity = new NullCarType();
+    private List<CarType> returnedCarTypes = Collections.emptyList();
 
     @Override
-    public List<AARType> findAllByCarTypesThatCanCarry(GoodsType expectedGoods)
+    public List<CarType> findAllByCarTypesThatCanCarry(GoodsType expectedGoods)
     {
-        return null;
+        return returnedCarTypes;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class CarTypeDALFake implements CarTypeDAL
     @Override
     public List<CarType> findAll()
     {
-        return null;
+        return returnedCarTypes;
     }
 
     public CarType savedEntity()
@@ -55,8 +57,19 @@ public class CarTypeDALFake implements CarTypeDAL
         return carTypeSavedEntity;
     }
 
-    public void entityToReturnIs(CarType returnedEntity)
+    public void setCurrentSavedEntity(CarType currentSavedEntity)
+    {
+
+        this.carTypeSavedEntity = currentSavedEntity;
+    }
+
+    public void setEntityToReturn(CarType returnedEntity)
     {
         this.returnedEntity = returnedEntity;
+    }
+
+    public void setReturnedEntityList(List<CarType> returnedCarTypes)
+    {
+        this.returnedCarTypes = returnedCarTypes;
     }
 }

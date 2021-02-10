@@ -1,17 +1,18 @@
 package dev.paigewatson.layoutmaster.helpers;
 
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class CarTypeServiceFake implements CarTypeService
 {
-    private List<CarTypeDto> returnedCarTypeDTOs;
-    private CarTypeDto savedDTOEntity;
-    private CarTypeDto returnedCarTypeWithAAR;
+    private List<CarType> returnedCarTypeList;
+    private CarType savedEntity;
+    private CarType returnedCarTypeWithAAR;
 
     @Override
     public List<AARDesignation> allAARDesignations()
@@ -19,43 +20,44 @@ public class CarTypeServiceFake implements CarTypeService
         return Arrays.asList(AARDesignation.class.getEnumConstants());
     }
 
-//    @Override
-//    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
-//    {
-//        this.savedDTOEntity = carTypeToSave;
-//        return carTypeToSave;
-//    }
 
-//    @Override
-//    public List<CarTypeDto> allCarTypes()
-//    {
-//        return this.returnedCarTypeDTOs;
-//    }
-//
-//    @Override
-//    public CarTypeDto carTypeForAAR(String expectedAARType)
-//    {
-//        return returnedCarTypeWithAAR;
-//    }
-//
-//    @Override
-//    public List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType)
-//    {
-//        return returnedCarTypeDTOs;
-//    }
-
-    public void setReturnedCarTypeDTOs(List<CarTypeDto> returnedCarTypeDTOs)
+    @Override
+    public CarType saveCarTypeToDatabase(CarType carTypeToSave)
     {
-        this.returnedCarTypeDTOs = returnedCarTypeDTOs;
+        this.savedEntity = carTypeToSave;
+        return carTypeToSave;
     }
 
-    public CarTypeDto savedDtoEntity()
+    @Override
+    public List<CarType> allCarTypes()
     {
-        return this.savedDTOEntity;
+        return this.returnedCarTypeList;
     }
 
-    public void setReturnedCarTypeWithAAR(CarTypeDto carTypeDto)
+    @Override
+    public CarType carTypeForAAR(AARDesignation expectedAARDesignation)
     {
-        returnedCarTypeWithAAR = carTypeDto;
+        return this.returnedCarTypeWithAAR;
+    }
+
+    @Override
+    public List<CarType> carTypesThatCarryGoodsType(GoodsType expectedGoodsType)
+    {
+        return returnedCarTypeList;
+    }
+
+    public void setReturnedCarTypeList(List<CarType> returnedCarTypeList)
+    {
+        this.returnedCarTypeList = returnedCarTypeList;
+    }
+
+    public CarType savedDtoEntity()
+    {
+        return this.savedEntity;
+    }
+
+    public void setReturnedCarTypeWithAAR(CarType carType)
+    {
+        returnedCarTypeWithAAR = carType;
     }
 }

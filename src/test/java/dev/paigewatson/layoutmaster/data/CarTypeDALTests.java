@@ -236,7 +236,7 @@ public class CarTypeDALTests
             insertCarTypesForTesting();
 
             //act
-            final List<AARType> allByCarTypesThatCanCarry = carTypeMongoDAL.findAllByCarTypesThatCanCarry(Logs);
+            final List<CarType> allByCarTypesThatCanCarry = carTypeMongoDAL.findAllByCarTypesThatCanCarry(Logs);
 
             //assert
             assertThat(allByCarTypesThatCanCarry.size()).isEqualTo(2);
@@ -250,7 +250,7 @@ public class CarTypeDALTests
             insertCarTypesForTesting();
 
             //act
-            final List<AARType> allByCarTypesThatCanCarry = carTypeMongoDAL.findAllByCarTypesThatCanCarry(Paper);
+            final List<CarType> allByCarTypesThatCanCarry = carTypeMongoDAL.findAllByCarTypesThatCanCarry(Paper);
 
             //assert
             assertThat(allByCarTypesThatCanCarry.size()).isEqualTo(0);

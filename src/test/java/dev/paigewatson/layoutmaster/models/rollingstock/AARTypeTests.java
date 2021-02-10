@@ -69,7 +69,7 @@ public class AARTypeTests
             final CarTypeDALFake carTypeDALFake = new CarTypeDALFake();
             UUID boxcarUUID = UUID.randomUUID();
             CarType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
-            carTypeDALFake.entityToReturnIs(new NullCarType());
+            carTypeDALFake.setEntityToReturn(new NullCarType());
             //act
             final CarType savedCarType = boxcarType.saveToDatabase(carTypeDALFake);
 
@@ -83,7 +83,7 @@ public class AARTypeTests
             final CarTypeDALFake carTypeDALFake = new CarTypeDALFake();
             UUID boxcarUUID = UUID.randomUUID();
             CarType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
-            carTypeDALFake.entityToReturnIs(boxcarType);
+            carTypeDALFake.setEntityToReturn(boxcarType);
             UUID boxcarUUID2 = UUID.randomUUID();
             CarType boxcarType2 = new AARType(boxcarUUID2, XM, Arrays.asList(Ingredients, Paper));
 
