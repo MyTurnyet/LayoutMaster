@@ -24,9 +24,9 @@ public class NullCarType implements CarType
     }
 
     @Override
-    public String displayName()
+    public AARDesignation displayName()
     {
-        return "";
+        return AARDesignation.NULL;
     }
 
     @Override

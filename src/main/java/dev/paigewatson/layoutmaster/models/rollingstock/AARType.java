@@ -44,9 +44,9 @@ public class AARType implements CarType
         return carriedGoodsList.contains(expectedGoodsType);
     }
 
-    public String displayName()
+    public AARDesignation displayName()
     {
-        return aarDesignation.name();
+        return aarDesignation;
     }
 
     @Override

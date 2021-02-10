@@ -15,6 +15,7 @@ import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Logs;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FA;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.NULL;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -33,11 +34,11 @@ public class AARTypeTests
             //assert
             final boolean ofType = nullCarType.isOfType(XM);
             final boolean canCarry = nullCarType.canCarry(Ingredients);
-            final String displayName = nullCarType.displayName();
+            final AARDesignation displayName = nullCarType.displayName();
             final boolean isNull = nullCarType.isNull();
 
             assertThat(isNull).isTrue();
-            assertThat(displayName).isEqualTo("");
+            assertThat(displayName).isEqualTo(NULL);
             assertThat(canCarry).isFalse();
             assertThat(ofType).isFalse();
 
@@ -58,7 +59,7 @@ public class AARTypeTests
             assertThat(boxCarType.canCarry(ScrapMetal)).isFalse();
             assertThat(boxCarType.isOfType(XM)).isTrue();
             assertThat(boxCarType.isOfType(FA)).isFalse();
-            assertThat(boxCarType.displayName()).isEqualTo("XM");
+            assertThat(boxCarType.displayName()).isEqualTo(XM);
         }
 
         @Test

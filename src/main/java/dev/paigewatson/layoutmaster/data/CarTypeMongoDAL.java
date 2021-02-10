@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -45,7 +46,8 @@ public class CarTypeMongoDAL implements CarTypeDAL
                 query(
                         where("aarDesignation")
                                 .is(aarDesignation)),
-                AARType.class
+                AARType.class,
+                collectionName
         );
         if (returnedCarType == null)
         {
@@ -63,6 +65,12 @@ public class CarTypeMongoDAL implements CarTypeDAL
     @Override
     public CarType insertCarType(CarType carTypeToSave)
     {
+        mongoTemplate.findAndRemove(
+                query(
+                        where("aarDesignation")
+                                .is(carTypeToSave.displayName())),
+                AARType.class,
+                collectionName);
         return mongoTemplate.insert(carTypeToSave, collectionName);
     }
 
@@ -70,5 +78,12 @@ public class CarTypeMongoDAL implements CarTypeDAL
     public void delete(CarType carTypeToDelete)
     {
         mongoTemplate.remove(carTypeToDelete, collectionName);
+    }
+
+    @Override
+    public List<CarType> findAll()
+    {
+        final List<AARType> allAARTypes = mongoTemplate.findAll(AARType.class, collectionName);
+        return Collections.unmodifiableList(allAARTypes);
     }
 }

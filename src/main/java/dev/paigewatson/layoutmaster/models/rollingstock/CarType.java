@@ -10,7 +10,7 @@ public interface CarType extends NullableEntity
 
     boolean isOfType(AARDesignation designation);
 
-    String displayName();
+    AARDesignation displayName();
 
     CarType saveToDatabase(CarTypeDAL carTypeDAL);
 }

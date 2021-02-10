@@ -18,4 +18,6 @@ public interface CarTypeDAL
     CarType insertCarType(CarType carTypeToSave);
 
     void delete(CarType carTypeToDelete);
+
+    List<CarType> findAll();
 }

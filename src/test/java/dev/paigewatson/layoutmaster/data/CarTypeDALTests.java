@@ -28,7 +28,6 @@ import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +50,28 @@ public class CarTypeDALTests
 
             mongoTemplate = mock(MongoTemplate.class);
             carTypeMongoDAL = new CarTypeMongoDAL(mongoTemplate);
+        }
+
+        @Test
+        public void should_returnAllInCollection()
+        {
+            //assign
+            UUID boxcarUUID = UUID.randomUUID();
+            AARType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
+            UUID gondolaUUID = UUID.randomUUID();
+            AARType gondolaType = new AARType(gondolaUUID, GS, Arrays.asList(MetalScraps, Aggregates));
+            UUID flatcarUUID = UUID.randomUUID();
+            AARType flatcarType = new AARType(flatcarUUID, FC, Arrays.asList(Logs, Lumber));
+
+            when(mongoTemplate.findAll(AARType.class, collectionName))
+                    .thenReturn(Arrays.asList(boxcarType, flatcarType, gondolaType));
+
+            //act
+            final List<CarType> allCarTypes = carTypeMongoDAL.findAll();
+
+            //assert
+            assertThat(allCarTypes.size()).isEqualTo(3);
+            verify(mongoTemplate).findAll(AARType.class, collectionName);
         }
 
         @Test
@@ -82,7 +103,7 @@ public class CarTypeDALTests
         }
 
         @Test
-        public void should_saveCarType()
+        public void should_insertCarType()
         {
             //assign
             final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
@@ -94,18 +115,31 @@ public class CarTypeDALTests
         }
 
         @Test
+        public void should_removeExistingThen_insertCarType()
+        {
+            //assign
+            final CarType boxcarTypeToAdd = new AARType(XM, Arrays.asList(Ingredients, Logs));
+
+            //act
+            carTypeMongoDAL.insertCarType(boxcarTypeToAdd);
+            //assert
+            verify(mongoTemplate).findAndRemove(query(where("aarDesignation").is(XM)), AARType.class, collectionName);
+            verify(mongoTemplate).insert(boxcarTypeToAdd, collectionName);
+        }
+
+        @Test
         public void should_queryWhereAARType_isXM()
         {
             //assign
             final AARType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
             final Query query = query(where("aarDesignation").is(XM));
-            when(mongoTemplate.findOne(query, AARType.class)).thenReturn(boxcarType);
+            when(mongoTemplate.findOne(query, AARType.class, collectionName)).thenReturn(boxcarType);
 
             //act
             final CarType byAarType = carTypeMongoDAL.findByAarType(XM);
 
             //assert
-            verify(mongoTemplate).findOne(any(), any());
+            verify(mongoTemplate).findOne(query, AARType.class, collectionName);
             assertThat(byAarType).isEqualTo(boxcarType);
         }
 
@@ -113,7 +147,6 @@ public class CarTypeDALTests
         public void should_returnNullCarType_whenNoCarTypeByAAR_exists()
         {
             //assign
-            final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
             final Query query = query(where("aarDesignation").is(XM));
             when(mongoTemplate.findOne(query, CarType.class)).thenReturn(null);
 
@@ -135,12 +168,8 @@ public class CarTypeDALTests
         private final MongoTemplate mongoTemplate;
         private AARType boxcarType;
         private AARType gondolaType;
-        private UUID gondolaUUID;
-        private UUID boxcarUUID;
-        private UUID flatcarUUID;
         private AARType flatcarType;
         private AARType boxcarType2;
-        private UUID boxcarUUID2;
 
 
         public DataTests(@Autowired MongoTemplate mongoTemplate)
@@ -153,13 +182,13 @@ public class CarTypeDALTests
         public void setUp()
         {
             mongoTemplate.remove(new Query(), collectionName);
-            boxcarUUID = UUID.randomUUID();
-            boxcarUUID2 = UUID.randomUUID();
+            UUID boxcarUUID = UUID.randomUUID();
+            UUID boxcarUUID2 = UUID.randomUUID();
             boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
             boxcarType2 = new AARType(boxcarUUID2, XM, Arrays.asList(Paper, Parts, Logs));
-            gondolaUUID = UUID.randomUUID();
+            UUID gondolaUUID = UUID.randomUUID();
             gondolaType = new AARType(gondolaUUID, GS, Arrays.asList(MetalScraps, Aggregates));
-            flatcarUUID = UUID.randomUUID();
+            UUID flatcarUUID = UUID.randomUUID();
             flatcarType = new AARType(flatcarUUID, FC, Arrays.asList(Logs, Lumber));
         }
 
@@ -172,6 +201,18 @@ public class CarTypeDALTests
             //assert
             final List<AARType> allExistingCarTypes = mongoTemplate.findAll(AARType.class);
             assertThat(allExistingCarTypes.size()).isEqualTo(1);
+        }
+
+        @Test
+        public void should_replaceExistingWhenCalling_insertCarTypes_ToDatabase()
+        {
+            //assign
+            insertCarTypesForTesting();
+            //act
+            carTypeMongoDAL.insertCarType(boxcarType2);
+            //assert
+            final List<AARType> allExistingCarTypes = mongoTemplate.findAll(AARType.class);
+            assertThat(allExistingCarTypes.size()).isEqualTo(3);
         }
 
         @Test

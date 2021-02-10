@@ -44,6 +44,12 @@ public class CarTypeDALFake implements CarTypeDAL
 
     }
 
+    @Override
+    public List<CarType> findAll()
+    {
+        return null;
+    }
+
     public CarType savedEntity()
     {
         return carTypeSavedEntity;
