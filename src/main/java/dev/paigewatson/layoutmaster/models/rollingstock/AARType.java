@@ -58,7 +58,7 @@ public class AARType implements CarType
         {
             carTypeDAL.delete(byAarType);
         }
-        return carTypeDAL.saveCarType(this);
+        return carTypeDAL.insertCarType(this);
     }
 
     public CarTypeDto getDto()
@@ -79,10 +79,10 @@ public class AARType implements CarType
     public String toString()
     {
         return "AARType{" +
-                "id='" + id + '\'' +
+                "id='" + id + "'" +
                 ", aarDesignation=" + aarDesignation +
                 ", carriedGoodsList=" + carriedGoodsList +
-                '}';
+                "}";
     }
 
     @Override

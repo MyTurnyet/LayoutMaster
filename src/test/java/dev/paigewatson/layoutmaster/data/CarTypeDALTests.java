@@ -69,6 +69,31 @@ public class CarTypeDALTests
         }
 
         @Test
+        public void should_removeCarType_fromDatabase()
+        {
+            //assign
+            final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
+
+            //act
+            carTypeMongoDAL.delete(boxcarType);
+
+            //assert
+            verify(mongoTemplate).remove(boxcarType, collectionName);
+        }
+
+        @Test
+        public void should_saveCarType()
+        {
+            //assign
+            final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
+
+            //act
+            carTypeMongoDAL.insertCarType(boxcarType);
+            //assert
+            verify(mongoTemplate).insert(boxcarType, collectionName);
+        }
+
+        @Test
         public void should_queryWhereAARType_isXM()
         {
             //assign
@@ -139,37 +164,14 @@ public class CarTypeDALTests
         }
 
         @Test
-        public void should_saveListOf_CarTypes_ToTheDatabase()
-        {
-            //assign
-            //act
-            carTypeMongoDAL.saveMultipleCarTypes(Arrays.asList(boxcarType, gondolaType));
-            //assert
-            final List<AARType> allExistingCarTypes = mongoTemplate.findAll(AARType.class);
-            assertThat(allExistingCarTypes.size()).isEqualTo(2);
-        }
-
-        @Test
         public void should_SaveCarTypes_ToDatabase()
         {
             //assign
             //act
-            boxcarType2.saveToDatabase(carTypeMongoDAL);
+            carTypeMongoDAL.insertCarType(boxcarType2);
             //assert
             final List<AARType> allExistingCarTypes = mongoTemplate.findAll(AARType.class);
             assertThat(allExistingCarTypes.size()).isEqualTo(1);
-        }
-
-        @Test
-        public void should_NotSaveExitingCarTypes_ToDatabase()
-        {
-            //assign
-            insertCarTypesForTesting();
-            //act
-            boxcarType2.saveToDatabase(carTypeMongoDAL);
-            //assert
-            final List<AARType> allExistingCarTypes = mongoTemplate.findAll(AARType.class);
-            assertThat(allExistingCarTypes.size()).isEqualTo(3);
         }
 
         @Test
@@ -216,7 +218,10 @@ public class CarTypeDALTests
         private void insertCarTypesForTesting()
         {
             final List<AARType> aarTypes = Arrays.asList(boxcarType, gondolaType, flatcarType);
-            aarTypes.forEach(mongoTemplate::insert);
+            for (AARType aarType : aarTypes)
+            {
+                mongoTemplate.insert(aarType, collectionName);
+            }
         }
     }
 }

@@ -15,9 +15,7 @@ public interface CarTypeDAL
 
     void deleteAll();
 
-    List<CarType> saveMultipleCarTypes(List<CarType> CarTypeList);
-
-    CarType saveCarType(CarType carTypeToSave);
+    CarType insertCarType(CarType carTypeToSave);
 
     void delete(CarType carTypeToDelete);
 }

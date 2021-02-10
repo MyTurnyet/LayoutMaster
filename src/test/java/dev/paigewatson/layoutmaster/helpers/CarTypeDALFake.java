@@ -32,13 +32,7 @@ public class CarTypeDALFake implements CarTypeDAL
     }
 
     @Override
-    public List<CarType> saveMultipleCarTypes(List<CarType> CarTypeList)
-    {
-        return null;
-    }
-
-    @Override
-    public CarType saveCarType(CarType carTypeToSave)
+    public CarType insertCarType(CarType carTypeToSave)
     {
         carTypeSavedEntity = carTypeToSave;
         return carTypeToSave;

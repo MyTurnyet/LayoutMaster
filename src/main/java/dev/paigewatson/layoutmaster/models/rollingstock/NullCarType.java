@@ -35,4 +35,13 @@ public class NullCarType implements CarType
         return this;
     }
 
+    @Override
+    public String toString()
+    {
+        return "NullCarType{" +
+                "id=''" +
+                ", aarDesignation=''" +
+                ", carriedGoodsList=''" +
+                "}";
+    }
 }

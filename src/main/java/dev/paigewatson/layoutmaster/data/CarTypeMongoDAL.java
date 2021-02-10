@@ -6,7 +6,6 @@ import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -21,12 +20,10 @@ public class CarTypeMongoDAL implements CarTypeDAL
 {
     private final MongoTemplate mongoTemplate;
 
-    @Value("{spring.data.mongodb.database}")
     private final String collectionName = "AARTypes";
 
     public CarTypeMongoDAL(@Autowired MongoTemplate mongoTemplate)
     {
-
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -64,16 +61,9 @@ public class CarTypeMongoDAL implements CarTypeDAL
     }
 
     @Override
-    public List<CarType> saveMultipleCarTypes(List<CarType> carTypeList)
+    public CarType insertCarType(CarType carTypeToSave)
     {
-        carTypeList.forEach(this::saveCarType);
-        return carTypeList;
-    }
-
-    @Override
-    public CarType saveCarType(CarType carTypeToSave)
-    {
-        return mongoTemplate.save(carTypeToSave);
+        return mongoTemplate.insert(carTypeToSave, collectionName);
     }
 
     @Override
