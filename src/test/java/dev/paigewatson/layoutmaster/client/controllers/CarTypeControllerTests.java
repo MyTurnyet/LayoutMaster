@@ -29,11 +29,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxCar;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondola;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -58,8 +55,8 @@ public class CarTypeControllerTests
         {
             carTypeServiceFake = new CarTypeServiceFake();
             carTypeController = new CarTypeController(carTypeServiceFake);
-            boxcarType = new AARType(XM, Collections.singletonList(SheetMetal));
-            gondolaCarType = new AARType(GS, Collections.singletonList(Parts));
+            boxcarType = boxCar();
+            gondolaCarType = gondola();
         }
 
         @Test
@@ -105,7 +102,7 @@ public class CarTypeControllerTests
             //act
             final CarTypeDto<? extends CarType> carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
             //assert
-            assertThat(carTypeByAAR.isNull());
+            assertThat(carTypeByAAR.isNull()).isTrue();
         }
 
         @Test
@@ -124,8 +121,7 @@ public class CarTypeControllerTests
         public void should_saveCarTypeToRepository()
         {
             //assign
-
-            final CarTypeDto boxcarTypeDto = new AARTypeDto("XM", Collections.singletonList("SheetMetal"));
+            final CarTypeDto<AARType> boxcarTypeDto = new AARTypeDto("XM", Collections.singletonList("SheetMetal"));
 
             //act
             carTypeController.addNewCarType(boxcarTypeDto);
@@ -157,8 +153,8 @@ public class CarTypeControllerTests
         {
             boxCarUUID = UUID.randomUUID();
             gondolaUUID = UUID.randomUUID();
-            boxcarType = new AARType(boxCarUUID, XM, Arrays.asList(Parts, Paper));
-            gondolaCarType = new AARType(gondolaUUID, GS, Collections.singletonList(Parts));
+            boxcarType = boxCar(boxCarUUID);
+            gondolaCarType = gondola(gondolaUUID);
         }
 
         @Test
@@ -193,7 +189,6 @@ public class CarTypeControllerTests
                     gondolaUUID.toString() +
                     "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
         }
-
 
         @Test
         public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception

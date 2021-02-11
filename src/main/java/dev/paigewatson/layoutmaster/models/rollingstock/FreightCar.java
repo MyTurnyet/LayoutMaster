@@ -1,6 +1,9 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import org.springframework.data.annotation.Id;
+
+import java.util.UUID;
 
 /**
  * FreightCar
@@ -11,6 +14,9 @@ import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
 public class FreightCar implements RollingStock
 {
+    @Id
+    private final String id;
+    private final UUID uuid;
     private final String roadName;
     private final int roadNumber;
     private final AARType carType;
@@ -18,6 +24,13 @@ public class FreightCar implements RollingStock
 
     public FreightCar(String roadName, int roadNumber, AARType carType)
     {
+        this(UUID.randomUUID(), roadName, roadNumber, carType);
+    }
+
+    public FreightCar(UUID uuid, String roadName, int roadNumber, AARType carType)
+    {
+        this.uuid = uuid;
+        this.id = uuid.toString();
         this.roadName = roadName;
         this.roadNumber = roadNumber;
         this.carType = carType;

@@ -1,18 +1,17 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
+import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Logs;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FA;
@@ -26,6 +25,16 @@ public class AARTypeTests
     @Tag("Unit")
     class UnitTests
     {
+        private UUID boxcarUUID;
+        private CarType boxcarType;
+
+        @BeforeEach
+        public void setup()
+        {
+            boxcarUUID = UUID.randomUUID();
+            boxcarType = EntityCreator.boxCar(boxcarUUID);
+        }
+
         @Test
         public void should_evaluateTo_NullCarType()
         {
@@ -49,18 +58,14 @@ public class AARTypeTests
         public void should_haveTypeName_andGoodsCarried()
         {
             //assign
-            final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-            carriedGoodsList.add(Ingredients);
-
-            final CarType boxCarType = new AARType(XM, carriedGoodsList);
 
             //act
             //assert
-            assertThat(boxCarType.canCarry(Ingredients)).isTrue();
-            assertThat(boxCarType.canCarry(ScrapMetal)).isFalse();
-            assertThat(boxCarType.isOfType(XM)).isTrue();
-            assertThat(boxCarType.isOfType(FA)).isFalse();
-            assertThat(boxCarType.displayName()).isEqualTo(XM);
+            assertThat(boxcarType.canCarry(Ingredients)).isTrue();
+            assertThat(boxcarType.canCarry(ScrapMetal)).isFalse();
+            assertThat(boxcarType.isOfType(XM)).isTrue();
+            assertThat(boxcarType.isOfType(FA)).isFalse();
+            assertThat(boxcarType.displayName()).isEqualTo(XM);
         }
 
         @Test
@@ -68,13 +73,12 @@ public class AARTypeTests
         {
             //assign
             final CarTypeDALFake carTypeDALFake = new CarTypeDALFake();
-            UUID boxcarUUID = UUID.randomUUID();
-            CarType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
             carTypeDALFake.setEntityToReturn(new NullCarType());
             //act
             final CarType savedCarType = boxcarType.saveToDatabase(carTypeDALFake);
 
             assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType);
+            assertThat(savedCarType).isEqualTo(boxcarType);
         }
 
         @Test
@@ -82,31 +86,27 @@ public class AARTypeTests
         {
             //assign
             final CarTypeDALFake carTypeDALFake = new CarTypeDALFake();
-            UUID boxcarUUID = UUID.randomUUID();
-            CarType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
             carTypeDALFake.setEntityToReturn(boxcarType);
             UUID boxcarUUID2 = UUID.randomUUID();
             CarType boxcarType2 = new AARType(boxcarUUID2, XM, Arrays.asList(Ingredients, Paper));
 
             //act
-            final CarType savedCarType = boxcarType.saveToDatabase(carTypeDALFake);
+            final CarType savedCarType = boxcarType2.saveToDatabase(carTypeDALFake);
 
-            assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType);
+            assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType2);
+            assertThat(savedCarType).isEqualTo(boxcarType2);
         }
 
         @Test
         public void should_convertToDTO()
         {
             //assign
-            UUID boxcarUUID = UUID.randomUUID();
-            CarType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
-
             //act
             final CarTypeDto boxcarTypeDto = boxcarType.getDto();
             //assert
             assertThat(boxcarTypeDto.toString()).isEqualTo("AARTypeDto{id='" +
                     boxcarUUID.toString() +
-                    "', aarType='XM', carriedGoods=[Ingredients, Logs]}");
+                    "', aarType='XM', carriedGoods=[Ingredients, Logs, Parts]}");
         }
     }
 }

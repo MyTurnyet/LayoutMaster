@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxCar;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.flatcar;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondola;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Aggregates;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Logs;
@@ -93,7 +96,7 @@ public class CarTypeDALTests
         public void should_removeCarType_fromDatabase()
         {
             //assign
-            final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
+            final CarType boxcarType = boxCar();
 
             //act
             carTypeMongoDAL.delete(boxcarType);
@@ -106,7 +109,7 @@ public class CarTypeDALTests
         public void should_insertCarType()
         {
             //assign
-            final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
+            final CarType boxcarType = boxCar();
 
             //act
             carTypeMongoDAL.insertCarType(boxcarType);
@@ -118,7 +121,7 @@ public class CarTypeDALTests
         public void should_removeExistingThen_insertCarType()
         {
             //assign
-            final CarType boxcarTypeToAdd = new AARType(XM, Arrays.asList(Ingredients, Logs));
+            final CarType boxcarTypeToAdd = boxCar();
 
             //act
             carTypeMongoDAL.insertCarType(boxcarTypeToAdd);
@@ -166,10 +169,9 @@ public class CarTypeDALTests
     {
         private final CarTypeDAL carTypeMongoDAL;
         private final MongoTemplate mongoTemplate;
-        private AARType boxcarType;
-        private AARType gondolaType;
-        private AARType flatcarType;
-        private AARType boxcarType2;
+        private CarType boxcarType;
+        private CarType boxcarType2;
+        private UUID boxcarUUID;
 
 
         public DataTests(@Autowired MongoTemplate mongoTemplate)
@@ -182,14 +184,9 @@ public class CarTypeDALTests
         public void setUp()
         {
             mongoTemplate.remove(new Query(), collectionName);
-            UUID boxcarUUID = UUID.randomUUID();
-            UUID boxcarUUID2 = UUID.randomUUID();
-            boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
-            boxcarType2 = new AARType(boxcarUUID2, XM, Arrays.asList(Paper, Parts, Logs));
-            UUID gondolaUUID = UUID.randomUUID();
-            gondolaType = new AARType(gondolaUUID, GS, Arrays.asList(MetalScraps, Aggregates));
-            UUID flatcarUUID = UUID.randomUUID();
-            flatcarType = new AARType(flatcarUUID, FC, Arrays.asList(Logs, Lumber));
+            boxcarUUID = UUID.randomUUID();
+            boxcarType = boxCar(boxcarUUID);
+            boxcarType2 = new AARType(UUID.randomUUID(), XM, Arrays.asList(Paper, Parts, Logs));
         }
 
         @Test
@@ -230,17 +227,17 @@ public class CarTypeDALTests
         }
 
         @Test
-        public void should_returnAllTypesThatCanCarry_Logs()
+        public void should_returnAllTypesThatCanCarry_Parts()
         {
             //assign
             insertCarTypesForTesting();
 
             //act
-            final List<CarType> allByCarTypesThatCanCarry = carTypeMongoDAL.findAllByCarTypesThatCanCarry(Logs);
+            final List<CarType> allByCarTypesThatCanCarry = carTypeMongoDAL.findAllByCarTypesThatCanCarry(Parts);
 
             //assert
             assertThat(allByCarTypesThatCanCarry.size()).isEqualTo(2);
-            assertThat(allByCarTypesThatCanCarry.stream().allMatch(aarType -> aarType.canCarry(Logs))).isTrue();
+            assertThat(allByCarTypesThatCanCarry.stream().allMatch(aarType -> aarType.canCarry(Parts))).isTrue();
         }
 
         @Test
@@ -258,7 +255,10 @@ public class CarTypeDALTests
 
         private void insertCarTypesForTesting()
         {
-            final List<AARType> aarTypes = Arrays.asList(boxcarType, gondolaType, flatcarType);
+            final AARType boxcar = boxCar(boxcarUUID);
+            final AARType gondola = gondola();
+            final AARType flatcar = flatcar();
+            final List<AARType> aarTypes = Arrays.asList(boxcar, gondola, flatcar);
             for (AARType aarType : aarTypes)
             {
                 mongoTemplate.insert(aarType, collectionName);
