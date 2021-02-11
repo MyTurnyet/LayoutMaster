@@ -1,7 +1,9 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
+import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
@@ -34,6 +36,8 @@ import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -116,18 +120,19 @@ public class CarTypeControllerTests
             assertThat(carTypesThatCarryLogs.size()).isEqualTo(2);
         }
 
-//        @Test
-//        public void should_saveCarTypeToRepository()
-//        {
-//            //assign
-//            final CarTypeDto carTypeDto = new CarTypeDto("XM", Collections.singletonList("SheetMetal"));
-//
-//            //act
-//            carTypeController.addNewCarType(carTypeDto);
-//
-//            //assert
-//            assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
-//        }
+        @Test
+        public void should_saveCarTypeToRepository()
+        {
+            //assign
+
+            final CarTypeDto boxcarTypeDto = new AARTypeDto("XM", Collections.singletonList("SheetMetal"));
+
+            //act
+            carTypeController.addNewCarType(boxcarTypeDto);
+
+            //assert
+            assertThat(carTypeServiceFake.savedDtoEntity().getDto().toString()).isEqualTo(boxcarTypeDto.toString());
+        }
     }
 
     @Nested
@@ -182,7 +187,9 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[{\"id\":\"" +
+            assertThat(contentAsString).isEqualTo("[{" +
+                    "\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+                    "\"id\":\"" +
                     gondolaUUID.toString() +
                     "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
         }
@@ -201,8 +208,12 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[{\"id\":\"" + boxCarUUID.toString() + "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Parts\",\"Paper\"],\"null\":false}" +
-                    ",{\"id\":\"" + gondolaUUID.toString() + "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
+            assertThat(contentAsString).isEqualTo("[{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\",\"id\":\"" +
+                    boxCarUUID.toString() +
+                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Parts\",\"Paper\"],\"null\":false}" +
+                    ",{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\",\"id\":\"" +
+                    gondolaUUID.toString() +
+                    "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
         }
 
         @Test
@@ -216,7 +227,8 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"id\":\"" +
+            assertThat(contentAsString).isEqualTo("{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+                    "\"id\":\"" +
                     boxCarUUID.toString() +
                     "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Parts\",\"Paper\"],\"null\":false}");
         }
@@ -231,34 +243,34 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"null\":true}");
+            assertThat(contentAsString).isEqualTo("{\"@class\":\"dev.paigewatson.layoutmaster.models.data.NullCarTypeDto\",\"null\":true}");
         }
 
-//        @Test
-//        public void should_addCarTypeToDatabase() throws Exception
-//        {
-//
-//            //assign
-//
-//            mockMvc.perform(MockMvcRequestBuilders.post("/models/types")
-//                    .content(boxcarType.toString())
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .accept(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isOk());
-//
-//            verify(carTypeService, times(1)).saveCarTypeToDatabase(boxcarType);
-//
-//        }
-//
-//        private String asJsonString(final Object obj)
-//        {
-//            try
-//            {
-//                return new ObjectMapper().writeValueAsString(obj);
-//            } catch (Exception e)
-//            {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        @Test
+        public void should_addCarTypeToDatabase() throws Exception
+        {
+
+            //assign
+            final CarTypeDto<AARType> boxcarTypeDto = boxcarType.getDto();
+            mockMvc.perform(MockMvcRequestBuilders.post("/models/types/add")
+                    .content(asJsonString(boxcarTypeDto))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
+
+        }
+
+        private String asJsonString(final Object obj)
+        {
+            try
+            {
+                return new ObjectMapper().writeValueAsString(obj);
+            } catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

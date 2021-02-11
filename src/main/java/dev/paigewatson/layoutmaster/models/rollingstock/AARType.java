@@ -67,14 +67,13 @@ public class AARType implements CarType
         return carTypeDAL.insertCarType(this);
     }
 
-    public CarTypeDto getDto()
+    public CarTypeDto<AARType> getDto()
     {
         final ArrayList<String> carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
-        final AARTypeDto carTypeDto = new AARTypeDto(uuid,
+        return new AARTypeDto(uuid,
                 aarDesignation.name(),
                 carriedGoods
         );
-        return carTypeDto;
     }
 
     @Override

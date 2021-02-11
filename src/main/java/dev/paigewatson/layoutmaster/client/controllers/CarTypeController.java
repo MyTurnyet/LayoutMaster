@@ -30,13 +30,13 @@ public class CarTypeController
         this.carTypeService = carTypeService;
     }
 
-    @GetMapping(path = "/aar", produces = "application/json")
+    @GetMapping(path = "/aar")
     public List<AARDesignation> getAARDesignations()
     {
         return carTypeService.allAARDesignations();
     }
 
-    @GetMapping(path = "/types", produces = "application/json")
+    @GetMapping(path = "/types")
     public List<CarTypeDto<AARType>> getAllCarTypes()
     {
         final List<CarType> carTypeList = carTypeService.allCarTypes();
@@ -47,13 +47,14 @@ public class CarTypeController
         return carTypeDtoList;
     }
 
-    @PostMapping(path = "/types", consumes = "application/json")
-    public void addNewCarType(@RequestBody AARType carType)
+    @PostMapping(path = "/types/add")
+    public void addNewCarType(@RequestBody CarTypeDto<? extends CarType> carTypeDto)
     {
+        final CarType carType = carTypeDto.getEntity();
         carTypeService.saveCarTypeToDatabase(carType);
     }
 
-    @GetMapping(path = "/types/aar/{aarType}", produces = "application/json")
+    @GetMapping(path = "/types/aar/{aarType}")
     public CarTypeDto<? extends CarType> getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
         final AARDesignation aarDesignation = AARDesignation.valueOf(expectedType);
@@ -61,7 +62,7 @@ public class CarTypeController
         return carTypeForAAR.getDto();
     }
 
-    @GetMapping(path = "/types/goods/{goodsType}", produces = "application/json")
+    @GetMapping(path = "/types/goods/{goodsType}")
     public List<CarTypeDto<AARType>> getCarTypesThatCarry(@PathVariable(value = "goodsType") String expectedGoods)
     {
         final List<CarType> carTypeList = carTypeService.carTypesThatCarryGoodsType(GoodsType.valueOf(expectedGoods));
