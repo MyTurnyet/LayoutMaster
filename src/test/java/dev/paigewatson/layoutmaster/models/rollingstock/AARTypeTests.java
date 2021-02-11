@@ -104,7 +104,7 @@ public class AARTypeTests
             //act
             final CarTypeDto boxcarTypeDto = boxcarType.getDto();
             //assert
-            assertThat(boxcarTypeDto.toString()).isEqualTo("CarTypeDto{id='" +
+            assertThat(boxcarTypeDto.toString()).isEqualTo("AARTypeDto{id='" +
                     boxcarUUID.toString() +
                     "', aarType='XM', carriedGoods=[Ingredients, Logs]}");
         }

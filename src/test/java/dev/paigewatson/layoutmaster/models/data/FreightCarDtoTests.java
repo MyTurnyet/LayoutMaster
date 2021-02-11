@@ -32,7 +32,7 @@ public class FreightCarDtoTests
             assertThat(freightCarDto.isNull()).isFalse();
             assertThat(freightCarDto.toString()).isEqualTo("FreightCarDto{id='" +
                     uuidFreight.toString() +
-                    "', roadName='PNWR', roadNumber=1234, carTypeDto=CarTypeDto{id='" +
+                    "', roadName='PNWR', roadNumber=1234, carTypeDto=AARTypeDto{id='" +
                     uuidCarType.toString() +
                     "', aarType='XM', carriedGoods=[Ingredients, Paper, Parts]}}");
         }

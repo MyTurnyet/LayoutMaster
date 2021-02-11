@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
@@ -42,7 +43,7 @@ public class AARTypeDto implements CarTypeDto<AARType>
     @Override
     public String toString()
     {
-        return "CarTypeDto{" +
+        return "AARTypeDto{" +
                 "id='" + id + '\'' +
                 ", aarType='" + aarType + '\'' +
                 ", carriedGoods=" + carriedGoods +
@@ -56,6 +57,7 @@ public class AARTypeDto implements CarTypeDto<AARType>
     }
 
     @Override
+    @JsonIgnore
     public AARType getEntity()
     {
         final UUID uuid = UUID.fromString(id);

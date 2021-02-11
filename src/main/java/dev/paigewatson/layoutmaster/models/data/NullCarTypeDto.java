@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 
 public class NullCarTypeDto implements CarTypeDto<NullCarType>
@@ -15,6 +16,7 @@ public class NullCarTypeDto implements CarTypeDto<NullCarType>
     }
 
     @Override
+    @JsonIgnore
     public NullCarType getEntity()
     {
         return new NullCarType();
