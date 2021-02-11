@@ -47,7 +47,7 @@ public class CarTypeDtoTests
 
     @Nested
     @Tag("Unit")
-    class NonNullCarTypeDtoTests
+    class AARTypeDtoTests
     {
         @Test
         public void should_createCarTypeDto()
