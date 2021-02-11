@@ -1,8 +1,8 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
 import dev.paigewatson.layoutmaster.helpers.FreightCarRepositoryFake;
+import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;

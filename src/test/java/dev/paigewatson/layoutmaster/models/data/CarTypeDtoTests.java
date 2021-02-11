@@ -1,4 +1,4 @@
-package dev.paigewatson.layoutmaster.data.models;
+package dev.paigewatson.layoutmaster.models.data;
 
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;

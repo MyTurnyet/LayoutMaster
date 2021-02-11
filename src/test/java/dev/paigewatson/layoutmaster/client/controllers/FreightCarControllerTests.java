@@ -2,9 +2,9 @@ package dev.paigewatson.layoutmaster.client.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
-import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake;
+import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;

@@ -1,6 +1,5 @@
-package dev.paigewatson.layoutmaster.data.models;
+package dev.paigewatson.layoutmaster.models.data;
 
-import dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 
 public class NullCarTypeDto implements CarTypeDto<NullCarType>

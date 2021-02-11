@@ -1,4 +1,4 @@
-package dev.paigewatson.layoutmaster.data.models;
+package dev.paigewatson.layoutmaster.models.data;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -42,19 +42,31 @@ public class FreightCarDtoTests
     @Tag("Unit")
     class NullFreightCarDtoTests
     {
-//        @Test
-//        public void should_createNullFreightCarDto()
-//        {
-//            //assign
-//            final NullFreightCarDto nullFreightCarDto = new NullFreightCarDto();
-//
-//            //assert
+        @Test
+        public void should_createNullFreightCarDto()
+        {
+            //assign
+            final NullFreightCarDto nullFreightCarDto = new NullFreightCarDto();
+
+            //assert
 //            assertThat(nullFreightCarDto.isNull()).isTrue();
 //            assertThat(nullFreightCarDto.roadName).isEqualTo("");
 //            assertThat(nullFreightCarDto.roadNumber).isEqualTo(0);
 //            assertThat(nullFreightCarDto.carTypeDto.toString()).isEqualTo(new NullCarTypeDto().toString());
 //            assertThat(nullFreightCarDto.toString()).isEqualTo("FreightCarDto{id='null', roadName='', roadNumber=0, carTypeDto=CarTypeDto{id='', aarType='', carriedGoods=[]}}");
-//        }
+        }
+
+        @Test
+        public void should_convertTo_nullFreightCar()
+        {
+            //assign
+            final NullFreightCarDto nullFreightCarDto = new NullFreightCarDto();
+
+            //act
+
+            //assert
+
+        }
     }
 
 }

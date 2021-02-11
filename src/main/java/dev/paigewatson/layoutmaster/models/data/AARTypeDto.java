@@ -1,9 +1,8 @@
-package dev.paigewatson.layoutmaster.data.models;
+package dev.paigewatson.layoutmaster.models.data;
 
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDto;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;

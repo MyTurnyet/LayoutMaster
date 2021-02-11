@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.client.services;
 
 import dev.paigewatson.layoutmaster.data.FreightCarRepository;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

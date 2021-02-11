@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.data;
 
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

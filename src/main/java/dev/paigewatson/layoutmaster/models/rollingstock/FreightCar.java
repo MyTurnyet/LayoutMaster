@@ -9,7 +9,7 @@ import dev.paigewatson.layoutmaster.models.goods.GoodsType;
  * if loaded or not
  */
 
-public class FreightCar
+public class FreightCar implements RollingStock
 {
     private final String roadName;
     private final int roadNumber;
@@ -60,5 +60,17 @@ public class FreightCar
                 ", carType=" + carType.toString() +
                 ", currentlyCarriedGoods=" + currentlyCarriedGoods +
                 '}';
+    }
+
+    @Override
+    public boolean isNull()
+    {
+        return false;
+    }
+
+    @Override
+    public FreightCar getDto()
+    {
+        return null;
     }
 }

@@ -1,13 +1,13 @@
-package dev.paigewatson.layoutmaster.data.models;
+package dev.paigewatson.layoutmaster.models.data;
 
-import dev.paigewatson.layoutmaster.data.NullableEntity;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
 @Document(collection = "FreightCars")
-public class FreightCarDto implements NullableEntity
+public class FreightCarDto implements EntityDto<FreightCar>
 {
     public String roadName = "";
     public int roadNumber = 0;
@@ -47,5 +47,11 @@ public class FreightCarDto implements NullableEntity
     public boolean isNull()
     {
         return false;
+    }
+
+    @Override
+    public FreightCar getEntity()
+    {
+        return null;
     }
 }

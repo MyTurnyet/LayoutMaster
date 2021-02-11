@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.helpers;
 
 import dev.paigewatson.layoutmaster.data.FreightCarRepository;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 
 import java.util.List;
 

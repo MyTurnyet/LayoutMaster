@@ -1,4 +1,4 @@
-package dev.paigewatson.layoutmaster.data.models;
+package dev.paigewatson.layoutmaster.models.data;
 
 public interface CastAsEntity<T>
 {

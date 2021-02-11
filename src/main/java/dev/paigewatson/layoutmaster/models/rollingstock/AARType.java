@@ -1,7 +1,8 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
-import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
+import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
+import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
