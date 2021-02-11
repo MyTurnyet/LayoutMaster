@@ -2,7 +2,7 @@ package dev.paigewatson.layoutmaster.client.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
 import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class FreightCarControllerTests
     @Tag("Unit")
     class UnitTests
     {
-        private CarTypeDto boxcarTypeDto;
+        private AARTypeDto boxcarTypeDto;
         private UUID boxcarOneUUID;
         private FreightCarDto boxcarOne;
         private FreightCarDto boxcarTwo;
@@ -54,15 +54,15 @@ public class FreightCarControllerTests
         public void setupInventory()
         {
             freightCarServiceFake = new FreightCarServiceFake();
-            boxcarTypeDto = new CarTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
-            final CarTypeDto flatcarTypeDto = new CarTypeDto("FC", Arrays.asList("Parts", "Logs"));
+            boxcarTypeDto = new AARTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
+            final AARTypeDto flatcarTypeDto = new AARTypeDto("FC", Arrays.asList("Parts", "Logs"));
             boxcarOneUUID = UUID.randomUUID();
 
             boxcarOne = new FreightCarDto(boxcarOneUUID, "PNWR", 2145, boxcarTypeDto);
             boxcarTwo = new FreightCarDto("BCR", 2342, boxcarTypeDto);
             boxcarThree = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
 
-            CarTypeDto gondolaTypeDto = new CarTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            AARTypeDto gondolaTypeDto = new AARTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
             gondolaOne = new FreightCarDto("BNSF", 1234, gondolaTypeDto);
             flatCarOne = new FreightCarDto("ATSF", 1232, flatcarTypeDto);
             gondolaTwo = new FreightCarDto("PNWR", 1235, gondolaTypeDto);
@@ -76,7 +76,7 @@ public class FreightCarControllerTests
         {
             //assign
             final UUID gondolaTypeUUID = UUID.randomUUID();
-            CarTypeDto gondolaTypeDto = new CarTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            AARTypeDto gondolaTypeDto = new AARTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
             final UUID gondolaToSaveUUID = UUID.randomUUID();
             final FreightCarDto gondolaToSave = new FreightCarDto(gondolaToSaveUUID, "BNSF", 1234, gondolaTypeDto);
 
@@ -156,7 +156,7 @@ public class FreightCarControllerTests
 
         @MockBean
         private FreightCarService freightCarService;
-        private CarTypeDto boxcarTypeDto;
+        private AARTypeDto boxcarTypeDto;
         private UUID boxcarOneUUID;
         private FreightCarDto boxcarOne;
         private FreightCarDto boxcarTwo;
@@ -176,7 +176,7 @@ public class FreightCarControllerTests
         private void setupTests()
         {
             boxcarTypeUUID = UUID.randomUUID();
-            boxcarTypeDto = new CarTypeDto(boxcarTypeUUID, "XM", Arrays.asList("Ingredients", "Paper", "Logs"));
+            boxcarTypeDto = new AARTypeDto(boxcarTypeUUID, "XM", Arrays.asList("Ingredients", "Paper", "Logs"));
             boxcarOneUUID = UUID.randomUUID();
             boxcarOne = new FreightCarDto(boxcarOneUUID, "PNWR", 2145, boxcarTypeDto);
             boxcarTwoUUID = UUID.randomUUID();
@@ -185,12 +185,12 @@ public class FreightCarControllerTests
 
 
             flatcarTypeUUID = UUID.randomUUID();
-            final CarTypeDto flatcarTypeDto = new CarTypeDto(flatcarTypeUUID, "FC", Arrays.asList("Parts", "Logs"));
+            final AARTypeDto flatcarTypeDto = new AARTypeDto(flatcarTypeUUID, "FC", Arrays.asList("Parts", "Logs"));
             flatcarUUID = UUID.randomUUID();
             flatCarOne = new FreightCarDto(flatcarUUID, "ATSF", 1232, flatcarTypeDto);
 
             gondolaTypeUUID = UUID.randomUUID();
-            CarTypeDto gondolaTypeDto = new CarTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            AARTypeDto gondolaTypeDto = new AARTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
             gondolaUUID = UUID.randomUUID();
             gondolaOne = new FreightCarDto(gondolaUUID, "BNSF", 1234, gondolaTypeDto);
             gondolaTwo = new FreightCarDto("PNWR", 1235, gondolaTypeDto);

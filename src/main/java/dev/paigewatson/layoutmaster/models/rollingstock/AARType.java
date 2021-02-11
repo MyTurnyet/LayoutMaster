@@ -1,8 +1,9 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -15,7 +16,11 @@ public class AARType implements CarType
 {
     private AARDesignation aarDesignation;
     private List<GoodsType> carriedGoodsList;
+
+    @Id
     private String id = "";
+    private UUID uuid;
+
 
     public AARType()
     {
@@ -29,6 +34,7 @@ public class AARType implements CarType
     public AARType(UUID uuid, AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
     {
         this.id = uuid.toString();
+        this.uuid = uuid;
         this.aarDesignation = aarDesignation;
         this.carriedGoodsList = carriedGoodsList;
     }
@@ -62,9 +68,11 @@ public class AARType implements CarType
 
     public CarTypeDto getDto()
     {
-        final CarTypeDto carTypeDto = new CarTypeDto();
-        carTypeDto.aarType = this.aarDesignation.name();
-        carTypeDto.carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
+        final ArrayList<String> carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
+        final AARTypeDto carTypeDto = new AARTypeDto(uuid,
+                aarDesignation.name(),
+                carriedGoods
+        );
         return carTypeDto;
     }
 

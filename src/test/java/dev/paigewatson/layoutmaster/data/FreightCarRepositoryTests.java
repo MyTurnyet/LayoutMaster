@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.data;
 
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
 import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class FreightCarRepositoryTests
 {
     private final FreightCarRepository repository;
-    private CarTypeDto gondolatTypeDto;
+    private AARTypeDto gondolatTypeDto;
 
     public FreightCarRepositoryTests(@Autowired FreightCarRepository repository)
     {
@@ -34,13 +34,13 @@ public class FreightCarRepositoryTests
     public void setupRepository()
     {
         repository.deleteAll();
-        final CarTypeDto boxcarTypeDto = new CarTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
-        final CarTypeDto flatcarTypeDto = new CarTypeDto("FC", Arrays.asList("Parts", "Logs"));
+        final AARTypeDto boxcarTypeDto = new AARTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
+        final AARTypeDto flatcarTypeDto = new AARTypeDto("FC", Arrays.asList("Parts", "Logs"));
         final FreightCarDto freightCarDto1 = new FreightCarDto("PNWR", 2145, boxcarTypeDto);
         final FreightCarDto freightCarDto3 = new FreightCarDto("BCR", 2342, boxcarTypeDto);
         final FreightCarDto freightCarDto4 = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
 
-        gondolatTypeDto = new CarTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+        gondolatTypeDto = new AARTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
         final FreightCarDto freightCarDto5 = new FreightCarDto("BNSF", 1234, gondolatTypeDto);
         final FreightCarDto freightCarDto6 = new FreightCarDto("ATSF", 1232, flatcarTypeDto);
         final FreightCarDto freightCarDto7 = new FreightCarDto("PNWR", 1235, gondolatTypeDto);

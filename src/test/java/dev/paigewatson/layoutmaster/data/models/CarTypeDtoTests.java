@@ -1,13 +1,19 @@
 package dev.paigewatson.layoutmaster.data.models;
 
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
+import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CarTypeDtoTests
@@ -24,9 +30,18 @@ public class CarTypeDtoTests
 
             //assert
             assertThat(nullCarTypeDto.isNull()).isTrue();
-            assertThat(nullCarTypeDto.getId()).isEqualTo("");
-            assertThat(nullCarTypeDto.carriedGoods).isEqualTo(Collections.emptyList());
-            assertThat(nullCarTypeDto.aarType).isEqualTo("");
+        }
+
+        @Test
+        public void should_convertToNullCarType()
+        {
+            //assign
+            final NullCarTypeDto nullCarTypeDto = new NullCarTypeDto();
+
+            //act
+            NullCarType nullCarType = nullCarTypeDto.getEntity();
+            //assert
+            assertThat(nullCarType.isNull()).isTrue();
         }
     }
 
@@ -41,12 +56,30 @@ public class CarTypeDtoTests
             final List<String> carriedGoods = Arrays.asList("Ingredients", "Paper", "Parts");
             final String expectedAARType = "XM";
 
-            final CarTypeDto carTypeDto = new CarTypeDto(expectedAARType, carriedGoods);
+            final AARTypeDto carTypeDto = new AARTypeDto(expectedAARType, carriedGoods);
 
             //assert
             assertThat(carTypeDto.isNull()).isFalse();
             assertThat(carTypeDto.carriedGoods).isEqualTo(carriedGoods);
             assertThat(carTypeDto.aarType).isEqualTo(expectedAARType);
+        }
+
+        @Test
+        public void should_CreateEntityFromDTO()
+        {
+            //assign
+            final List<String> carriedGoods = Arrays.asList("Ingredients", "Paper", "Parts");
+            final String expectedAARType = "XM";
+            final UUID uuid = UUID.randomUUID();
+            final AARTypeDto carTypeDto = new AARTypeDto(uuid, expectedAARType, carriedGoods);
+
+            //act
+            final CarType aarType = carTypeDto.getEntity();
+            //assert
+            assertThat(aarType.isOfType(XM)).isTrue();
+            assertThat(aarType.canCarry(Ingredients)).isTrue();
+            assertThat(aarType.canCarry(Paper)).isTrue();
+            assertThat(aarType.canCarry(Parts)).isTrue();
         }
     }
 }

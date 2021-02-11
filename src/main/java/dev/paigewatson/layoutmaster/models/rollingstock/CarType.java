@@ -13,4 +13,6 @@ public interface CarType extends NullableEntity
     AARDesignation displayName();
 
     CarType saveToDatabase(CarTypeDAL carTypeDAL);
+
+    CarTypeDto getDto();
 }

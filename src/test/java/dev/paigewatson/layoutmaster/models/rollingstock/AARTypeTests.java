@@ -92,5 +92,20 @@ public class AARTypeTests
 
             assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType);
         }
+
+        @Test
+        public void should_convertToDTO()
+        {
+            //assign
+            UUID boxcarUUID = UUID.randomUUID();
+            CarType boxcarType = new AARType(boxcarUUID, XM, Arrays.asList(Ingredients, Logs));
+
+            //act
+            final CarTypeDto boxcarTypeDto = boxcarType.getDto();
+            //assert
+            assertThat(boxcarTypeDto.toString()).isEqualTo("CarTypeDto{id='" +
+                    boxcarUUID.toString() +
+                    "', aarType='XM', carriedGoods=[Ingredients, Logs]}");
+        }
     }
 }

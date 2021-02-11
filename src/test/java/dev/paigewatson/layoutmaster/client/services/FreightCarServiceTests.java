@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
 import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
 import dev.paigewatson.layoutmaster.helpers.FreightCarRepositoryFake;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,21 +31,21 @@ public class FreightCarServiceTests
         private FreightCarDto gondolaTwo;
         private FreightCarDto gondolaThree;
         private FreightCarDto flatCarOne;
-        private CarTypeDto boxcarTypeDto;
+        private AARTypeDto boxcarTypeDto;
         private UUID boxcarOneUUID;
 
         @BeforeEach
         public void setupTests()
         {
             repositoryFake = new FreightCarRepositoryFake();
-            boxcarTypeDto = new CarTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
-            final CarTypeDto flatcarTypeDto = new CarTypeDto("FC", Arrays.asList("Parts", "Logs"));
+            boxcarTypeDto = new AARTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
+            final AARTypeDto flatcarTypeDto = new AARTypeDto("FC", Arrays.asList("Parts", "Logs"));
             boxcarOneUUID = UUID.randomUUID();
             boxcarOne = new FreightCarDto(boxcarOneUUID, "PNWR", 2145, boxcarTypeDto);
             boxcarTwo = new FreightCarDto("BCR", 2342, boxcarTypeDto);
             boxcarThree = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
 
-            CarTypeDto gondolatTypeDto = new CarTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            AARTypeDto gondolatTypeDto = new AARTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
             gondolaOne = new FreightCarDto("BNSF", 1234, gondolatTypeDto);
             flatCarOne = new FreightCarDto("ATSF", 1232, flatcarTypeDto);
             gondolaTwo = new FreightCarDto("PNWR", 1235, gondolatTypeDto);

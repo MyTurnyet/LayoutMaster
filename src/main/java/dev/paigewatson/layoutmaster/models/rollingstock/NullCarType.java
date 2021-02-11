@@ -1,6 +1,7 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
+import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
 public class NullCarType implements CarType
@@ -32,7 +33,13 @@ public class NullCarType implements CarType
     @Override
     public CarType saveToDatabase(CarTypeDAL carTypeDAL)
     {
-        return this;
+        return null;
+    }
+
+    @Override
+    public CarTypeDto getDto()
+    {
+        return new NullCarTypeDto();
     }
 
     @Override
@@ -44,4 +51,5 @@ public class NullCarType implements CarType
                 ", carriedGoodsList=''" +
                 "}";
     }
+
 }

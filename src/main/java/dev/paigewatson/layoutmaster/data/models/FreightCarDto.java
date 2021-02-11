@@ -11,7 +11,7 @@ public class FreightCarDto implements NullableEntity
 {
     public String roadName = "";
     public int roadNumber = 0;
-    public CarTypeDto carTypeDto;
+    public AARTypeDto carTypeDto;
     @Id
     public String id;
 
@@ -19,12 +19,12 @@ public class FreightCarDto implements NullableEntity
     {
     }
 
-    public FreightCarDto(String roadName, int roadNumber, CarTypeDto carTypeDto)
+    public FreightCarDto(String roadName, int roadNumber, AARTypeDto carTypeDto)
     {
         this(UUID.randomUUID(), roadName, roadNumber, carTypeDto);
     }
 
-    public FreightCarDto(UUID uuid, String roadName, int roadNumber, CarTypeDto carTypeDto)
+    public FreightCarDto(UUID uuid, String roadName, int roadNumber, AARTypeDto carTypeDto)
     {
         this.id = uuid.toString();
         this.roadName = roadName;

@@ -1,8 +1,9 @@
 package dev.paigewatson.layoutmaster.data.models;
 
-import dev.paigewatson.layoutmaster.data.NullableEntity;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarTypeDto;
+import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 
-public class NullCarTypeDto extends CarTypeDto implements NullableEntity
+public class NullCarTypeDto implements CarTypeDto<NullCarType>
 {
     public NullCarTypeDto()
     {
@@ -12,5 +13,11 @@ public class NullCarTypeDto extends CarTypeDto implements NullableEntity
     public boolean isNull()
     {
         return true;
+    }
+
+    @Override
+    public NullCarType getEntity()
+    {
+        return new NullCarType();
     }
 }

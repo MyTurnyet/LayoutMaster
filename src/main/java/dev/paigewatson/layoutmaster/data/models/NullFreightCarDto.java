@@ -5,7 +5,7 @@ public class NullFreightCarDto extends FreightCarDto
 
     public NullFreightCarDto()
     {
-        this.carTypeDto = new NullCarTypeDto();
+//        this.carTypeDto = new NullCarTypeDto();
     }
 
     @Override

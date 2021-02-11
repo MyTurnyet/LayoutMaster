@@ -1,10 +1,13 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.models.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,32 +30,34 @@ public class CarTypeController
         this.carTypeService = carTypeService;
     }
 
-    @GetMapping(value = "/aar")
-    public List<AARDesignation> getAARDesignations()
+    @GetMapping(path = "/aar", produces = "application/json")
+    public ResponseEntity<List<AARDesignation>> getAARDesignations()
     {
-        return carTypeService.allAARDesignations();
+        return new ResponseEntity<>(carTypeService.allAARDesignations(), HttpStatus.OK);
     }
 
-    @GetMapping("/types")
-    public List<CarType> getAllCarTypes()
+    @GetMapping(path = "/types", produces = "application/json")
+    public ResponseEntity<List<CarType>> getAllCarTypes()
     {
-        return carTypeService.allCarTypes();
+        return new ResponseEntity<>(carTypeService.allCarTypes(), HttpStatus.OK);
     }
 
-    @PostMapping("/types")
-    public void addNewCarType(@RequestBody CarTypeDto carType)
+    @PostMapping(path = "/types", consumes = "application/json")
+    public void addNewCarType(@RequestBody AARType carType)
     {
-//        carTypeService.saveCarTypeToDatabase(carType);
+        carTypeService.saveCarTypeToDatabase(carType);
     }
 
-    @GetMapping("/types/aar/{aarType}")
-    public CarType getCarTypeByAAR(@PathVariable(value = "aarType") AARDesignation expectedType)
+    @GetMapping(path = "/types/aar/{aarType}", produces = "application/json")
+    public ResponseEntity<CarType> getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
-        return carTypeService.carTypeForAAR(expectedType);
+        final AARDesignation aarDesignation = AARDesignation.valueOf(expectedType);
+        final ResponseEntity<CarType> responseEntity = new ResponseEntity<CarType>(carTypeService.carTypeForAAR(aarDesignation), HttpStatus.OK);
+        return responseEntity;
     }
 
-    @GetMapping("/types/goods/{goodsType}")
-    public List<CarTypeDto> getCarTypesThatCarry(@PathVariable(value = "goodsType") String expectedGoods)
+    @GetMapping(path = "/types/goods/{goodsType}", produces = "application/json")
+    public List<AARTypeDto> getCarTypesThatCarry(@PathVariable(value = "goodsType") String expectedGoods)
     {
         return Collections.emptyList();
 //        return carTypeService.carTypesThatCarryGoodsType(expectedGoods);
