@@ -18,5 +18,5 @@ public interface CarTypeDAL
 
     void delete(CarType carTypeToDelete);
 
-    List<CarType> findAll();
+    List<CarType> getAllCarTypes();
 }

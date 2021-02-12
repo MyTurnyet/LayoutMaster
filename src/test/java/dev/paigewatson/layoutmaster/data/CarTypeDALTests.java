@@ -70,7 +70,7 @@ public class CarTypeDALTests
                     .thenReturn(Arrays.asList(boxcarType, flatcarType, gondolaType));
 
             //act
-            final List<CarType> allCarTypes = carTypeMongoDAL.findAll();
+            final List<CarType> allCarTypes = carTypeMongoDAL.getAllCarTypes();
 
             //assert
             assertThat(allCarTypes.size()).isEqualTo(3);

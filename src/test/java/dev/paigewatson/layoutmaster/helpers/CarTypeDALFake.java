@@ -47,7 +47,7 @@ public class CarTypeDALFake implements CarTypeDAL
     }
 
     @Override
-    public List<CarType> findAll()
+    public List<CarType> getAllCarTypes()
     {
         return returnedCarTypes;
     }

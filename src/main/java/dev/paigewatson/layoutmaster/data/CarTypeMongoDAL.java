@@ -77,7 +77,7 @@ public class CarTypeMongoDAL implements CarTypeDAL
     }
 
     @Override
-    public List<CarType> findAll()
+    public List<CarType> getAllCarTypes()
     {
         final List<AARType> allAARTypes = mongoTemplate.findAll(AARType.class, collectionName);
         return Collections.unmodifiableList(allAARTypes);

@@ -35,7 +35,7 @@ public class MongoCarTypeService implements CarTypeService
     @Override
     public List<CarType> allCarTypes()
     {
-        return carTypeDAL.findAll();
+        return carTypeDAL.getAllCarTypes();
     }
 
     @Override
