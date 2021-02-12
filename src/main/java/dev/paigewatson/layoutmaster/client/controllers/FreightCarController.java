@@ -2,7 +2,6 @@ package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
 import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
-import dev.paigewatson.layoutmaster.models.data.NullFreightCarDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +56,7 @@ public class FreightCarController
     @PostMapping(value = "/freightcars/add")
     public FreightCarDto saveFreightCarToDatabase(@RequestBody FreightCarDto freightCarToSave)
     {
-        return new NullFreightCarDto();
+        return freightCarToSave;
 //        return freightCarService.saveFreightCarToDatabase(freightCarToSave);
     }
 }

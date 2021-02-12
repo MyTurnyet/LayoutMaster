@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.models.data;
 
-import org.junit.jupiter.api.Nested;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -10,63 +10,51 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Tag("Unit")
 public class FreightCarDtoTests
 {
-    @Nested
-    @Tag("Unit")
-    class NonNullFreightCarDtoTests
+    @Test
+    public void should_createFreightCarDto()
     {
-        @Test
-        public void should_createFreightCarDto()
-        {
-            //assign
-            final List<String> carriedGoods = Arrays.asList("Ingredients", "Paper", "Parts");
-            final String expectedAARType = "XM";
-            final UUID uuidCarType = UUID.randomUUID();
-            final AARTypeDto boxcarTypeDto = new AARTypeDto(uuidCarType, expectedAARType, carriedGoods);
+        //assign
+        final List<String> carriedGoods = Arrays.asList("Ingredients", "Paper", "Parts");
+        final String expectedAARType = "XM";
+        final UUID uuidCarType = UUID.randomUUID();
+        final AARTypeDto boxcarTypeDto = new AARTypeDto(uuidCarType, expectedAARType, carriedGoods);
 
-            final UUID uuidFreight = UUID.randomUUID();
-            final FreightCarDto freightCarDto = new FreightCarDto(uuidFreight, "PNWR", 1234, boxcarTypeDto);
+        final UUID uuidFreight = UUID.randomUUID();
+        final FreightCarDto freightCarDto = new FreightCarDto(uuidFreight, "PNWR", 1234, boxcarTypeDto);
 
-            //assert
-            assertThat(freightCarDto.isNull()).isFalse();
-            assertThat(freightCarDto.toString()).isEqualTo("FreightCarDto{id='" +
-                    uuidFreight.toString() +
-                    "', roadName='PNWR', roadNumber=1234, carTypeDto=AARTypeDto{id='" +
-                    uuidCarType.toString() +
-                    "', aarType='XM', carriedGoods=[Ingredients, Paper, Parts]}}");
-        }
+        //assert
+        assertThat(freightCarDto.isNull()).isFalse();
+        assertThat(freightCarDto.toString()).isEqualTo("FreightCarDto{id='" +
+                uuidFreight.toString() +
+                "', roadName='PNWR', roadNumber=1234, carTypeDto=AARTypeDto{id='" +
+                uuidCarType.toString() +
+                "', aarType='XM', carriedGoods=[Ingredients, Paper, Parts]}}");
     }
 
-    @Nested
-    @Tag("Unit")
-    class NullFreightCarDtoTests
+    @Test
+    public void should_getEntity()
     {
-        @Test
-        public void should_createNullFreightCarDto()
-        {
-            //assign
-            final NullFreightCarDto nullFreightCarDto = new NullFreightCarDto();
+        //assign
+        final List<String> carriedGoods = Arrays.asList("Ingredients", "Paper", "Parts");
+        final String expectedAARType = "XM";
+        final UUID uuidCarType = UUID.randomUUID();
+        final AARTypeDto boxcarTypeDto = new AARTypeDto(uuidCarType, expectedAARType, carriedGoods);
 
-            //assert
-//            assertThat(nullFreightCarDto.isNull()).isTrue();
-//            assertThat(nullFreightCarDto.roadName).isEqualTo("");
-//            assertThat(nullFreightCarDto.roadNumber).isEqualTo(0);
-//            assertThat(nullFreightCarDto.carTypeDto.toString()).isEqualTo(new NullCarTypeDto().toString());
-//            assertThat(nullFreightCarDto.toString()).isEqualTo("FreightCarDto{id='null', roadName='', roadNumber=0, carTypeDto=CarTypeDto{id='', aarType='', carriedGoods=[]}}");
-        }
+        final UUID uuidFreight = UUID.randomUUID();
+        final FreightCarDto freightCarDto = new FreightCarDto(uuidFreight, "PNWR", 4324, boxcarTypeDto);
 
-        @Test
-        public void should_convertTo_nullFreightCar()
-        {
-            //assign
-            final NullFreightCarDto nullFreightCarDto = new NullFreightCarDto();
+        //act
+        final FreightCar freightCar = freightCarDto.getEntity();
+        //assert
+        assertThat(freightCar.toString()).isEqualTo("FreightCar{id='" +
+                uuidFreight.toString() +
+                "', roadName='PNWR', roadNumber=4324, " +
+                "carType=AARType{id='" +
+                uuidCarType.toString() +
+                "', aarDesignation=XM, carriedGoodsList=[Ingredients, Paper, Parts]}, currentlyCarriedGoods=EMPTY}");
 
-            //act
-
-            //assert
-
-        }
     }
-
 }

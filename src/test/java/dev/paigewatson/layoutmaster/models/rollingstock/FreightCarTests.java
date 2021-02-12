@@ -1,6 +1,7 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -17,13 +18,13 @@ public class FreightCarTests
 {
     public static FreightCar createTestFreightCar()
     {
-        return createTestFreightCar(UUID.randomUUID());
+        return createTestFreightCar(UUID.randomUUID(), UUID.randomUUID());
     }
 
-    public static FreightCar createTestFreightCar(UUID uuid)
+    public static FreightCar createTestFreightCar(UUID freightCarUUID, UUID carTypeUUID)
     {
-        final AARType boxCarType = EntityCreator.boxcarType();
-        return new FreightCar(uuid, "PNWR", 1234, boxCarType);
+        final AARType boxCarType = EntityCreator.boxcarType(carTypeUUID);
+        return new FreightCar(freightCarUUID, "PNWR", 1234, boxCarType);
     }
 
     @Nested
@@ -50,13 +51,12 @@ public class FreightCarTests
         public void should_LoadFreightCar()
         {
             //assign
-            final FreightCar freightCar = createTestFreightCar();
+            final RollingStock freightCar = createTestFreightCar();
 
             //act
-            assertThat(freightCar.isLoaded()).isFalse();
             freightCar.load(Ingredients);
             //assert
-            assertThat(freightCar.isLoaded()).isTrue();
+            assertThat(freightCar.isCarrying(Ingredients)).isTrue();
         }
 
         @Test
@@ -72,7 +72,7 @@ public class FreightCarTests
         }
 
         @Test
-        public void should_beOfTypeXM()
+        public void should_beOfTypeXM_andNotNull()
         {
             //assign
             final RollingStock freightCar = createTestFreightCar();
@@ -81,6 +81,27 @@ public class FreightCarTests
             //assert
             assertThat(freightCar.isAARType(XM)).isTrue();
             assertThat(freightCar.isAARType(GS)).isFalse();
+            assertThat(freightCar.isNull()).isFalse();
+        }
+
+        @Test
+        public void should_returnRollingStockDto()
+        {
+            //assign
+            final UUID freightCarUUID = UUID.randomUUID();
+            final UUID aarTypeUUID = UUID.randomUUID();
+            final FreightCar freightCar = createTestFreightCar(freightCarUUID, aarTypeUUID);
+
+            //act
+            final FreightCarDto freightCarDto = freightCar.getDto();
+
+            //assert
+            assertThat(freightCarDto.toString()).isEqualTo("FreightCarDto{id='" +
+                    freightCarUUID.toString() +
+                    "', roadName='PNWR', roadNumber=1234, " +
+                    "carTypeDto=AARTypeDto{id='" +
+                    aarTypeUUID.toString() +
+                    "', aarType='XM', carriedGoods=[Ingredients, Logs, Parts]}}");
         }
     }
 }

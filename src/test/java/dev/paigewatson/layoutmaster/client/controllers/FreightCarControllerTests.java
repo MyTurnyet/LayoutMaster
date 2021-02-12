@@ -7,6 +7,7 @@ import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ public class FreightCarControllerTests
 {
     @Nested
     @Tag("Unit")
+    @Disabled
     class UnitTests
     {
         private AARTypeDto boxcarTypeDto;

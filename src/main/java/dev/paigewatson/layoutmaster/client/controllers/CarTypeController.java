@@ -41,9 +41,7 @@ public class CarTypeController
     {
         final List<CarType> carTypeList = carTypeService.allCarTypes();
         final List<CarTypeDto<AARType>> carTypeDtoList = carTypeList.stream().map(carType ->
-        {
-            return carType.getDto();
-        }).collect(Collectors.toList());
+                carType.getDto()).collect(Collectors.toList());
         return carTypeDtoList;
     }
 

@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.models.data;
 
+import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.springframework.data.annotation.Id;
 
@@ -8,9 +9,10 @@ import java.util.UUID;
 
 public class FreightCarDto implements EntityDto<FreightCar>
 {
+    public CarTypeDto<AARType> carTypeDto;
     public String roadName = "";
     public int roadNumber = 0;
-    public AARTypeDto carTypeDto;
+    private UUID uuid = UUID.randomUUID();
     @Id
     public String id;
 
@@ -18,14 +20,15 @@ public class FreightCarDto implements EntityDto<FreightCar>
     {
     }
 
-    public FreightCarDto(String roadName, int roadNumber, AARTypeDto carTypeDto)
+    public FreightCarDto(String roadName, int roadNumber, CarTypeDto<AARType> carTypeDto)
     {
         this(UUID.randomUUID(), roadName, roadNumber, carTypeDto);
     }
 
-    public FreightCarDto(UUID uuid, String roadName, int roadNumber, AARTypeDto carTypeDto)
+    public FreightCarDto(UUID uuid, String roadName, int roadNumber, CarTypeDto<AARType> carTypeDto)
     {
         this.id = uuid.toString();
+        this.uuid = uuid;
         this.roadName = roadName;
         this.roadNumber = roadNumber;
         this.carTypeDto = carTypeDto;
@@ -51,6 +54,7 @@ public class FreightCarDto implements EntityDto<FreightCar>
     @Override
     public FreightCar getEntity()
     {
-        return null;
+        final FreightCar freightCar = new FreightCar(uuid, roadName, roadNumber, carTypeDto.getEntity());
+        return freightCar;
     }
 }

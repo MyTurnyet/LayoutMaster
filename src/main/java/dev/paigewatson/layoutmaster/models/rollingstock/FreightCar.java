@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
+import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -47,11 +48,6 @@ public class FreightCar implements RollingStock
         return carType.canCarry(expectedGood);
     }
 
-    public boolean isLoaded()
-    {
-        return currentlyCarriedGoods != GoodsType.EMPTY;
-    }
-
     public void load(GoodsType goodsToLoad)
     {
         if (!canCarry(goodsToLoad)) return;
@@ -73,12 +69,14 @@ public class FreightCar implements RollingStock
     public String toString()
     {
         return "FreightCar{" +
-                "roadName='" + roadName + '\'' +
+                "id='" + id + '\'' +
+                ", roadName='" + roadName + '\'' +
                 ", roadNumber=" + roadNumber +
-                ", carType=" + carType.toString() +
+                ", carType=" + carType +
                 ", currentlyCarriedGoods=" + currentlyCarriedGoods +
                 '}';
     }
+
 
     @Override
     public boolean isNull()
@@ -87,14 +85,20 @@ public class FreightCar implements RollingStock
     }
 
     @Override
-    public FreightCar getDto()
+    public FreightCarDto getDto()
     {
-        return null;
+        return new FreightCarDto(uuid, roadName, roadNumber, carType.getDto());
     }
 
     @Override
     public boolean isAARType(AARDesignation expectedAARDesignation)
     {
         return this.carType.isOfType(expectedAARDesignation);
+    }
+
+    @Override
+    public boolean isCarrying(GoodsType goodsType)
+    {
+        return currentlyCarriedGoods == goodsType;
     }
 }
