@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +23,7 @@ public class FreightCarTests
 
     public static FreightCar createTestFreightCar(UUID freightCarUUID, UUID carTypeUUID)
     {
-        final AARType boxCarType = EntityCreator.boxcarType(carTypeUUID);
+        final AARType boxCarType = TestAARTypeCreator.boxcarType(carTypeUUID);
         return new FreightCar(freightCarUUID, "PNWR", 1234, boxCarType);
     }
 

@@ -7,7 +7,6 @@ import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -17,7 +16,7 @@ public class AARTypeDto implements CarTypeDto<AARType>
     @Id
     private String id = "";
     public String aarType = "";
-    public List<String> carriedGoods = Collections.emptyList();
+    public List<String> carriedGoods;
 
     public AARTypeDto()
     {

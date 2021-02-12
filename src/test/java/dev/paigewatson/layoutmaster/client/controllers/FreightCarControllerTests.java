@@ -2,8 +2,8 @@ package dev.paigewatson.layoutmaster.client.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake;
+import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator;
 import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -41,7 +39,6 @@ public class FreightCarControllerTests
     @Tag("Unit")
     class UnitTests
     {
-        private AARTypeDto boxcarTypeDto;
         private RollingStock boxcarOne;
         private RollingStock boxcarTwo;
         private RollingStock boxcarThree;
@@ -55,12 +52,11 @@ public class FreightCarControllerTests
         {
             freightCarServiceFake = new FreightCarServiceFake();
 
-            boxcarOne = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2341);
-            boxcarTwo = EntityCreator.boxcar(UUID.randomUUID(), "BCR", 2342);
-            boxcarThree = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2335);
-
-            flatCarOne = EntityCreator.flatcar("ATSF", 1232);
-            gondolaOne = EntityCreator.gondola("BNSF", 1234);
+            boxcarOne = TestFreightCarCreator.boxcar("PNWR", 2341);
+            boxcarTwo = TestFreightCarCreator.boxcar("BCR", 2342);
+            boxcarThree = TestFreightCarCreator.boxcar("PNWR", 2335);
+            flatCarOne = TestFreightCarCreator.flatcar("ATSF", 1232);
+            gondolaOne = TestFreightCarCreator.gondola("BNSF", 1234);
 
             freightCarController = new FreightCarController(freightCarServiceFake);
         }
@@ -73,7 +69,6 @@ public class FreightCarControllerTests
             AARTypeDto gondolaTypeDto = new AARTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
             final UUID gondolaToSaveUUID = UUID.randomUUID();
             final FreightCarDto gondolaToSave = new FreightCarDto(gondolaToSaveUUID, "BNSF", 1234, gondolaTypeDto);
-
 
             //act
             final FreightCarDto returnedFreightCarDto = freightCarController.saveFreightCarToDatabase(gondolaToSave);
@@ -137,55 +132,34 @@ public class FreightCarControllerTests
 
         @MockBean
         private FreightCarService freightCarService;
-        private AARTypeDto boxcarTypeDto;
         private UUID boxcarOneUUID;
-        @Captor
-        ArgumentCaptor<RollingStock> dtoArgumentCaptor;
         private RollingStock boxcarOne;
         private RollingStock boxcarTwo;
-        private RollingStock boxcarThree;
         private RollingStock gondolaOne;
         private RollingStock flatCarOne;
-        private RollingStock gondolaTwo;
         private UUID gondolaUUID;
         private UUID flatcarUUID;
         private UUID gondolaTypeUUID;
         private UUID flatcarTypeUUID;
         private UUID boxcarTypeUUID;
         private UUID boxcarTwoUUID;
-        private RollingStock gondolaThree;
 
         @BeforeEach
-        private void setupTests()
+        public void setupTests()
         {
             boxcarOneUUID = UUID.randomUUID();
             boxcarTwoUUID = UUID.randomUUID();
             boxcarTypeUUID = UUID.randomUUID();
-            boxcarOne = EntityCreator.boxcar(boxcarOneUUID, "PNWR", 2341, boxcarTypeUUID);
-            boxcarTwo = EntityCreator.boxcar(boxcarTwoUUID, "BCR", 2342, boxcarTypeUUID);
-            boxcarThree = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2335);
-
-            gondolaOne = EntityCreator.gondola("BNSF", 1234);
-
-//            boxcarTypeDto = new AARTypeDto(boxcarTypeUUID, "XM", Arrays.asList("Ingredients", "Paper", "Logs"));
-//            boxcarOne = new FreightCarDto(boxcarOneUUID, "PNWR", 2145, boxcarTypeDto);
-//            boxcarTwo = new FreightCarDto(boxcarTwoUUID, "PNWR", 2342, boxcarTypeDto);
-//            boxcarThree = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
-
+            boxcarOne = TestFreightCarCreator.boxcar(boxcarOneUUID, "PNWR", 2341, boxcarTypeUUID);
+            boxcarTwo = TestFreightCarCreator.boxcar(boxcarTwoUUID, "BCR", 2342, boxcarTypeUUID);
 
             flatcarTypeUUID = UUID.randomUUID();
             flatcarUUID = UUID.randomUUID();
-            flatCarOne = EntityCreator.flatcar(flatcarUUID, "ATSF", 1232, flatcarTypeUUID);
+            flatCarOne = TestFreightCarCreator.flatcar(flatcarUUID, "ATSF", 1232, flatcarTypeUUID);
 
             gondolaTypeUUID = UUID.randomUUID();
             gondolaUUID = UUID.randomUUID();
-            gondolaOne = EntityCreator.gondola(gondolaUUID, "BNSF", 1234, gondolaTypeUUID);
-            gondolaTwo = EntityCreator.gondola("PNWR", 1235);
-            gondolaThree = EntityCreator.gondola("BCR", 1237);
-//            gondolaOne = new FreightCarDto(gondolaUUID, "BNSF", 1234, gondolaTypeDto);
-//            gondolaTwo = new FreightCarDto("PNWR", 1235, gondolaTypeDto);
-//            gondolaThree = new FreightCarDto("BCR", 1237, gondolaTypeDto);
-
+            gondolaOne = TestFreightCarCreator.gondola(gondolaUUID, "BNSF", 1234, gondolaTypeUUID);
         }
 
         @Test

@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -32,7 +32,7 @@ public class AARTypeTests
         public void setup()
         {
             boxcarUUID = UUID.randomUUID();
-            boxcarType = EntityCreator.boxcarType(boxcarUUID);
+            boxcarType = TestAARTypeCreator.boxcarType(boxcarUUID);
         }
 
         @Test

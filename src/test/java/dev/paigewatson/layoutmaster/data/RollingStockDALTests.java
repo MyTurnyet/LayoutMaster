@@ -1,6 +1,6 @@
 package dev.paigewatson.layoutmaster.data;
 
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.flatcarType;
+import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.flatcarType;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;
@@ -52,10 +52,10 @@ public class RollingStockDALTests
         @BeforeEach
         public void setup()
         {
-            boxCar1234 = new FreightCar(UUID.randomUUID(), "PNWR", 1234, EntityCreator.boxcarType());
-            boxCar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, EntityCreator.boxcarType());
-            flatcar3345 = new FreightCar(UUID.randomUUID(), "BCR", 3345, EntityCreator.flatcarType());
-            gondola3225 = new FreightCar(UUID.randomUUID(), "BNSF", 3225, EntityCreator.gondolaType());
+            boxCar1234 = new FreightCar(UUID.randomUUID(), "PNWR", 1234, TestAARTypeCreator.boxcarType());
+            boxCar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, TestAARTypeCreator.boxcarType());
+            flatcar3345 = new FreightCar(UUID.randomUUID(), "BCR", 3345, TestAARTypeCreator.flatcarType());
+            gondola3225 = new FreightCar(UUID.randomUUID(), "BNSF", 3225, TestAARTypeCreator.gondolaType());
         }
 
         @Test
@@ -157,10 +157,10 @@ public class RollingStockDALTests
         {
             mongoTemplate.remove(new Query(), collectionName);
             boxcar1234uuid = UUID.randomUUID();
-            boxcar1234 = new FreightCar(boxcar1234uuid, "PNWR", 1234, EntityCreator.boxcarType());
-            boxcar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, EntityCreator.boxcarType());
+            boxcar1234 = new FreightCar(boxcar1234uuid, "PNWR", 1234, TestAARTypeCreator.boxcarType());
+            boxcar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, TestAARTypeCreator.boxcarType());
             flatcar2234 = new FreightCar(UUID.randomUUID(), "PNWR", 2234, flatcarType());
-            gondola4453 = new FreightCar(UUID.randomUUID(), "BNSF", 4453, EntityCreator.gondolaType());
+            gondola4453 = new FreightCar(UUID.randomUUID(), "BNSF", 4453, TestAARTypeCreator.gondolaType());
 
         }
 

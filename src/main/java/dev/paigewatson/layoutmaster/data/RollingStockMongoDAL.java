@@ -6,6 +6,7 @@ import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+@Service
 public class RollingStockMongoDAL implements RollingStockDAL
 {
     private final MongoTemplate mongoTemplate;

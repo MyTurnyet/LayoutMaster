@@ -29,11 +29,6 @@ public class FreightCar implements RollingStock
     {
     }
 
-    public FreightCar(String roadName, int roadNumber, AARType carType)
-    {
-        this(UUID.randomUUID(), roadName, roadNumber, carType);
-    }
-
     public FreightCar(UUID uuid, String roadName, int roadNumber, AARType carType)
     {
         this.uuid = uuid;
@@ -56,13 +51,7 @@ public class FreightCar implements RollingStock
 
     public String displayName()
     {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(carType.displayName());
-        stringBuilder.append(" - ");
-        stringBuilder.append(roadName);
-        stringBuilder.append(" ");
-        stringBuilder.append(roadNumber);
-        return stringBuilder.toString();
+        return carType.displayName() + " - " + roadName + " " + roadNumber;
     }
 
     @Override

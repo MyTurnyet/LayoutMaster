@@ -10,7 +10,6 @@ public class FreightCarServiceFake implements FreightCarService
 {
     public RollingStock savedFreightCar;
     private List<RollingStock> returnedFreightCarsList;
-    private RollingStock existingFreightCar;
 
     @Override
     public List<RollingStock> allFreightCars()
@@ -23,7 +22,7 @@ public class FreightCarServiceFake implements FreightCarService
     {
         return returnedFreightCarsList;
     }
-    
+
     @Override
     public void delete(RollingStock rollingStockToDelete)
     {
@@ -43,14 +42,8 @@ public class FreightCarServiceFake implements FreightCarService
         return savedFreightCar;
     }
 
-
     public void setReturnedFreightCars(List<RollingStock> returnedFreightCarsList)
     {
         this.returnedFreightCarsList = returnedFreightCarsList;
-    }
-
-    public void setFreightCarByIdReturn(RollingStock existingFreightCar)
-    {
-        this.existingFreightCar = existingFreightCar;
     }
 }

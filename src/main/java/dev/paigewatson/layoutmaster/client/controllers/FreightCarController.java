@@ -3,6 +3,7 @@ package dev.paigewatson.layoutmaster.client.controllers;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
 import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.ConvertsToDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class FreightCarController
 
     private List<FreightCarDto> convertRollingStockListToDTOList(List<RollingStock> rollingStockList)
     {
-        return rollingStockList.stream().map(rollingStock -> rollingStock.getDto()).collect(Collectors.toList());
+        return rollingStockList.stream().map(ConvertsToDto::getDto).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/freightcars/aar/{aarType}")

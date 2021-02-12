@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.helpers.RollingStockDALFake;
+import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -31,22 +30,20 @@ public class FreightCarServiceTests
         private RollingStock gondolaTwo;
         private RollingStock gondolaThree;
         private RollingStock flatCarOne;
-        private UUID boxcarOneUUID;
 
         @BeforeEach
         public void setupTests()
         {
             rollingStockDALFake = new RollingStockDALFake();
 
-            boxcarOneUUID = UUID.randomUUID();
-            boxcarOne = EntityCreator.boxcar(boxcarOneUUID, "PNWR", 2341);
-            boxcarTwo = EntityCreator.boxcar(UUID.randomUUID(), "BCR", 2342);
-            boxcarThree = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2335);
+            boxcarOne = TestFreightCarCreator.boxcar("PNWR", 2341);
+            boxcarTwo = TestFreightCarCreator.boxcar("BCR", 2342);
+            boxcarThree = TestFreightCarCreator.boxcar("PNWR", 2335);
 
-            flatCarOne = EntityCreator.flatcar("ATSF", 1232);
-            gondolaOne = EntityCreator.gondola("BNSF", 1234);
-            gondolaTwo = EntityCreator.gondola("PNWR", 1235);
-            gondolaThree = EntityCreator.gondola("BCR", 1237);
+            flatCarOne = TestFreightCarCreator.flatcar("ATSF", 1232);
+            gondolaOne = TestFreightCarCreator.gondola("BNSF", 1234);
+            gondolaTwo = TestFreightCarCreator.gondola("PNWR", 1235);
+            gondolaThree = TestFreightCarCreator.gondola("BCR", 1237);
 
             freightCarService = new MongoFreightCarService(rollingStockDALFake);
         }
@@ -96,12 +93,11 @@ public class FreightCarServiceTests
         @Test
         public void should_insertNewFreightCar_IntoRepository()
         {
-            //assign
-
             //act
             final RollingStock savedRollingStock = freightCarService.saveFreightCarToDatabase(boxcarThree);
             //assert
             assertThat(rollingStockDALFake.savedEntity).isEqualTo(boxcarThree);
+            assertThat(savedRollingStock).isEqualTo(boxcarThree);
         }
 
         @Test

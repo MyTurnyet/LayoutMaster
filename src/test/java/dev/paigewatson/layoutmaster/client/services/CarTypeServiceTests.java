@@ -1,7 +1,7 @@
 package dev.paigewatson.layoutmaster.client.services;
 
 import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
@@ -54,7 +54,7 @@ public class CarTypeServiceTests
             //assign
 
             final List<GoodsType> carriedGoods = Collections.singletonList(SheetMetal);
-            final CarType boxcarType = EntityCreator.boxcarType();
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
             List<CarType> returnedCarTypes = Collections.singletonList(boxcarType);
             carTypeDALFake.setReturnedEntityList(returnedCarTypes);
 
@@ -69,8 +69,8 @@ public class CarTypeServiceTests
         public void should_updateOnSaveCarTypeToRepository()
         {
             //assign
-            final CarType boxcarType = EntityCreator.boxcarType();
-            final CarType existingBoxcarType = EntityCreator.boxcarType();
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            final CarType existingBoxcarType = TestAARTypeCreator.boxcarType();
             carTypeDALFake.setCurrentSavedEntity(existingBoxcarType);
 
             //act
@@ -84,7 +84,7 @@ public class CarTypeServiceTests
         public void should_insertOnSaveCarTypeToRepository()
         {
             //assign
-            final CarType boxcarType = EntityCreator.boxcarType();
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
 
             //act
             final CarType returnedCarTypeDto = service.saveCarTypeToDatabase(boxcarType);
@@ -96,7 +96,7 @@ public class CarTypeServiceTests
         public void should_getExistingCarTypeByAAR()
         {
             //assign
-            final CarType existingCarType = EntityCreator.gondolaType();
+            final CarType existingCarType = TestAARTypeCreator.gondolaType();
             carTypeDALFake.setEntityToReturn(existingCarType);
             //act
             final CarType carTypeForAAR = service.carTypeForAAR(GS);
@@ -120,8 +120,8 @@ public class CarTypeServiceTests
         public void should_getCarTypesThatCarry_goods()
         {
             //assign
-            final CarType boxcarType = EntityCreator.boxcarType();
-            final CarType gondolaCarType = EntityCreator.gondolaType();
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            final CarType gondolaCarType = TestAARTypeCreator.gondolaType();
             carTypeDALFake.setReturnedEntityList(Arrays.asList(boxcarType, gondolaCarType));
             //act
             final List<CarType> carTypesThatCarryGoods = service.carTypesThatCarryGoodsType(Parts);

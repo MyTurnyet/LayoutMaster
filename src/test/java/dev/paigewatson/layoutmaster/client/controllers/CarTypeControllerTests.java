@@ -3,7 +3,7 @@ package dev.paigewatson.layoutmaster.client.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
-import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxcarType;
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondolaType;
+import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType;
+import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.gondolaType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -57,8 +57,8 @@ public class CarTypeControllerTests
         {
             carTypeServiceFake = new CarTypeServiceFake();
             carTypeController = new CarTypeController(carTypeServiceFake);
-            boxcarType = EntityCreator.boxcarType();
-            gondolaCarType = EntityCreator.gondolaType();
+            boxcarType = TestAARTypeCreator.boxcarType();
+            gondolaCarType = TestAARTypeCreator.gondolaType();
         }
 
         @Test

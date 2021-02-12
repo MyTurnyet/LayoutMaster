@@ -21,11 +21,6 @@ public class FreightCarDto implements EntityDto<FreightCar>
     {
     }
 
-    public FreightCarDto(String roadName, int roadNumber, CarTypeDto<AARType> carTypeDto)
-    {
-        this(UUID.randomUUID(), roadName, roadNumber, carTypeDto);
-    }
-
     public FreightCarDto(UUID uuid, String roadName, int roadNumber, CarTypeDto<AARType> carTypeDto)
     {
         this.id = uuid.toString();
@@ -56,7 +51,6 @@ public class FreightCarDto implements EntityDto<FreightCar>
     @JsonIgnore
     public FreightCar getEntity()
     {
-        final FreightCar freightCar = new FreightCar(uuid, roadName, roadNumber, carTypeDto.getEntity());
-        return freightCar;
+        return new FreightCar(uuid, roadName, roadNumber, carTypeDto.getEntity());
     }
 }
