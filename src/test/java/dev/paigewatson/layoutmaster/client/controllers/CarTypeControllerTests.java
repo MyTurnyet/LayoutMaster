@@ -3,6 +3,7 @@ package dev.paigewatson.layoutmaster.client.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
+import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
@@ -29,8 +30,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxCar;
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondola;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxcarType;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondolaType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -55,8 +56,8 @@ public class CarTypeControllerTests
         {
             carTypeServiceFake = new CarTypeServiceFake();
             carTypeController = new CarTypeController(carTypeServiceFake);
-            boxcarType = boxCar();
-            gondolaCarType = gondola();
+            boxcarType = EntityCreator.boxcarType();
+            gondolaCarType = EntityCreator.gondolaType();
         }
 
         @Test
@@ -153,8 +154,8 @@ public class CarTypeControllerTests
         {
             boxCarUUID = UUID.randomUUID();
             gondolaUUID = UUID.randomUUID();
-            boxcarType = boxCar(boxCarUUID);
-            gondolaCarType = gondola(gondolaUUID);
+            boxcarType = boxcarType(boxCarUUID);
+            gondolaCarType = gondolaType(gondolaUUID);
         }
 
         @Test

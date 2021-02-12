@@ -1,54 +1,56 @@
 package dev.paigewatson.layoutmaster.helpers;
 
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
-import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 
 import java.util.List;
 
 public class FreightCarServiceFake implements FreightCarService
 {
-    public FreightCarDto savedFreightCar;
-    private List<FreightCarDto> returnedFreightCarsList;
-    private FreightCarDto freightCarDtoReturnedById;
+    public RollingStock savedFreightCar;
+    private List<RollingStock> returnedFreightCarsList;
+    private RollingStock existingFreightCar;
 
     @Override
-    public List<FreightCarDto> allFreightCars()
+    public List<RollingStock> allFreightCars()
     {
         return returnedFreightCarsList;
     }
 
     @Override
-    public List<FreightCarDto> allFreightCarsByAARType(String aarType)
+    public List<RollingStock> allFreightCarsByAARType(AARDesignation aarDesignation)
+    {
+        return returnedFreightCarsList;
+    }
+    
+    @Override
+    public void delete(RollingStock rollingStockToDelete)
+    {
+
+    }
+
+    @Override
+    public List<RollingStock> allFreightCarsByRoadName(String roadName)
     {
         return returnedFreightCarsList;
     }
 
     @Override
-    public List<FreightCarDto> allFreightCarsThatCarry(String goodsType)
-    {
-        return returnedFreightCarsList;
-    }
-
-    @Override
-    public List<FreightCarDto> allFreightCarsByRoadName(String roadName)
-    {
-        return returnedFreightCarsList;
-    }
-
-    @Override
-    public FreightCarDto saveFreightCarToDatabase(FreightCarDto freightCarToSave)
+    public RollingStock saveFreightCarToDatabase(RollingStock freightCarToSave)
     {
         savedFreightCar = freightCarToSave;
         return savedFreightCar;
     }
 
-    public void setReturnedFreightCars(List<FreightCarDto> returnedFreightCarsList)
+
+    public void setReturnedFreightCars(List<RollingStock> returnedFreightCarsList)
     {
         this.returnedFreightCarsList = returnedFreightCarsList;
     }
 
-    public void setFreightCarByIdReturn(FreightCarDto existingFreightCarDto)
+    public void setFreightCarByIdReturn(RollingStock existingFreightCar)
     {
-        freightCarDtoReturnedById = existingFreightCarDto;
+        this.existingFreightCar = existingFreightCar;
     }
 }

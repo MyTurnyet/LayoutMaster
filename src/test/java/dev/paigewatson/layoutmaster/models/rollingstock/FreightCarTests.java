@@ -1,11 +1,11 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.UUID;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
@@ -17,11 +17,13 @@ public class FreightCarTests
 {
     public static FreightCar createTestFreightCar()
     {
-        final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-        carriedGoodsList.add(Ingredients);
+        return createTestFreightCar(UUID.randomUUID());
+    }
 
-        final AARType boxCarType = new AARType(XM, carriedGoodsList);
-        return new FreightCar("PNWR", 1234, boxCarType);
+    public static FreightCar createTestFreightCar(UUID uuid)
+    {
+        final AARType boxCarType = EntityCreator.boxcarType();
+        return new FreightCar(uuid, "PNWR", 1234, boxCarType);
     }
 
     @Nested

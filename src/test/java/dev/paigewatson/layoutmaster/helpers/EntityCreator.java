@@ -3,6 +3,7 @@ package dev.paigewatson.layoutmaster.helpers;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,31 +39,52 @@ public class EntityCreator
         return new AARType(uuid, aarDesignation, carriedGoodsList);
     }
 
-    public static AARType boxCar()
+    public static AARType boxcarType()
     {
-        return boxCar(UUID.randomUUID());
+        return boxcarType(UUID.randomUUID());
     }
 
-    public static AARType boxCar(UUID uuid)
+    public static AARType boxcarType(UUID uuid)
     {
         return getLoadedCarType(XM, uuid, Arrays.asList(Ingredients, Logs, Parts));
     }
 
-    public static AARType gondola()
+    public static AARType gondolaType()
     {
-        return gondola(UUID.randomUUID());
+        return gondolaType(UUID.randomUUID());
 
     }
 
-    public static AARType gondola(UUID uuid)
+    public static FreightCar gondola(String roadName, int roadNumber)
+    {
+        return new FreightCar(UUID.randomUUID(), roadName, roadNumber, gondolaType());
+    }
+
+    public static FreightCar boxcar()
+    {
+        return boxcar(UUID.randomUUID(), "PNWR", 1234);
+    }
+
+    public static AARType gondolaType(UUID uuid)
     {
         return getLoadedCarType(GS, uuid, Arrays.asList(ScrapMetal, MetalScraps, Logs, Aggregates));
 
     }
 
-    public static AARType flatcar()
+    public static AARType flatcarType()
     {
         return getLoadedCarType(FC, UUID.randomUUID(), Arrays.asList(Logs, Lumber, Parts));
 
     }
+
+    public static FreightCar flatcar(String roadName, int roadNumber)
+    {
+        return new FreightCar(UUID.randomUUID(), roadName, roadNumber, flatcarType());
+    }
+
+    public static FreightCar boxcar(UUID uuid, String roadName, int roadNumber)
+    {
+        return new FreightCar(uuid, roadName, roadNumber, boxcarType());
+    }
+
 }

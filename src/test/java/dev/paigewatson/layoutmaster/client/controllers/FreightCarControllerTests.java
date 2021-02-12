@@ -1,9 +1,11 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
+import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake;
 import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -30,14 +32,11 @@ public class FreightCarControllerTests
     class UnitTests
     {
         private AARTypeDto boxcarTypeDto;
-        private UUID boxcarOneUUID;
-        private FreightCarDto boxcarOne;
-        private FreightCarDto boxcarTwo;
-        private FreightCarDto boxcarThree;
-        private FreightCarDto gondolaOne;
-        private FreightCarDto flatCarOne;
-        private FreightCarDto gondolaTwo;
-        private FreightCarDto gondolaThree;
+        private RollingStock boxcarOne;
+        private RollingStock boxcarTwo;
+        private RollingStock boxcarThree;
+        private RollingStock gondolaOne;
+        private RollingStock flatCarOne;
         private FreightCarServiceFake freightCarServiceFake;
         private FreightCarController freightCarController;
 
@@ -45,19 +44,15 @@ public class FreightCarControllerTests
         public void setupInventory()
         {
             freightCarServiceFake = new FreightCarServiceFake();
-            boxcarTypeDto = new AARTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
-            final AARTypeDto flatcarTypeDto = new AARTypeDto("FC", Arrays.asList("Parts", "Logs"));
-            boxcarOneUUID = UUID.randomUUID();
 
-            boxcarOne = new FreightCarDto(boxcarOneUUID, "PNWR", 2145, boxcarTypeDto);
-            boxcarTwo = new FreightCarDto("BCR", 2342, boxcarTypeDto);
-            boxcarThree = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
+            boxcarOne = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2341);
+            boxcarTwo = EntityCreator.boxcar(UUID.randomUUID(), "BCR", 2342);
+            boxcarThree = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2335);
 
-            AARTypeDto gondolaTypeDto = new AARTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
-            gondolaOne = new FreightCarDto("BNSF", 1234, gondolaTypeDto);
-            flatCarOne = new FreightCarDto("ATSF", 1232, flatcarTypeDto);
-            gondolaTwo = new FreightCarDto("PNWR", 1235, gondolaTypeDto);
-            gondolaThree = new FreightCarDto("BCR", 1237, gondolaTypeDto);
+            flatCarOne = EntityCreator.flatcar("ATSF", 1232);
+            gondolaOne = EntityCreator.gondola("BNSF", 1234);
+            RollingStock gondolaTwo = EntityCreator.gondola("PNWR", 1235);
+            RollingStock gondolaThree = EntityCreator.gondola("BCR", 1237);
 
             freightCarController = new FreightCarController(freightCarServiceFake);
         }

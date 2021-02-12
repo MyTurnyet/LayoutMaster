@@ -18,9 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxCar;
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.flatcar;
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondola;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.flatcarType;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;
@@ -54,10 +52,10 @@ public class RollingStockDALTests
         @BeforeEach
         public void setup()
         {
-            boxCar1234 = new FreightCar(UUID.randomUUID(), "PNWR", 1234, EntityCreator.boxCar());
-            boxCar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, EntityCreator.boxCar());
-            flatcar3345 = new FreightCar(UUID.randomUUID(), "BCR", 3345, EntityCreator.flatcar());
-            gondola3225 = new FreightCar(UUID.randomUUID(), "BNSF", 3225, EntityCreator.gondola());
+            boxCar1234 = new FreightCar(UUID.randomUUID(), "PNWR", 1234, EntityCreator.boxcarType());
+            boxCar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, EntityCreator.boxcarType());
+            flatcar3345 = new FreightCar(UUID.randomUUID(), "BCR", 3345, EntityCreator.flatcarType());
+            gondola3225 = new FreightCar(UUID.randomUUID(), "BNSF", 3225, EntityCreator.gondolaType());
         }
 
         @Test
@@ -159,10 +157,10 @@ public class RollingStockDALTests
         {
             mongoTemplate.remove(new Query(), collectionName);
             boxcar1234uuid = UUID.randomUUID();
-            boxcar1234 = new FreightCar(boxcar1234uuid, "PNWR", 1234, boxCar());
-            boxcar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, boxCar());
-            flatcar2234 = new FreightCar(UUID.randomUUID(), "PNWR", 2234, flatcar());
-            gondola4453 = new FreightCar(UUID.randomUUID(), "BNSF", 4453, gondola());
+            boxcar1234 = new FreightCar(boxcar1234uuid, "PNWR", 1234, EntityCreator.boxcarType());
+            boxcar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, EntityCreator.boxcarType());
+            flatcar2234 = new FreightCar(UUID.randomUUID(), "PNWR", 2234, flatcarType());
+            gondola4453 = new FreightCar(UUID.randomUUID(), "BNSF", 4453, EntityCreator.gondolaType());
 
         }
 

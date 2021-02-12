@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.data;
 
+import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxCar;
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.flatcar;
-import static dev.paigewatson.layoutmaster.helpers.EntityCreator.gondola;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.boxcarType;
+import static dev.paigewatson.layoutmaster.helpers.EntityCreator.flatcarType;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Aggregates;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Logs;
@@ -96,7 +96,7 @@ public class CarTypeDALTests
         public void should_removeCarType_fromDatabase()
         {
             //assign
-            final CarType boxcarType = boxCar();
+            final CarType boxcarType = EntityCreator.boxcarType();
 
             //act
             carTypeMongoDAL.delete(boxcarType);
@@ -109,7 +109,7 @@ public class CarTypeDALTests
         public void should_insertCarType()
         {
             //assign
-            final CarType boxcarType = boxCar();
+            final CarType boxcarType = EntityCreator.boxcarType();
 
             //act
             carTypeMongoDAL.insertCarType(boxcarType);
@@ -121,7 +121,7 @@ public class CarTypeDALTests
         public void should_removeExistingThen_insertCarType()
         {
             //assign
-            final CarType boxcarTypeToAdd = boxCar();
+            final CarType boxcarTypeToAdd = EntityCreator.boxcarType();
 
             //act
             carTypeMongoDAL.insertCarType(boxcarTypeToAdd);
@@ -185,7 +185,7 @@ public class CarTypeDALTests
         {
             mongoTemplate.remove(new Query(), collectionName);
             boxcarUUID = UUID.randomUUID();
-            boxcarType = boxCar(boxcarUUID);
+            boxcarType = boxcarType(boxcarUUID);
             boxcarType2 = new AARType(UUID.randomUUID(), XM, Arrays.asList(Paper, Parts, Logs));
         }
 
@@ -268,9 +268,9 @@ public class CarTypeDALTests
 
         private void insertCarTypesForTesting()
         {
-            final AARType boxcar = boxCar(boxcarUUID);
-            final AARType gondola = gondola();
-            final AARType flatcar = flatcar();
+            final AARType boxcar = boxcarType(boxcarUUID);
+            final AARType gondola = EntityCreator.gondolaType();
+            final AARType flatcar = flatcarType();
             final List<AARType> aarTypes = Arrays.asList(boxcar, gondola, flatcar);
             for (AARType aarType : aarTypes)
             {

@@ -1,15 +1,15 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.helpers.FreightCarRepositoryFake;
-import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
-import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
+import dev.paigewatson.layoutmaster.helpers.EntityCreator;
+import dev.paigewatson.layoutmaster.helpers.RollingStockDALFake;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,124 +21,97 @@ public class FreightCarServiceTests
     @Tag("Unit")
     class UnitTests
     {
-
-        private FreightCarRepositoryFake repositoryFake;
         private FreightCarService freightCarService;
-        private FreightCarDto boxcarOne;
-        private FreightCarDto boxcarTwo;
-        private FreightCarDto boxcarThree;
-        private FreightCarDto gondolaOne;
-        private FreightCarDto gondolaTwo;
-        private FreightCarDto gondolaThree;
-        private FreightCarDto flatCarOne;
-        private AARTypeDto boxcarTypeDto;
+        private RollingStockDALFake rollingStockDALFake;
+
+        private RollingStock boxcarOne;
+        private RollingStock boxcarTwo;
+        private RollingStock boxcarThree;
+        private RollingStock gondolaOne;
+        private RollingStock gondolaTwo;
+        private RollingStock gondolaThree;
+        private RollingStock flatCarOne;
         private UUID boxcarOneUUID;
 
         @BeforeEach
         public void setupTests()
         {
-            repositoryFake = new FreightCarRepositoryFake();
-            boxcarTypeDto = new AARTypeDto("XM", Arrays.asList("Ingredients", "Paper", "Logs"));
-            final AARTypeDto flatcarTypeDto = new AARTypeDto("FC", Arrays.asList("Parts", "Logs"));
+            rollingStockDALFake = new RollingStockDALFake();
+
             boxcarOneUUID = UUID.randomUUID();
-            boxcarOne = new FreightCarDto(boxcarOneUUID, "PNWR", 2145, boxcarTypeDto);
-            boxcarTwo = new FreightCarDto("BCR", 2342, boxcarTypeDto);
-            boxcarThree = new FreightCarDto("PNWR", 2335, boxcarTypeDto);
+            boxcarOne = EntityCreator.boxcar(boxcarOneUUID, "PNWR", 2341);
+            boxcarTwo = EntityCreator.boxcar(UUID.randomUUID(), "BCR", 2342);
+            boxcarThree = EntityCreator.boxcar(UUID.randomUUID(), "PNWR", 2335);
 
-            AARTypeDto gondolatTypeDto = new AARTypeDto("GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
-            gondolaOne = new FreightCarDto("BNSF", 1234, gondolatTypeDto);
-            flatCarOne = new FreightCarDto("ATSF", 1232, flatcarTypeDto);
-            gondolaTwo = new FreightCarDto("PNWR", 1235, gondolatTypeDto);
-            gondolaThree = new FreightCarDto("BCR", 1237, gondolatTypeDto);
+            flatCarOne = EntityCreator.flatcar("ATSF", 1232);
+            gondolaOne = EntityCreator.gondola("BNSF", 1234);
+            gondolaTwo = EntityCreator.gondola("PNWR", 1235);
+            gondolaThree = EntityCreator.gondola("BCR", 1237);
 
-            freightCarService = new MongoFreightCarService(repositoryFake);
+            freightCarService = new MongoFreightCarService(rollingStockDALFake);
         }
 
         @Test
         public void should_getAllFreightCars_fromRepository()
         {
             //assign
-            repositoryFake.setReturnedValuesList(Arrays.asList(
+            rollingStockDALFake.setReturnedValuesList(Arrays.asList(
                     boxcarOne, boxcarTwo, boxcarThree,
                     gondolaOne, flatCarOne, gondolaTwo, gondolaThree
             ));
             //act
-            final List<FreightCarDto> freightCarDtoList = freightCarService.allFreightCars();
+            final List<RollingStock> rollingStockList = freightCarService.allFreightCars();
             //assert
-            assertThat(freightCarDtoList.size()).isEqualTo(7);
+            assertThat(rollingStockList.size()).isEqualTo(7);
         }
 
         @Test
         public void should_getAllFreightCars_fromRepository_matchingAARType_XM()
         {
             //assign
-            repositoryFake.setReturnedValuesList(Arrays.asList(
+            rollingStockDALFake.setReturnedValuesList(Arrays.asList(
                     boxcarOne, boxcarTwo, boxcarThree
             ));
 
             //act
-            final List<FreightCarDto> freightCarDtoList = freightCarService.allFreightCarsByAARType("XM");
+            final List<RollingStock> rollingStockList = freightCarService.allFreightCarsByAARType(AARDesignation.XM);
             //assert
-            assertThat(freightCarDtoList.size()).isEqualTo(3);
-        }
-
-        @Test
-        public void should_getAllFreightCars_fromRepository_ThatCarryPaper()
-        {
-            //assign
-            repositoryFake.setReturnedValuesList(Arrays.asList(
-                    boxcarOne, boxcarTwo, boxcarThree, flatCarOne
-            ));
-
-            //act
-            final List<FreightCarDto> freightCarDtoList = freightCarService.allFreightCarsThatCarry("Logs");
-            //assert
-            assertThat(freightCarDtoList.size()).isEqualTo(4);
+            assertThat(rollingStockList.size()).isEqualTo(3);
         }
 
         @Test
         public void should_getAllFreightCars_fromRepository_withBCR_roadName()
         {
             //assign
-            repositoryFake.setReturnedValuesList(Arrays.asList(
+            rollingStockDALFake.setReturnedValuesList(Arrays.asList(
                     boxcarTwo, gondolaThree
             ));
 
             //act
-            final List<FreightCarDto> freightCarDtoList = freightCarService.allFreightCarsByRoadName("BCR");
+            final List<RollingStock> rollingStockList = freightCarService.allFreightCarsByRoadName("BCR");
             //assert
-            assertThat(freightCarDtoList.size()).isEqualTo(2);
+            assertThat(rollingStockList.size()).isEqualTo(2);
         }
 
         @Test
         public void should_insertNewFreightCar_IntoRepository()
         {
             //assign
-            final FreightCarDto boxcarToInsert = new FreightCarDto("BCR", 2342, boxcarTypeDto);
 
             //act
-            final FreightCarDto freightCarDtoList = freightCarService.saveFreightCarToDatabase(boxcarToInsert);
+            final RollingStock savedRollingStock = freightCarService.saveFreightCarToDatabase(boxcarThree);
             //assert
-            assertThat(repositoryFake.savedEntity).isEqualTo(boxcarToInsert);
-            assertThat(repositoryFake.entityInserted).isTrue();
-            assertThat(repositoryFake.entitySaved).isFalse();
+            assertThat(rollingStockDALFake.savedEntity).isEqualTo(boxcarThree);
         }
 
         @Test
-        public void should_updateFreightCar_InRepository_IfIDExists()
+        public void should_deleteFreightCar_fromDatabase()
         {
             //assign
-            repositoryFake.setReturnedValuesList(Collections.singletonList(boxcarOne));
+            freightCarService.delete(boxcarOne);
 
-            final FreightCarDto boxcarToInsert = new FreightCarDto(boxcarOneUUID, "STFU", 9999, boxcarTypeDto);
-
-            //act
-            freightCarService.saveFreightCarToDatabase(boxcarToInsert);
             //assert
-            assertThat(repositoryFake.savedEntity.toString()).isEqualTo(boxcarToInsert.toString());
-            assertThat(repositoryFake.entitySaved).isTrue();
-            assertThat(repositoryFake.entityInserted).isFalse();
+            assertThat(rollingStockDALFake.deletedEntity).isEqualTo(boxcarOne);
         }
-
     }
 }

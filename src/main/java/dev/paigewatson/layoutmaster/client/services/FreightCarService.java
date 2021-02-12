@@ -1,18 +1,19 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 
 import java.util.List;
 
 public interface FreightCarService
 {
-    List<FreightCarDto> allFreightCars();
+    List<RollingStock> allFreightCars();
 
-    List<FreightCarDto> allFreightCarsByAARType(String aarType);
+    List<RollingStock> allFreightCarsByAARType(AARDesignation aarDesignation);
 
-    List<FreightCarDto> allFreightCarsThatCarry(String goodsType);
+    void delete(RollingStock rollingStockToDelete);
 
-    List<FreightCarDto> allFreightCarsByRoadName(String roadName);
+    List<RollingStock> allFreightCarsByRoadName(String roadName);
 
-    FreightCarDto saveFreightCarToDatabase(FreightCarDto freightCarToSave);
+    RollingStock saveFreightCarToDatabase(RollingStock freightCarToSave);
 }

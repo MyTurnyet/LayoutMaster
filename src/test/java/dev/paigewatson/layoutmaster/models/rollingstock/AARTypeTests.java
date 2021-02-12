@@ -32,7 +32,7 @@ public class AARTypeTests
         public void setup()
         {
             boxcarUUID = UUID.randomUUID();
-            boxcarType = EntityCreator.boxCar(boxcarUUID);
+            boxcarType = EntityCreator.boxcarType(boxcarUUID);
         }
 
         @Test
