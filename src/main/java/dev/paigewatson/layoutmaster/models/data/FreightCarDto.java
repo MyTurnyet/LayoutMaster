@@ -2,11 +2,10 @@ package dev.paigewatson.layoutmaster.models.data;
 
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-@Document(collection = "FreightCars")
+
 public class FreightCarDto implements EntityDto<FreightCar>
 {
     public String roadName = "";

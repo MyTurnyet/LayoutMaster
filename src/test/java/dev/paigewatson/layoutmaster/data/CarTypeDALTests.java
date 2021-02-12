@@ -85,7 +85,7 @@ public class CarTypeDALTests
         }
 
         @Test
-        public void should_deleteRecord_ById()
+        public void should_deleteRecord()
         {
             final CarType boxcarType = new AARType(XM, Arrays.asList(Ingredients, Logs));
             carTypeMongoDAL.delete(boxcarType);
@@ -210,6 +210,19 @@ public class CarTypeDALTests
             //assert
             final List<AARType> allExistingCarTypes = mongoTemplate.findAll(AARType.class);
             assertThat(allExistingCarTypes.size()).isEqualTo(3);
+        }
+
+        @Test
+        public void should_returnAllCarTypes()
+        {
+            //assign
+            insertCarTypesForTesting();
+
+            //act
+            final List<CarType> allCarTypes = carTypeMongoDAL.getAllCarTypes();
+
+            //assert
+            assertThat(allCarTypes.size()).isEqualTo(3);
         }
 
         @Test

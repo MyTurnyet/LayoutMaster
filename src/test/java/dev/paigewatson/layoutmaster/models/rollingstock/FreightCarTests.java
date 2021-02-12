@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -28,7 +29,7 @@ public class FreightCarTests
     class UnitTests
     {
         @Test
-        public void should_returnListOfGoods()
+        public void should_knowWhatGoodsItCanCarry()
         {
             //assign
             final FreightCar freightCar = createTestFreightCar();
@@ -67,22 +68,17 @@ public class FreightCarTests
             //assert
             assertThat(displayName).isEqualTo("XM - PNWR 1234");
         }
-//
-//        @Test
-//        public void should_produceItselfAsString()
-//        {
-//            //assign
-//            final FreightCar freightCar = createTestFreightCar();
-//
-//            //act
-//            final String freightCarAsString = freightCar.toString();
-//            //assert
-//            assertThat(freightCarAsString)
-//                    .isEqualTo(
-//                            "FreightCar{roadName='PNWR', roadNumber=1234, " +
-//                                    "carType=CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}," +
-//                                    " currentlyCarriedGoods=EMPTY}");
-//        }
 
+        @Test
+        public void should_beOfTypeXM()
+        {
+            //assign
+            final RollingStock freightCar = createTestFreightCar();
+
+            //act
+            //assert
+            assertThat(freightCar.isAARType(XM)).isTrue();
+            assertThat(freightCar.isAARType(GS)).isFalse();
+        }
     }
 }

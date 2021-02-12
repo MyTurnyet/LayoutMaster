@@ -2,6 +2,7 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
@@ -12,15 +13,20 @@ import java.util.UUID;
  * if loaded or not
  */
 
+@Document(collection = "FreightCars")
 public class FreightCar implements RollingStock
 {
     @Id
-    private final String id;
-    private final UUID uuid;
-    private final String roadName;
-    private final int roadNumber;
-    private final AARType carType;
+    private String id;
+    private UUID uuid;
+    private String roadName;
+    private int roadNumber;
+    private AARType carType;
     private GoodsType currentlyCarriedGoods = GoodsType.EMPTY;
+
+    public FreightCar()
+    {
+    }
 
     public FreightCar(String roadName, int roadNumber, AARType carType)
     {
@@ -38,7 +44,6 @@ public class FreightCar implements RollingStock
 
     public boolean canCarry(GoodsType expectedGood)
     {
-
         return carType.canCarry(expectedGood);
     }
 
@@ -85,5 +90,11 @@ public class FreightCar implements RollingStock
     public FreightCar getDto()
     {
         return null;
+    }
+
+    @Override
+    public boolean isAARType(AARDesignation expectedAARDesignation)
+    {
+        return this.carType.isOfType(expectedAARDesignation);
     }
 }
