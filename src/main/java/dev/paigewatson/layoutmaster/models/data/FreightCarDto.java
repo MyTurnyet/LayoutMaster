@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import org.springframework.data.annotation.Id;
@@ -52,6 +53,7 @@ public class FreightCarDto implements EntityDto<FreightCar>
     }
 
     @Override
+    @JsonIgnore
     public FreightCar getEntity()
     {
         final FreightCar freightCar = new FreightCar(uuid, roadName, roadNumber, carTypeDto.getEntity());

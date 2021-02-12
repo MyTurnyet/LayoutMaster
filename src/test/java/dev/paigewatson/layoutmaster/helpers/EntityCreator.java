@@ -31,10 +31,10 @@ public class EntityCreator
 
     public static AARType getCarType(AARDesignation aarDesignation, UUID uuid)
     {
-        return getLoadedCarType(aarDesignation, uuid, Collections.emptyList());
+        return getLoadedCarType(uuid, aarDesignation, Collections.emptyList());
     }
 
-    public static AARType getLoadedCarType(AARDesignation aarDesignation, UUID uuid, List<GoodsType> carriedGoodsList)
+    public static AARType getLoadedCarType(UUID uuid, AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
     {
         return new AARType(uuid, aarDesignation, carriedGoodsList);
     }
@@ -46,7 +46,7 @@ public class EntityCreator
 
     public static AARType boxcarType(UUID uuid)
     {
-        return getLoadedCarType(XM, uuid, Arrays.asList(Ingredients, Logs, Parts));
+        return getLoadedCarType(uuid, XM, Arrays.asList(Ingredients, Logs, Parts));
     }
 
     public static AARType gondolaType()
@@ -57,7 +57,17 @@ public class EntityCreator
 
     public static FreightCar gondola(String roadName, int roadNumber)
     {
-        return new FreightCar(UUID.randomUUID(), roadName, roadNumber, gondolaType());
+        return gondola(UUID.randomUUID(), roadName, roadNumber);
+    }
+
+    public static FreightCar gondola(UUID uuid, String roadName, int roadNumber)
+    {
+        return gondola(uuid, roadName, roadNumber, UUID.randomUUID());
+    }
+
+    public static FreightCar gondola(UUID uuid, String roadName, int roadNumber, UUID carTypeUUID)
+    {
+        return new FreightCar(uuid, roadName, roadNumber, gondolaType(carTypeUUID));
     }
 
     public static FreightCar boxcar()
@@ -67,24 +77,45 @@ public class EntityCreator
 
     public static AARType gondolaType(UUID uuid)
     {
-        return getLoadedCarType(GS, uuid, Arrays.asList(ScrapMetal, MetalScraps, Logs, Aggregates));
+        return getLoadedCarType(uuid, GS, Arrays.asList(ScrapMetal, MetalScraps, Logs, Aggregates));
 
     }
 
     public static AARType flatcarType()
     {
-        return getLoadedCarType(FC, UUID.randomUUID(), Arrays.asList(Logs, Lumber, Parts));
+        return flatcarType(UUID.randomUUID());
+
+    }
+
+    public static AARType flatcarType(UUID uuid)
+    {
+        return getLoadedCarType(uuid, FC, Arrays.asList(Logs, Lumber, Parts));
 
     }
 
     public static FreightCar flatcar(String roadName, int roadNumber)
     {
-        return new FreightCar(UUID.randomUUID(), roadName, roadNumber, flatcarType());
+        return flatcar(UUID.randomUUID(), roadName, roadNumber);
+    }
+
+    public static FreightCar flatcar(UUID flatcarUUID, String roadName, int roadNumber)
+    {
+        return new FreightCar(flatcarUUID, roadName, roadNumber, flatcarType());
+    }
+
+    public static FreightCar flatcar(UUID flatcarUUID, String roadName, int roadNumber, UUID carTypeUUID)
+    {
+        return new FreightCar(flatcarUUID, roadName, roadNumber, flatcarType(carTypeUUID));
     }
 
     public static FreightCar boxcar(UUID uuid, String roadName, int roadNumber)
     {
-        return new FreightCar(uuid, roadName, roadNumber, boxcarType());
+        return boxcar(uuid, roadName, roadNumber, UUID.randomUUID());
+    }
+
+    public static FreightCar boxcar(UUID uuid, String roadName, int roadNumber, UUID carTypeUUID)
+    {
+        return new FreightCar(uuid, roadName, roadNumber, boxcarType(carTypeUUID));
     }
 
 }

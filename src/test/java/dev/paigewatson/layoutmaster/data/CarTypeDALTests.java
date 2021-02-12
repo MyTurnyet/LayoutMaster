@@ -186,7 +186,7 @@ public class CarTypeDALTests
             mongoTemplate.remove(new Query(), collectionName);
             boxcarUUID = UUID.randomUUID();
             boxcarType = boxcarType(boxcarUUID);
-            boxcarType2 = new AARType(UUID.randomUUID(), XM, Arrays.asList(Paper, Parts, Logs));
+            boxcarType2 = EntityCreator.getLoadedCarType(UUID.randomUUID(), XM, Arrays.asList(Paper, Parts, Logs));
         }
 
         @Test

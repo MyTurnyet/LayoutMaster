@@ -6,6 +6,7 @@ import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
 import dev.paigewatson.layoutmaster.helpers.EntityCreator;
 import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
 import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
@@ -188,7 +189,7 @@ public class CarTypeControllerTests
                     "\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
                     "\"id\":\"" +
                     gondolaUUID.toString() +
-                    "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
+                    "\",\"aarType\":\"GS\",\"carriedGoods\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"null\":false}]");
         }
 
         @Test
@@ -196,9 +197,9 @@ public class CarTypeControllerTests
         {
             List<CarType> returnedCarTypes = Arrays.asList(boxcarType, gondolaCarType);
 
-            when(carTypeService.carTypesThatCarryGoodsType(any())).thenReturn(returnedCarTypes);
+            when(carTypeService.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/goods/Paper")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/goods/Logs")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -206,10 +207,10 @@ public class CarTypeControllerTests
 
             assertThat(contentAsString).isEqualTo("[{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\",\"id\":\"" +
                     boxCarUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Parts\",\"Paper\"],\"null\":false}" +
+                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"],\"null\":false}" +
                     ",{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\",\"id\":\"" +
                     gondolaUUID.toString() +
-                    "\",\"aarType\":\"GS\",\"carriedGoods\":[\"Parts\"],\"null\":false}]");
+                    "\",\"aarType\":\"GS\",\"carriedGoods\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"null\":false}]");
         }
 
         @Test
@@ -226,7 +227,7 @@ public class CarTypeControllerTests
             assertThat(contentAsString).isEqualTo("{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
                     "\"id\":\"" +
                     boxCarUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Parts\",\"Paper\"],\"null\":false}");
+                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"],\"null\":false}");
         }
 
         @Test
