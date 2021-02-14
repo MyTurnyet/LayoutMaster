@@ -1,7 +1,6 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
-import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -82,26 +81,6 @@ public class FreightCarTests
             assertThat(freightCar.isAARType(XM)).isTrue();
             assertThat(freightCar.isAARType(GS)).isFalse();
             assertThat(freightCar.isNull()).isFalse();
-        }
-
-        @Test
-        public void should_returnRollingStockDto()
-        {
-            //assign
-            final UUID freightCarUUID = UUID.randomUUID();
-            final UUID aarTypeUUID = UUID.randomUUID();
-            final FreightCar freightCar = createTestFreightCar(freightCarUUID, aarTypeUUID);
-
-            //act
-            final FreightCarDto freightCarDto = freightCar.getDto();
-
-            //assert
-            assertThat(freightCarDto.toString()).isEqualTo("FreightCarDto{id='" +
-                    freightCarUUID.toString() +
-                    "', roadName='PNWR', roadNumber=1234, " +
-                    "carTypeDto=AARTypeDto{id='" +
-                    aarTypeUUID.toString() +
-                    "', aarType='XM', carriedGoods=[Ingredients, Logs, Parts]}}");
         }
     }
 }

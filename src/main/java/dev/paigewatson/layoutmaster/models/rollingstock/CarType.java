@@ -2,10 +2,9 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
 import dev.paigewatson.layoutmaster.models.NullableEntity;
-import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
-public interface CarType extends NullableEntity, ConvertsToDto<CarTypeDto<AARType>>
+public interface CarType extends NullableEntity
 {
     boolean canCarry(GoodsType goodsType);
 

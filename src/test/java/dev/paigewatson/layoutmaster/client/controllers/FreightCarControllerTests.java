@@ -3,10 +3,11 @@ package dev.paigewatson.layoutmaster.client.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator;
-import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
-import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -66,16 +67,16 @@ public class FreightCarControllerTests
         {
             //assign
             final UUID gondolaTypeUUID = UUID.randomUUID();
-            AARTypeDto gondolaTypeDto = new AARTypeDto(gondolaTypeUUID, "GS", Arrays.asList("MetalScraps", "ScrapMetal", "Aggregates"));
+            AARType gondolaTypeDto = TestAARTypeCreator.gondolaType();
             final UUID gondolaToSaveUUID = UUID.randomUUID();
-            final FreightCarDto gondolaToSave = new FreightCarDto(gondolaToSaveUUID, "BNSF", 1234, gondolaTypeDto);
+            final FreightCar gondolaToSave = TestFreightCarCreator.gondola(gondolaToSaveUUID, "FOO", 2345, gondolaTypeUUID);
 
             //act
-            final FreightCarDto returnedFreightCarDto = freightCarController.saveFreightCarToDatabase(gondolaToSave);
+            final RollingStock returnedFreightCarDto = freightCarController.saveFreightCarToDatabase(gondolaToSave);
 
             //assert
             final RollingStock savedFreightCar = freightCarServiceFake.savedFreightCar;
-            assertThat(returnedFreightCarDto.toString()).isEqualTo(savedFreightCar.getDto().toString());
+            assertThat(returnedFreightCarDto.toString()).isEqualTo(savedFreightCar.toString());
         }
 
 
@@ -88,7 +89,7 @@ public class FreightCarControllerTests
                     flatCarOne, gondolaOne));
 
             //act
-            final List<FreightCarDto> freightCarDtoList = freightCarController.getAllFreightCars();
+            final List<RollingStock> freightCarDtoList = freightCarController.getAllFreightCars();
             //assert
             assertThat(freightCarDtoList.size()).isEqualTo(5);
         }
@@ -101,7 +102,7 @@ public class FreightCarControllerTests
                     boxcarOne, boxcarTwo, boxcarThree));
 
             //act
-            final List<FreightCarDto> freightCarDtoList = freightCarController.getAllFreightCarsOfAARType(AARDesignation.XM);
+            final List<RollingStock> freightCarDtoList = freightCarController.getAllFreightCarsOfAARType(AARDesignation.XM);
             //assert
             assertThat(freightCarDtoList.size()).isEqualTo(3);
         }
@@ -115,7 +116,7 @@ public class FreightCarControllerTests
                     flatCarOne));
 
             //act
-            final List<FreightCarDto> freightCarDtoList = freightCarController.getAllFreightCarsWithRoadName("BCR");
+            final List<RollingStock> freightCarDtoList = freightCarController.getAllFreightCarsWithRoadName("BCR");
             //assert
             assertThat(freightCarDtoList.size()).isEqualTo(4);
         }
@@ -175,42 +176,34 @@ public class FreightCarControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+            assertThat(contentAsString).isEqualTo("[{\"id\":\"" +
+                    boxcarOneUUID.toString() +
+                    "\",\"roadName\":\"PNWR\",\"roadNumber\":2341," +
+                    "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
                     "\"id\":\"" +
                     boxcarTypeUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
-                    "\"null\":false}," +
-                    "\"roadName\":\"PNWR\",\"roadNumber\":2341,\"id\":\"" +
-                    boxcarOneUUID.toString() +
-                    "\",\"null\":false}," +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
+                    "{\"id\":\"" +
+                    gondolaUUID.toString() +
+                    "\",\"roadName\":\"BNSF\",\"roadNumber\":1234," +
+                    "\"carType\":{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"]," +
                     "\"id\":\"" +
                     gondolaTypeUUID.toString() +
-                    "\",\"aarType\":\"GS\",\"carriedGoods\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"null\":false}," +
-                    "\"roadName\":\"BNSF\",\"roadNumber\":1234,\"id\":\"" +
-                    gondolaUUID.toString() +
-                    "\",\"null\":false}," +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
+                    "{\"id\":\"" +
+                    flatcarUUID.toString() +
+                    "\",\"roadName\":\"ATSF\",\"roadNumber\":1232," +
+                    "\"carType\":{\"aarDesignation\":\"FC\",\"carriedGoodsList\":[\"Logs\",\"Lumber\",\"Parts\"]," +
                     "\"id\":\"" +
                     flatcarTypeUUID.toString() +
-                    "\",\"aarType\":\"FC\",\"carriedGoods\":[\"Logs\",\"Lumber\",\"Parts\"],\"null\":false}," +
-                    "\"roadName\":\"ATSF\",\"roadNumber\":1232,\"id\":\"" +
-                    flatcarUUID.toString() +
-                    "\",\"null\":false}]");
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}]");
         }
 
         @Test
         public void should_addFreightCarToDatabase() throws Exception
         {
             when(freightCarService.saveFreightCarToDatabase(any())).thenReturn(boxcarOne);
-            final String content = asJsonString(boxcarOne.getDto());
+            final String content = asJsonString(boxcarOne);
             mockMvc.perform(MockMvcRequestBuilders.post("/inventory/freightcars/add")
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -246,26 +239,20 @@ public class FreightCarControllerTests
             final String contentAsString = result.getResponse().getContentAsString();
 
             assertThat(contentAsString).isEqualTo("[" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":{" +
-                    "\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
-                    "\"id\":\"" +
-                    boxcarTypeUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"],\"null\":false}," +
-                    "\"roadName\":\"PNWR\",\"roadNumber\":2341," +
-                    "\"id\":\"" +
+                    "{\"id\":\"" +
                     boxcarOneUUID.toString() +
-                    "\",\"null\":false}," +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+                    "\",\"roadName\":\"PNWR\",\"roadNumber\":2341," +
+                    "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
                     "\"id\":\"" +
                     boxcarTypeUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"],\"null\":false}," +
-                    "\"roadName\":\"BCR\",\"roadNumber\":2342," +
-                    "\"id\":\"" +
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
+                    "{\"id\":\"" +
                     boxcarTwoUUID.toString() +
-                    "\",\"null\":false}]");
+                    "\",\"roadName\":\"BCR\",\"roadNumber\":2342," +
+                    "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
+                    "\"id\":\"" +
+                    boxcarTypeUUID.toString() +
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}]");
         }
 
         @Test
@@ -282,25 +269,20 @@ public class FreightCarControllerTests
             final String contentAsString = result.getResponse().getContentAsString();
 
             assertThat(contentAsString).isEqualTo("[" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":" +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
-                    "\"id\":\"" +
-                    boxcarTypeUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"],\"null\":false}," +
-                    "\"roadName\":\"PNWR\",\"roadNumber\":2341," +
-                    "\"id\":\"" +
+                    "{\"id\":\"" +
                     boxcarOneUUID.toString() +
-                    "\",\"null\":false}," +
-                    "{\"@class\":\"dev.paigewatson.layoutmaster.models.data.FreightCarDto\"," +
-                    "\"carTypeDto\":{\"@class\":\"dev.paigewatson.layoutmaster.models.data.AARTypeDto\"," +
+                    "\",\"roadName\":\"PNWR\",\"roadNumber\":2341," +
+                    "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
                     "\"id\":\"" +
                     boxcarTypeUUID.toString() +
-                    "\",\"aarType\":\"XM\",\"carriedGoods\":[\"Ingredients\",\"Logs\",\"Parts\"],\"null\":false}," +
-                    "\"roadName\":\"BCR\",\"roadNumber\":2342," +
-                    "\"id\":\"" +
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
+                    "{\"id\":\"" +
                     boxcarTwoUUID.toString() +
-                    "\",\"null\":false}]");
+                    "\",\"roadName\":\"BCR\",\"roadNumber\":2342," +
+                    "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
+                    "\"id\":\"" +
+                    boxcarTypeUUID.toString() +
+                    "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}]");
         }
     }
 }

@@ -1,6 +1,5 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import dev.paigewatson.layoutmaster.models.data.FreightCarDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,12 +17,12 @@ import java.util.UUID;
 public class FreightCar implements RollingStock
 {
     @Id
-    private String id;
+    public String id;
     private UUID uuid;
-    private String roadName;
-    private int roadNumber;
-    private AARType carType;
-    private GoodsType currentlyCarriedGoods = GoodsType.EMPTY;
+    public String roadName;
+    public int roadNumber;
+    public AARType carType;
+    public GoodsType currentlyCarriedGoods = GoodsType.EMPTY;
 
     public FreightCar()
     {
@@ -71,12 +70,6 @@ public class FreightCar implements RollingStock
     public boolean isNull()
     {
         return false;
-    }
-
-    @Override
-    public FreightCarDto getDto()
-    {
-        return new FreightCarDto(uuid, roadName, roadNumber, carType.getDto());
     }
 
     @Override
