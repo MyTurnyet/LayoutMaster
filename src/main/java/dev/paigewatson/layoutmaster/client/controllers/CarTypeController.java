@@ -1,8 +1,9 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,31 +23,40 @@ public class CarTypeController
 
     public CarTypeController(@Autowired CarTypeService carTypeService)
     {
-
         this.carTypeService = carTypeService;
     }
 
-    @GetMapping(value = "/aar")
+    @GetMapping(path = "/aar")
     public List<AARDesignation> getAARDesignations()
     {
         return carTypeService.allAARDesignations();
     }
 
-    @GetMapping("/cartypes")
-    public List<CarTypeDto> getAllCarTypes()
+    @GetMapping(path = "/types")
+    public List<CarType> getAllCarTypes()
     {
-        return carTypeService.allCarTypes();
+        final List<CarType> carTypeList = carTypeService.allCarTypes();
+        return carTypeList;
     }
 
-    @PostMapping("/cartypes")
-    public void addNewCarType(@RequestBody CarTypeDto carType)
+    @PostMapping(path = "/types/add")
+    public void addNewCarType(@RequestBody CarType carType)
     {
         carTypeService.saveCarTypeToDatabase(carType);
     }
 
-    @GetMapping("/cartypes/aar/{aarType}")
-    public CarTypeDto getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
+    @GetMapping(path = "/types/aar/{aarType}")
+    public CarType getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
-        return carTypeService.carTypeWithAAR(expectedType);
+        final AARDesignation aarDesignation = AARDesignation.valueOf(expectedType);
+        final CarType carTypeForAAR = carTypeService.carTypeForAAR(aarDesignation);
+        return carTypeForAAR;
+    }
+
+    @GetMapping(path = "/types/goods/{goodsType}")
+    public List<CarType> getCarTypesThatCarry(@PathVariable(value = "goodsType") String expectedGoods)
+    {
+        final List<CarType> carTypeList = carTypeService.carTypesThatCarryGoodsType(GoodsType.valueOf(expectedGoods));
+        return carTypeList;
     }
 }

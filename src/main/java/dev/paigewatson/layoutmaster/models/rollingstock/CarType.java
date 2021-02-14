@@ -1,69 +1,17 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import dev.paigewatson.layoutmaster.data.MongoCarTypeRepository;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.data.CarTypeDAL;
+import dev.paigewatson.layoutmaster.models.NullableEntity;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
-public class CarType
+public interface CarType extends NullableEntity
 {
-    private final AARDesignation aarDesignation;
-    private final List<GoodsType> carriedGoodsList;
-    private String id = "";
+    boolean canCarry(GoodsType goodsType);
 
-    public CarType(AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
-    {
-        this("", aarDesignation, carriedGoodsList);
-    }
+    boolean isOfType(AARDesignation designation);
 
-    public CarType(String id, AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
-    {
-        this.id = id;
-        this.aarDesignation = aarDesignation;
-        this.carriedGoodsList = carriedGoodsList;
-    }
+    AARDesignation displayName();
 
+    CarType saveToDatabase(CarTypeDAL carTypeDAL);
 
-    public boolean isOfType(AARDesignation expectedTypeDesignation)
-    {
-        return expectedTypeDesignation == aarDesignation;
-    }
-
-    public boolean canCarry(GoodsType expectedGoodsType)
-    {
-        return carriedGoodsList.contains(expectedGoodsType);
-    }
-
-    public String displayName()
-    {
-        return aarDesignation.name();
-    }
-
-    public CarTypeDto getDto()
-    {
-        final CarTypeDto carTypeDto = new CarTypeDto();
-        carTypeDto.id = this.id;
-        carTypeDto.aarType = this.aarDesignation.name();
-        carTypeDto.carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
-        return carTypeDto;
-    }
-
-    public void saveToRepository(MongoCarTypeRepository carTypeRepository)
-    {
-        carTypeRepository.save(this.getDto());
-    }
-
-    @Override
-    public String toString()
-    {
-        return "CarType{" +
-                "id='" + id + '\'' +
-                ", aarDesignation=" + aarDesignation +
-                ", carriedGoodsList=" + carriedGoodsList +
-                '}';
-    }
 }

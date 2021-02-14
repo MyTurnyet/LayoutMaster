@@ -1,14 +1,15 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.UUID;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Lumber;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -16,11 +17,13 @@ public class FreightCarTests
 {
     public static FreightCar createTestFreightCar()
     {
-        final ArrayList<GoodsType> carriedGoodsList = new ArrayList<>();
-        carriedGoodsList.add(Ingredients);
+        return createTestFreightCar(UUID.randomUUID(), UUID.randomUUID());
+    }
 
-        final CarType boxCarType = new CarType(XM, carriedGoodsList);
-        return new FreightCar("PNWR", 1234, boxCarType);
+    public static FreightCar createTestFreightCar(UUID freightCarUUID, UUID carTypeUUID)
+    {
+        final AARType boxCarType = TestAARTypeCreator.boxcarType(carTypeUUID);
+        return new FreightCar(freightCarUUID, "PNWR", 1234, boxCarType);
     }
 
     @Nested
@@ -28,7 +31,7 @@ public class FreightCarTests
     class UnitTests
     {
         @Test
-        public void should_returnListOfGoods()
+        public void should_knowWhatGoodsItCanCarry()
         {
             //assign
             final FreightCar freightCar = createTestFreightCar();
@@ -47,13 +50,12 @@ public class FreightCarTests
         public void should_LoadFreightCar()
         {
             //assign
-            final FreightCar freightCar = createTestFreightCar();
+            final RollingStock freightCar = createTestFreightCar();
 
             //act
-            assertThat(freightCar.isLoaded()).isFalse();
             freightCar.load(Ingredients);
             //assert
-            assertThat(freightCar.isLoaded()).isTrue();
+            assertThat(freightCar.isCarrying(Ingredients)).isTrue();
         }
 
         @Test
@@ -67,22 +69,18 @@ public class FreightCarTests
             //assert
             assertThat(displayName).isEqualTo("XM - PNWR 1234");
         }
-//
-//        @Test
-//        public void should_produceItselfAsString()
-//        {
-//            //assign
-//            final FreightCar freightCar = createTestFreightCar();
-//
-//            //act
-//            final String freightCarAsString = freightCar.toString();
-//            //assert
-//            assertThat(freightCarAsString)
-//                    .isEqualTo(
-//                            "FreightCar{roadName='PNWR', roadNumber=1234, " +
-//                                    "carType=CarType{id='', carTypeDesignation=XM, carriedGoodsList=[Ingredients]}," +
-//                                    " currentlyCarriedGoods=EMPTY}");
-//        }
 
+        @Test
+        public void should_beOfTypeXM_andNotNull()
+        {
+            //assign
+            final RollingStock freightCar = createTestFreightCar();
+
+            //act
+            //assert
+            assertThat(freightCar.isAARType(XM)).isTrue();
+            assertThat(freightCar.isAARType(GS)).isFalse();
+            assertThat(freightCar.isNull()).isFalse();
+        }
     }
 }

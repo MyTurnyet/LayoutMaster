@@ -2,10 +2,13 @@ package dev.paigewatson.layoutmaster.client.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.CarTypeService;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
+import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -23,11 +26,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.IntStream;
 
+import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType;
+import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.gondolaType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,91 +45,88 @@ public class CarTypeControllerTests
     {
         private CarTypeController carTypeController;
         private CarTypeServiceFake carTypeServiceFake;
+        private CarType boxcarType;
+        private CarType gondolaCarType;
 
         @BeforeEach
         public void setUp()
         {
             carTypeServiceFake = new CarTypeServiceFake();
             carTypeController = new CarTypeController(carTypeServiceFake);
+            boxcarType = TestAARTypeCreator.boxcarType();
+            gondolaCarType = TestAARTypeCreator.gondolaType();
         }
 
         @Test
         public void should_returnAllAARDesignations()
         {
-            //assign
-            //act
-            final List<AARDesignation> allCarTypes = carTypeController.getAARDesignations();
-            //assert
-            assertThat(allCarTypes.size()).isEqualTo(23);
+            final List<AARDesignation> aarDesignations = carTypeController.getAARDesignations();
+            assertThat(aarDesignations.size()).isEqualTo(24);
         }
 
         @Test
         public void should_returnAllCarTypes()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
-            List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
-            carTypeServiceFake.setReturnedCarTypeDTOs(returnedCarTypes);
+            List<CarType> returnedCarTypes = Arrays.asList(boxcarType, gondolaCarType);
+            final List<CarType> carTypeDtoList = Arrays.asList(boxcarType, gondolaCarType);
+            carTypeServiceFake.setReturnedCarTypeList(returnedCarTypes);
 
             //act
-            final List<CarTypeDto> allCarTypes = carTypeController.getAllCarTypes();
+            final List<CarType> allCarTypes = carTypeController.getAllCarTypes();
             //assert
-            assertThat(allCarTypes).isEqualTo(returnedCarTypes);
+            IntStream.range(0, allCarTypes.size()).forEachOrdered(i -> assertThat(allCarTypes.get(i).toString()).isEqualTo(carTypeDtoList.get(i).toString()));
         }
 
         @Test
         public void should_returnCarTypeByAAR()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
-            carTypeServiceFake.setReturnedCarTypeWithAAR(carTypeDto);
+            carTypeServiceFake.setReturnedCarTypeWithAAR(boxcarType);
 
             //act
-            final CarTypeDto carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+            final CarType carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+
             //assert
-            assertThat(carTypeByAAR.toString()).isEqualTo(carTypeDto.toString());
+            assertThat(carTypeByAAR.toString()).isEqualTo(boxcarType.toString());
         }
 
         @Test
         public void should_notReturnCarTypeByAAR()
         {
             //assign
-            carTypeServiceFake.setReturnedCarTypeWithAAR(new NullCarTypeDto());
+            carTypeServiceFake.setReturnedCarTypeWithAAR(new NullCarType());
 
             //act
-            final CarTypeDto carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+            final CarType carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
             //assert
-            assertThat(carTypeByAAR.isNull());
+            assertThat(carTypeByAAR.isNull()).isTrue();
+        }
+
+        @Test
+        public void should_returnCarTypesT_thatCarry_goods()
+        {
+            //assign
+            carTypeServiceFake.setReturnedCarTypeList(Arrays.asList(boxcarType, gondolaCarType));
+
+            //act
+            final List<CarType> carTypesThatCarryLogs = carTypeController.getCarTypesThatCarry("Logs");
+            //assert
+            assertThat(carTypesThatCarryLogs.size()).isEqualTo(2);
         }
 
         @Test
         public void should_saveCarTypeToRepository()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("", "XM", Collections.singletonList("SheetMetal"));
-
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
 
             //act
-            carTypeController.addNewCarType(carTypeDto);
+            carTypeController.addNewCarType(boxcarType);
 
             //assert
-
-            assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
+            assertThat(carTypeServiceFake.savedDtoEntity().toString()).isEqualTo(boxcarType.toString());
         }
-//        @Test
-//        public void should_saveCarTypeToRepository()
-//        {
-//            //assign
-//            final CarTypeDto carTypeDto = new CarTypeDto("", "XM", Collections.singletonList("SheetMetal"));
-//
-//
-//            //act
-//            carTypeController.addNewCarType(carTypeDto);
-//
-//            //assert
-//
-//            assertThat(carTypeServiceFake.savedDtoEntity()).isEqualTo(carTypeDto);
-//        }
     }
 
     @Nested
@@ -139,6 +141,20 @@ public class CarTypeControllerTests
         @MockBean
         private CarTypeService carTypeService;
 
+        private AARType boxcarType;
+        private AARType gondolaCarType;
+        private UUID boxCarUUID;
+        private UUID gondolaUUID;
+
+        @BeforeEach
+        public void setupTests()
+        {
+            boxCarUUID = UUID.randomUUID();
+            gondolaUUID = UUID.randomUUID();
+            boxcarType = boxcarType(boxCarUUID);
+            gondolaCarType = gondolaType(gondolaUUID);
+        }
+
         @Test
         public void should_returnAllAARDesignations() throws Exception
         {
@@ -150,71 +166,90 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[\"XA\",\"XM\",\"XP\",\"XL\",\"XR\",\"XF\",\"FA\",\"FBC\",\"FC\",\"FL\",\"FM\",\"TC\",\"GA\",\"GS\",\"HK\",\"HFA\",\"HT\",\"HTA\",\"TM\",\"TP\",\"RB\",\"RBL\",\"RP\"]");
+            assertThat(contentAsString).isEqualTo("[\"XA\",\"XM\",\"XP\",\"XL\",\"XR\",\"XF\",\"FA\",\"FBC\",\"FC\",\"FL\",\"FM\",\"TC\",\"GA\",\"GS\",\"HK\",\"HFA\",\"HT\",\"HTA\",\"TM\",\"TP\",\"RB\",\"RBL\",\"RP\",\"NULL\"]");
         }
 
         @Test
         public void should_returnAllCarTypes() throws Exception
         {
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
-            List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
-            when(carTypeService.allCarTypes()).thenReturn(returnedCarTypes);
+            final List<CarType> aarTypes = Collections.singletonList(gondolaCarType);
+            when(carTypeService.allCarTypes()).thenReturn(aarTypes);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}]");
+            assertThat(contentAsString).isEqualTo("[{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"" +
+                    gondolaUUID.toString() +
+                    "\",\"null\":false}]");
+        }
+
+        @Test
+        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
+        {
+            List<CarType> returnedCarTypes = Arrays.asList(boxcarType, gondolaCarType);
+
+            when(carTypeService.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes);
+
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/goods/Logs")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            final String contentAsString = result.getResponse().getContentAsString();
+
+            assertThat(contentAsString).isEqualTo("[{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
+                    boxCarUUID.toString() +
+                    "\",\"null\":false},{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"" +
+                    gondolaUUID.toString() +
+                    "\",\"null\":false}]");
         }
 
         @Test
         public void should_returnCarTypeByAARType() throws Exception
         {
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
-            when(carTypeService.carTypeWithAAR("XM")).thenReturn(carTypeDto);
+            when(carTypeService.carTypeForAAR(any())).thenReturn(boxcarType);
 
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"id\":\"FOOO!\",\"aarType\":\"XM\",\"carriedGoods\":[\"SheetMetal\"],\"null\":false}");
+            assertThat(contentAsString).isEqualTo("{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
+                    boxCarUUID.toString() +
+                    "\",\"null\":false}");
         }
 
         @Test
         public void should_notReturnCarTypeByAARType() throws Exception
         {
-            when(carTypeService.carTypeWithAAR("XM")).thenReturn(new NullCarTypeDto());
-
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/cartypes/aar/XM")
+            when(carTypeService.carTypeForAAR(any())).thenReturn(new NullCarType());
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"id\":\"\",\"aarType\":\"\",\"carriedGoods\":[],\"null\":true}");
+            assertThat(contentAsString).isEqualTo("{\"null\":true}");
         }
 
-        @Test
-        public void should_addCarTypeToDatabase() throws Exception
-        {
-            final CarTypeDto carTypeDto = new CarTypeDto("FOOO!", "XM", Collections.singletonList("SheetMetal"));
-
-
-            //assign
-            final String content = asJsonString(carTypeDto);
-            mockMvc.perform(MockMvcRequestBuilders.post("/models/cartypes")
-                    .content(content)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk());
-
-            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
-
-        }
+//        @Test
+//        public void should_addCarTypeToDatabase() throws Exception
+//        {
+//
+//            //assign
+//            final CarType boxcarTypeDto = boxcarType;
+//            mockMvc.perform(MockMvcRequestBuilders.post("/models/types/add")
+//                    .content(asJsonString(boxcarTypeDto))
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .accept(MediaType.APPLICATION_JSON))
+//                    .andExpect(status().isOk());
+//
+//            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
+//
+//        }
 
         private String asJsonString(final Object obj)
         {
