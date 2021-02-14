@@ -2,7 +2,6 @@ package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
 import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
-import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -95,18 +94,6 @@ public class AARTypeTests
 
             assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType2);
             assertThat(savedCarType).isEqualTo(boxcarType2);
-        }
-
-        @Test
-        public void should_convertToDTO()
-        {
-            //assign
-            //act
-            final CarTypeDto boxcarTypeDto = boxcarType.getDto();
-            //assert
-            assertThat(boxcarTypeDto.toString()).isEqualTo("AARTypeDto{id='" +
-                    boxcarUUID.toString() +
-                    "', aarType='XM', carriedGoods=[Ingredients, Logs, Parts]}");
         }
     }
 }

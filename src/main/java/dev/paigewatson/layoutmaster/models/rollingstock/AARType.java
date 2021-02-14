@@ -1,25 +1,21 @@
 package dev.paigewatson.layoutmaster.models.rollingstock;
 
 import dev.paigewatson.layoutmaster.data.CarTypeDAL;
-import dev.paigewatson.layoutmaster.models.data.AARTypeDto;
-import dev.paigewatson.layoutmaster.models.data.CarTypeDto;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Document(collection = "AARTypes")
 public class AARType implements CarType
 {
-    private AARDesignation aarDesignation;
-    private List<GoodsType> carriedGoodsList;
+    public AARDesignation aarDesignation;
+    public List<GoodsType> carriedGoodsList;
 
     @Id
-    private String id = "";
+    public String id = "";
     private UUID uuid;
 
 
@@ -65,15 +61,6 @@ public class AARType implements CarType
             carTypeDAL.delete(byAarType);
         }
         return carTypeDAL.insertCarType(this);
-    }
-
-    public CarTypeDto<AARType> getDto()
-    {
-        final ArrayList<String> carriedGoods = carriedGoodsList.stream().map(Enum::name).collect(Collectors.toCollection(ArrayList::new));
-        return new AARTypeDto(uuid,
-                aarDesignation.name(),
-                carriedGoods
-        );
     }
 
     @Override
