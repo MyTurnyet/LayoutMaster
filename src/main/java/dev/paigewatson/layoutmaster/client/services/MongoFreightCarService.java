@@ -1,56 +1,51 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.FreightCarRepository;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
+import dev.paigewatson.layoutmaster.data.RollingStockDAL;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MongoFreightCarService implements FreightCarService
 {
-    private final FreightCarRepository freightCarRepository;
+    private final RollingStockDAL rollingStockDAL;
 
-    public MongoFreightCarService(@Autowired FreightCarRepository freightCarRepository)
+
+    public MongoFreightCarService(@Autowired RollingStockDAL rollingStockDAL)
     {
-        this.freightCarRepository = freightCarRepository;
+        this.rollingStockDAL = rollingStockDAL;
     }
 
     @Override
-    public List<FreightCarDto> allFreightCars()
+    public List<RollingStock> allFreightCars()
     {
-        return freightCarRepository.findAll();
+        return rollingStockDAL.getAllRollingStock();
     }
 
     @Override
-    public List<FreightCarDto> allFreightCarsByAARType(String aarType)
+    public List<RollingStock> allFreightCarsByAARType(AARDesignation aarDesignation)
     {
-        return freightCarRepository.findAllByCarTypeDto_AarType(aarType);
+        return rollingStockDAL.getAllOfAARDesignation(aarDesignation);
     }
 
     @Override
-    public List<FreightCarDto> allFreightCarsThatCarry(String goodsType)
+    public void delete(RollingStock rollingStockToDelete)
     {
-        return freightCarRepository.findAllByCarTypeDtoCarriedGoodsContains(goodsType);
+        rollingStockDAL.delete(rollingStockToDelete);
     }
 
     @Override
-    public List<FreightCarDto> allFreightCarsByRoadName(String roadName)
+    public List<RollingStock> allFreightCarsByRoadName(String roadName)
     {
-        return freightCarRepository.findAllByRoadName(roadName);
+        return rollingStockDAL.getAllOfRoadName(roadName);
     }
 
     @Override
-    public FreightCarDto saveFreightCarToDatabase(FreightCarDto freightCarToSave)
+    public RollingStock saveFreightCarToDatabase(RollingStock freightCarToSave)
     {
-        final Optional<FreightCarDto> freightCarById = freightCarRepository.findById(freightCarToSave.id);
-        if (!freightCarById.isPresent())
-        {
-            return freightCarRepository.insert(freightCarToSave);
-        }
-        freightCarToSave.id = freightCarById.get().id;
-        return freightCarRepository.save(freightCarToSave);
+        return rollingStockDAL.insertRollingStock(freightCarToSave);
     }
 }

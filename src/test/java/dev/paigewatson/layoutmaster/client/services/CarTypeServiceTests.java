@@ -1,8 +1,10 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.helpers.CarTypeRepositoryFake;
+import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -12,6 +14,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
+import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CarTypeServiceTests
@@ -21,14 +26,14 @@ public class CarTypeServiceTests
     class UnitTests
     {
 
-        private CarTypeRepositoryFake repositoryFake;
         private CarTypeService service;
+        private CarTypeDALFake carTypeDALFake;
 
         @BeforeEach
         public void beforeEachTestRuns()
         {
-            repositoryFake = new CarTypeRepositoryFake();
-            service = new MongoCarTypeService(repositoryFake);
+            carTypeDALFake = new CarTypeDALFake();
+            service = new MongoCarTypeService(carTypeDALFake);
         }
 
         @Test
@@ -38,7 +43,7 @@ public class CarTypeServiceTests
             //act
             List<AARDesignation> aarDesignations = service.allAARDesignations();
             //assert
-            assertThat(aarDesignations.size()).isEqualTo(23);
+            assertThat(aarDesignations.size()).isEqualTo(24);
         }
 
 
@@ -48,86 +53,82 @@ public class CarTypeServiceTests
             //assign
             //assign
 
-            final List<String> carriedGoods = Collections.singletonList("SheetMetal");
-            final CarTypeDto carTypeDto = new CarTypeDto("XM", carriedGoods);
-            List<CarTypeDto> returnedCarTypes = Collections.singletonList(carTypeDto);
-            repositoryFake.setReturnedValuesList(returnedCarTypes);
+            final List<GoodsType> carriedGoods = Collections.singletonList(SheetMetal);
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            List<CarType> returnedCarTypes = Collections.singletonList(boxcarType);
+            carTypeDALFake.setReturnedEntityList(returnedCarTypes);
 
             //act
-            List<CarTypeDto> allCarTypesList = service.allCarTypes();
+            List<CarType> allCarTypesList = service.allCarTypes();
             //assert
             assertThat(allCarTypesList.size()).isEqualTo(1);
-            assertThat(allCarTypesList.get(0).carriedGoods).isEqualTo(carriedGoods);
-            assertThat(allCarTypesList.get(0).aarType).isEqualTo("XM");
+            assertThat(allCarTypesList.get(0)).isEqualTo(boxcarType);
         }
-
 
         @Test
         public void should_updateOnSaveCarTypeToRepository()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("XM", Arrays.asList("Parts", "Paper"));
-            final CarTypeDto existingCarTypeDto = new CarTypeDto("XM", Collections.singletonList("Ingredients"));
-            repositoryFake.findByAarReturned(existingCarTypeDto);
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            final CarType existingBoxcarType = TestAARTypeCreator.boxcarType();
+            carTypeDALFake.setCurrentSavedEntity(existingBoxcarType);
 
             //act
-            final CarTypeDto returnedCarTypeDto = service.saveCarTypeToDatabase(carTypeDto);
+            final CarType returnedCarType = service.saveCarTypeToDatabase(boxcarType);
             //assert
-            assertThat(repositoryFake.savedEntity.toString()).isEqualTo(returnedCarTypeDto.toString());
-            assertThat(returnedCarTypeDto.getId()).isEqualTo(existingCarTypeDto.getId());
+            assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType);
+            assertThat(returnedCarType).isEqualTo(boxcarType);
         }
 
         @Test
         public void should_insertOnSaveCarTypeToRepository()
         {
             //assign
-            final CarTypeDto carTypeDto = new CarTypeDto("XM", Arrays.asList("Parts", "Paper"));
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
 
             //act
-            final CarTypeDto returnedCarTypeDto = service.saveCarTypeToDatabase(carTypeDto);
+            final CarType returnedCarTypeDto = service.saveCarTypeToDatabase(boxcarType);
             //assert
-            assertThat(repositoryFake.savedEntity.toString()).isEqualTo(returnedCarTypeDto.toString());
+            assertThat(carTypeDALFake.savedEntity().toString()).isEqualTo(returnedCarTypeDto.toString());
         }
 
         @Test
         public void should_getExistingCarTypeByAAR()
         {
             //assign
-            final CarTypeDto existingCarTypeDto = new CarTypeDto("GS", Collections.singletonList("Ingredients"));
-            repositoryFake.findByAarReturned(existingCarTypeDto);
+            final CarType existingCarType = TestAARTypeCreator.gondolaType();
+            carTypeDALFake.setEntityToReturn(existingCarType);
             //act
-            final CarTypeDto carTypeForAAR = service.carTypeForAAR("XM");
+            final CarType carTypeForAAR = service.carTypeForAAR(GS);
             //assert
 
-            assertThat(carTypeForAAR.getId()).isEqualTo(existingCarTypeDto.getId());
-            assertThat(carTypeForAAR.aarType).isEqualTo(existingCarTypeDto.aarType);
-            assertThat(carTypeForAAR.carriedGoods).isEqualTo(existingCarTypeDto.carriedGoods);
+            assertThat(carTypeForAAR).isEqualTo(existingCarType);
+        }
+
+        @Test
+        public void should_getNullCarType_whenNonExistent_AAR()
+        {
+            //assign
+            //act
+            final CarType carTypeForAAR = service.carTypeForAAR(GS);
+            //assert
+
+            assertThat(carTypeForAAR.isNull()).isTrue();
         }
 
         @Test
         public void should_getCarTypesThatCarry_goods()
         {
             //assign
-            final CarTypeDto boxcarTypeDto = new CarTypeDto("XM", Arrays.asList("Parts", "Paper"));
-            final CarTypeDto gondolaCarTypeDto = new CarTypeDto("GS", Collections.singletonList("Parts"));
-            repositoryFake.returnedValues = Arrays.asList(boxcarTypeDto, gondolaCarTypeDto);
+            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            final CarType gondolaCarType = TestAARTypeCreator.gondolaType();
+            carTypeDALFake.setReturnedEntityList(Arrays.asList(boxcarType, gondolaCarType));
             //act
-            final List<CarTypeDto> carTypesThatCarryGoods = service.carTypesThatCarryGoodsType("Parts");
+            final List<CarType> carTypesThatCarryGoods = service.carTypesThatCarryGoodsType(Parts);
             //assert
             assertThat(carTypesThatCarryGoods.size()).isEqualTo(2);
-            assertThat(carTypesThatCarryGoods.stream().anyMatch(carTypeDto -> carTypeDto.toString() == boxcarTypeDto.toString()));
-            assertThat(carTypesThatCarryGoods.stream().anyMatch(carTypeDto -> carTypeDto.toString() == gondolaCarTypeDto.toString()));
-        }
-
-        @Test
-        public void should_returnNullCarTypeDto_fromCarTypeWithAAR()
-        {
-            //assign
-            //act
-            final CarTypeDto carTypeForAAR = service.carTypeForAAR("XM");
-            //assert
-
-            assertThat(carTypeForAAR.isNull()).isTrue();
+            assertThat(carTypesThatCarryGoods.stream().anyMatch(carType -> carType == boxcarType));
+            assertThat(carTypesThatCarryGoods.stream().anyMatch(carType -> carType == gondolaCarType));
         }
     }
 }

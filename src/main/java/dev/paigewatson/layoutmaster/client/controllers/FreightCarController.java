@@ -1,7 +1,9 @@
 package dev.paigewatson.layoutmaster.client.controllers;
 
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
-import dev.paigewatson.layoutmaster.data.models.FreightCarDto;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,32 +26,32 @@ public class FreightCarController
     }
 
     @GetMapping(value = "/freightcars")
-    public List<FreightCarDto> getAllFreightCars()
+    public List<RollingStock> getAllFreightCars()
     {
-        return freightCarService.allFreightCars();
+
+        final List<RollingStock> allRollingStockList = freightCarService.allFreightCars();
+        return allRollingStockList;
     }
 
     @GetMapping(value = "/freightcars/aar/{aarType}")
-    public List<FreightCarDto> getAllFreightCarsOfAARType(@PathVariable(value = "aarType") String aarType)
+    public List<RollingStock> getAllFreightCarsOfAARType(@PathVariable(value = "aarType") AARDesignation aarType)
     {
-        return freightCarService.allFreightCarsByAARType(aarType);
-    }
-
-    @GetMapping(value = "/freightcars/goods/{goodsType}")
-    public List<FreightCarDto> getAllFreightCarsThatCarry(@PathVariable(value = "goodsType") String goodsType)
-    {
-        return freightCarService.allFreightCarsThatCarry(goodsType);
+        final List<RollingStock> rollingStockList = freightCarService.allFreightCarsByAARType(aarType);
+        return rollingStockList;
     }
 
     @GetMapping(value = "/freightcars/{roadname}")
-    public List<FreightCarDto> getAllFreightCarsWithRoadName(@PathVariable(value = "roadname") String roadName)
+    public List<RollingStock> getAllFreightCarsWithRoadName(@PathVariable(value = "roadname") String roadName)
     {
-        return freightCarService.allFreightCarsByRoadName(roadName);
+        final List<RollingStock> rollingStockList = freightCarService.allFreightCarsByRoadName(roadName);
+        return rollingStockList;
     }
 
     @PostMapping(value = "/freightcars/add")
-    public FreightCarDto saveFreightCarToDatabase(@RequestBody FreightCarDto freightCarToSave)
+    public RollingStock saveFreightCarToDatabase(@RequestBody FreightCar freightCarToSave)
     {
-        return freightCarService.saveFreightCarToDatabase(freightCarToSave);
+
+        final RollingStock saveFreightCarToDatabase = freightCarService.saveFreightCarToDatabase(freightCarToSave);
+        return saveFreightCarToDatabase;
     }
 }

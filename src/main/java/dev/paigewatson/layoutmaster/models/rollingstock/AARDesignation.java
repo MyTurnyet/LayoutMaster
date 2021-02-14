@@ -25,4 +25,6 @@ public enum AARDesignation
     RB,
     RBL,
     RP,
+    NULL
+
 }

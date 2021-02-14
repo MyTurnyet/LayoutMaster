@@ -1,9 +1,9 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.CarTypeRepository;
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
-import dev.paigewatson.layoutmaster.data.models.NullCarTypeDto;
+import dev.paigewatson.layoutmaster.data.CarTypeDAL;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public class MongoCarTypeService implements CarTypeService
 {
-    private final CarTypeRepository carTypeRepository;
+    private final CarTypeDAL carTypeDAL;
 
-    public MongoCarTypeService(@Autowired CarTypeRepository carTypeRepository)
+    public MongoCarTypeService(@Autowired CarTypeDAL carTypeDAL)
     {
-        this.carTypeRepository = carTypeRepository;
+        this.carTypeDAL = carTypeDAL;
     }
 
     public List<AARDesignation> allAARDesignations()
@@ -26,34 +26,27 @@ public class MongoCarTypeService implements CarTypeService
     }
 
     @Override
-    public CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave)
+    public CarType saveCarTypeToDatabase(CarType carTypeToSave)
     {
-        final CarTypeDto carTypeWithMatchingAARType = carTypeForAAR(carTypeToSave.aarType);
-        if (carTypeWithMatchingAARType.isNull())
-        {
-            return carTypeRepository.insert(carTypeToSave);
-        }
-        carTypeWithMatchingAARType.carriedGoods = carTypeToSave.carriedGoods;
-        carTypeRepository.save(carTypeWithMatchingAARType);
-        return carTypeWithMatchingAARType;
+        carTypeDAL.insertCarType(carTypeToSave);
+        return carTypeToSave;
     }
 
     @Override
-    public List<CarTypeDto> allCarTypes()
+    public List<CarType> allCarTypes()
     {
-        return carTypeRepository.findAll();
+        return carTypeDAL.getAllCarTypes();
     }
 
     @Override
-    public CarTypeDto carTypeForAAR(String expectedAARType)
+    public CarType carTypeForAAR(AARDesignation expectedAARDesignation)
     {
-        final CarTypeDto carTypeByAAR = carTypeRepository.findByAarTypeEquals(expectedAARType);
-        return carTypeByAAR == null ? new NullCarTypeDto() : carTypeByAAR;
+        return carTypeDAL.findByAarType(expectedAARDesignation);
     }
 
     @Override
-    public List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType)
+    public List<CarType> carTypesThatCarryGoodsType(GoodsType expectedGoodsType)
     {
-        return carTypeRepository.findAllByCarriedGoodsContains(expectedGoodsType);
+        return carTypeDAL.findAllByCarTypesThatCanCarry(expectedGoodsType);
     }
 }

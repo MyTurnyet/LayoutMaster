@@ -1,7 +1,8 @@
 package dev.paigewatson.layoutmaster.client.services;
 
-import dev.paigewatson.layoutmaster.data.models.CarTypeDto;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 
 import java.util.List;
 
@@ -9,11 +10,11 @@ public interface CarTypeService
 {
     List<AARDesignation> allAARDesignations();
 
-    CarTypeDto saveCarTypeToDatabase(CarTypeDto carTypeToSave);
+    CarType saveCarTypeToDatabase(CarType carTypeToSave);
 
-    List<CarTypeDto> allCarTypes();
+    List<CarType> allCarTypes();
 
-    CarTypeDto carTypeForAAR(String expectedAARType);
+    CarType carTypeForAAR(AARDesignation expectedAARDesignation);
 
-    List<CarTypeDto> carTypesThatCarryGoodsType(String expectedGoodsType);
+    List<CarType> carTypesThatCarryGoodsType(GoodsType expectedGoodsType);
 }
