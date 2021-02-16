@@ -4,7 +4,10 @@ import dev.paigewatson.layoutmaster.data.CarTypeDAL;
 import dev.paigewatson.layoutmaster.models.NullableEntity;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 
-public interface CarType extends NullableEntity
+import java.io.Serializable;
+
+
+public interface CarType extends NullableEntity, Serializable
 {
     boolean canCarry(GoodsType goodsType);
 

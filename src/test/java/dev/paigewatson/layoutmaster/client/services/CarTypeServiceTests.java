@@ -16,7 +16,9 @@ import java.util.List;
 
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CarTypeServiceTests
@@ -40,10 +42,11 @@ public class CarTypeServiceTests
         public void should_returnAllAARDesignations()
         {
             //assign
+            carTypeDALFake.setReturnAARDesignationsList(Arrays.asList(XM, GS, FC));
             //act
             List<AARDesignation> aarDesignations = service.allAARDesignations();
             //assert
-            assertThat(aarDesignations.size()).isEqualTo(24);
+            assertThat(aarDesignations.size()).isEqualTo(3);
         }
 
 

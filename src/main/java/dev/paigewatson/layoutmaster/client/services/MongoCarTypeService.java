@@ -7,7 +7,6 @@ import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -22,7 +21,7 @@ public class MongoCarTypeService implements CarTypeService
 
     public List<AARDesignation> allAARDesignations()
     {
-        return Arrays.asList(AARDesignation.class.getEnumConstants());
+        return carTypeDAL.getAllAARDesignations();
     }
 
     @Override

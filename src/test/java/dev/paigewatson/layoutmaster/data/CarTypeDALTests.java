@@ -24,8 +24,9 @@ import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Logs;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -187,11 +188,18 @@ public class CarTypeDALTests
         @Test
         public void should_returnDistinct_AARDesignations()
         {
+            insertCarTypesForTesting();
+            final AARType gondola = TestAARTypeCreator.gondolaType();
+            final AARType flatcar = TestAARTypeCreator.flatcarType();
+            mongoTemplate.insert(gondola, collectionName);
+            mongoTemplate.insert(flatcar, collectionName);
             //act
             final List<AARDesignation> allCarTypes = carTypeMongoDAL.getAllAARDesignations();
 
             //assert
-            assertThat(allCarTypes.size()).isEqualTo(2);
+            assertThat(allCarTypes.size()).isEqualTo(3);
+            List<AARDesignation> expectedTypes = Arrays.asList(XM, FC, GS);
+            assertThat(allCarTypes).hasSameElementsAs(expectedTypes);
 
         }
 
@@ -199,8 +207,6 @@ public class CarTypeDALTests
         public void should_SaveCarTypes_ToDatabase()
         {
             //assign
-            insertCarTypesForTesting();
-
             //act
             carTypeMongoDAL.insertCarType(boxcarType2);
             //assert
