@@ -1,6 +1,7 @@
 package dev.paigewatson.layoutmaster.data;
 
 import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +23,10 @@ import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Logs;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
 import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,6 +49,21 @@ public class CarTypeDALTests
 
             mongoTemplate = mock(MongoTemplate.class);
             carTypeMongoDAL = new CarTypeMongoDAL(mongoTemplate);
+        }
+
+        @Test
+        public void should_returnDistinct_AARDesignations()
+        {
+            when(mongoTemplate.findDistinct("aarDesignation", AARType.class, AARDesignation.class))
+                    .thenReturn(Arrays.asList(XM, FC));
+
+            //act
+            final List<AARDesignation> allCarTypes = carTypeMongoDAL.getAllAARDesignations();
+
+            //assert
+            assertThat(allCarTypes.size()).isEqualTo(2);
+            verify(mongoTemplate).findDistinct("aarDesignation", AARType.class, AARDesignation.class);
+
         }
 
         @Test
@@ -165,6 +183,24 @@ public class CarTypeDALTests
             boxcarUUID = UUID.randomUUID();
             boxcarType = TestAARTypeCreator.boxcarType(boxcarUUID);
             boxcarType2 = TestAARTypeCreator.getLoadedCarType(UUID.randomUUID(), XM, Arrays.asList(Paper, Parts, Logs));
+        }
+
+        @Test
+        public void should_returnDistinct_AARDesignations()
+        {
+            insertCarTypesForTesting();
+            final AARType gondola = TestAARTypeCreator.gondolaType();
+            final AARType flatcar = TestAARTypeCreator.flatcarType();
+            mongoTemplate.insert(gondola, collectionName);
+            mongoTemplate.insert(flatcar, collectionName);
+            //act
+            final List<AARDesignation> allCarTypes = carTypeMongoDAL.getAllAARDesignations();
+
+            //assert
+            assertThat(allCarTypes.size()).isEqualTo(3);
+            List<AARDesignation> expectedTypes = Arrays.asList(XM, FC, GS);
+            assertThat(allCarTypes).hasSameElementsAs(expectedTypes);
+
         }
 
         @Test

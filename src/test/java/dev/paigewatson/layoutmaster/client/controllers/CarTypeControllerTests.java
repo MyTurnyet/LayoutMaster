@@ -16,7 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +36,10 @@ import java.util.stream.IntStream;
 
 import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType;
 import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.gondolaType;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
+import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,12 +68,15 @@ public class CarTypeControllerTests
         @Test
         public void should_returnAllAARDesignations()
         {
+            final List<AARDesignation> expectedList = Arrays.asList(XM, FC, GS);
+            carTypeServiceFake.setReturnAARTypes(expectedList);
             final List<AARDesignation> aarDesignations = carTypeController.getAARDesignations();
-            assertThat(aarDesignations.size()).isEqualTo(24);
+            assertThat(aarDesignations.size()).isEqualTo(3);
+            assertThat(aarDesignations).hasSameElementsAs(expectedList);
         }
 
         @Test
-        public void should_returnAllCarTypes()
+        public void should_returnAllCarTypesInDatabse()
         {
             //assign
             List<CarType> returnedCarTypes = Arrays.asList(boxcarType, gondolaCarType);
@@ -156,9 +167,11 @@ public class CarTypeControllerTests
         }
 
         @Test
-        public void should_returnAllAARDesignations() throws Exception
+        public void should_returnAllAARDesignationsInDatabase() throws Exception
         {
-            when(carTypeService.allAARDesignations()).thenReturn(Arrays.asList(AARDesignation.values()));
+            final List<AARDesignation> expectedList = Arrays.asList(XM, FC, GS);
+
+            when(carTypeService.allAARDesignations()).thenReturn(expectedList);
 
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/aar")
                     .contentType(MediaType.APPLICATION_JSON))
@@ -166,7 +179,7 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("[\"XA\",\"XM\",\"XP\",\"XL\",\"XR\",\"XF\",\"FA\",\"FBC\",\"FC\",\"FL\",\"FM\",\"TC\",\"GA\",\"GS\",\"HK\",\"HFA\",\"HT\",\"HTA\",\"TM\",\"TP\",\"RB\",\"RBL\",\"RP\",\"NULL\"]");
+            assertThat(contentAsString).isEqualTo("[\"XM\",\"FC\",\"GS\"]");
         }
 
         @Test
@@ -209,6 +222,8 @@ public class CarTypeControllerTests
         @Test
         public void should_returnCarTypeByAARType() throws Exception
         {
+            when(carTypeService.allAARDesignations()).thenReturn(Arrays.asList(AARDesignation.values()));
+
             when(carTypeService.carTypeForAAR(any())).thenReturn(boxcarType);
 
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
@@ -232,7 +247,7 @@ public class CarTypeControllerTests
                     .andReturn();
             final String contentAsString = result.getResponse().getContentAsString();
 
-            assertThat(contentAsString).isEqualTo("{\"null\":true}");
+            assertThat(contentAsString).isEqualTo("{\"aarDesignation\":\"NULL\",\"carriedGoodsList\":[],\"id\":\"\",\"null\":true}");
         }
 
 //        @Test
@@ -261,5 +276,91 @@ public class CarTypeControllerTests
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Nested
+    @Tag("Data")
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    public class FunctionalTests
+    {
+        private final String collectionName = "AARTypes";
+
+        private final MongoTemplate mongoTemplate;
+        @LocalServerPort
+        private int port;
+
+        @Autowired
+        private TestRestTemplate restTemplate;
+        private AARType boxcar;
+        private AARType gondola;
+        private AARType flatcar;
+
+        public FunctionalTests(@Autowired MongoTemplate mongoTemplate)
+        {
+            this.mongoTemplate = mongoTemplate;
+        }
+
+        @BeforeEach
+        public void setup()
+        {
+            mongoTemplate.remove(new Query(), collectionName);
+            insertCarTypesForTesting();
+        }
+
+        @Test
+        public void should_returnAllCarTypes() throws Exception
+        {
+            final AARType[] aarTypesArray = this.restTemplate.getForObject("http://localhost:" + port + "/models/types", AARType[].class);
+            assertThat(aarTypesArray.length).isEqualTo(3);
+        }
+
+        @Test
+        public void should_returnAllAARDesignations()
+        {
+            final AARDesignation[] returnedAARList = this.restTemplate.getForObject("http://localhost:" + port + "/models/aar", AARDesignation[].class);
+            final List<AARDesignation> expectedAarDesignationList = Arrays.asList(XM, FC, GS);
+            assertThat(returnedAARList).hasSameElementsAs(expectedAarDesignationList);
+        }
+
+
+        @Test
+        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
+        {
+            final AARType[] contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/goods/Parts", AARType[].class);
+
+            assertThat(contentAsString.length).isEqualTo(2);
+            assertThat(contentAsString[0]).isEqualTo(boxcar);
+            assertThat(contentAsString[1]).isEqualTo(flatcar);
+        }
+
+        @Test
+        public void should_returnCarTypeByAARType() throws Exception
+        {
+            final AARType contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/XM", AARType.class);
+
+            assertThat(contentAsString).isEqualTo(boxcar);
+        }
+
+        @Test
+        public void should_notReturnCarTypeByAARType() throws Exception
+        {
+            final NullCarType contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/QR", NullCarType.class);
+
+            assertThat(contentAsString.isNull()).isTrue();
+        }
+
+        private void insertCarTypesForTesting()
+        {
+            final UUID boxcarUUID = UUID.randomUUID();
+            boxcar = TestAARTypeCreator.boxcarType(boxcarUUID);
+            gondola = TestAARTypeCreator.gondolaType();
+            flatcar = TestAARTypeCreator.flatcarType();
+            final List<AARType> aarTypes = Arrays.asList(boxcar, gondola, flatcar);
+            for (AARType aarType : aarTypes)
+            {
+                mongoTemplate.insert(aarType, collectionName);
+            }
+        }
+
     }
 }

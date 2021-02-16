@@ -14,6 +14,7 @@ public class CarTypeDALFake implements CarTypeDAL
     private CarType carTypeSavedEntity;
     private CarType returnedEntity = new NullCarType();
     private List<CarType> returnedCarTypes = Collections.emptyList();
+    private List<AARDesignation> aarDesignationList;
 
     @Override
     public List<CarType> findAllByCarTypesThatCanCarry(GoodsType expectedGoods)
@@ -52,6 +53,12 @@ public class CarTypeDALFake implements CarTypeDAL
         return returnedCarTypes;
     }
 
+    @Override
+    public List<AARDesignation> getAllAARDesignations()
+    {
+        return aarDesignationList;
+    }
+
     public CarType savedEntity()
     {
         return carTypeSavedEntity;
@@ -71,5 +78,10 @@ public class CarTypeDALFake implements CarTypeDAL
     public void setReturnedEntityList(List<CarType> returnedCarTypes)
     {
         this.returnedCarTypes = returnedCarTypes;
+    }
+
+    public void setReturnAARDesignationsList(List<AARDesignation> aarDesignationList)
+    {
+        this.aarDesignationList = aarDesignationList;
     }
 }

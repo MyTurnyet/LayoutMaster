@@ -5,7 +5,7 @@ import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CarTypeServiceFake implements CarTypeService
@@ -13,11 +13,12 @@ public class CarTypeServiceFake implements CarTypeService
     private List<CarType> returnedCarTypeList;
     private CarType savedEntity;
     private CarType returnedCarTypeWithAAR;
+    private List<AARDesignation> returnedAARTypes = Collections.emptyList();
 
     @Override
     public List<AARDesignation> allAARDesignations()
     {
-        return Arrays.asList(AARDesignation.class.getEnumConstants());
+        return returnedAARTypes;
     }
 
 
@@ -59,5 +60,10 @@ public class CarTypeServiceFake implements CarTypeService
     public void setReturnedCarTypeWithAAR(CarType carType)
     {
         returnedCarTypeWithAAR = carType;
+    }
+
+    public void setReturnAARTypes(List<AARDesignation> returnedAARTypes)
+    {
+        this.returnedAARTypes = returnedAARTypes;
     }
 }

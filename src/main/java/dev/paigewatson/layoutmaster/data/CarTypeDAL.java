@@ -19,4 +19,6 @@ public interface CarTypeDAL
     void delete(CarType carTypeToDelete);
 
     List<CarType> getAllCarTypes();
+
+    List<AARDesignation> getAllAARDesignations();
 }
