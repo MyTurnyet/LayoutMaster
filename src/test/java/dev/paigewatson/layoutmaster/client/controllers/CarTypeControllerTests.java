@@ -16,7 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -209,6 +212,8 @@ public class CarTypeControllerTests
         @Test
         public void should_returnCarTypeByAARType() throws Exception
         {
+            when(carTypeService.allAARDesignations()).thenReturn(Arrays.asList(AARDesignation.values()));
+
             when(carTypeService.carTypeForAAR(any())).thenReturn(boxcarType);
 
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
@@ -261,5 +266,62 @@ public class CarTypeControllerTests
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Nested
+    @Tag("Data")
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    public class FunctionalTests
+    {
+
+        @LocalServerPort
+        private int port;
+
+        @Autowired
+        private TestRestTemplate restTemplate;
+
+        @Test
+        public void should_returnAllCarTypes() throws Exception
+        {
+            final String contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types", String.class);
+
+            assertThat(contentAsString).isEqualTo("[{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"24b5fd54-96e5-4c0e-916d-2c1d233b9456\",\"null\":false},{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"3507d92e-ac29-4b13-9c78-43813c258ce2\",\"null\":false},{\"aarDesignation\":\"FC\",\"carriedGoodsList\":[\"Logs\",\"Lumber\",\"Parts\"],\"id\":\"c5115111-7a14-4410-903e-4d513b1f9db5\",\"null\":false}]");
+        }
+
+        @Test
+        public void should_returnAllAARDesignations() throws Exception
+        {
+            final String contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/aar", String.class);
+
+            assertThat(contentAsString).isEqualTo("[\"XA\",\"XM\",\"XP\",\"XL\",\"XR\",\"XF\",\"FA\",\"FBC\",\"FC\",\"FL\",\"FM\",\"TC\",\"GA\",\"GS\",\"HK\",\"HFA\",\"HT\",\"HTA\",\"TM\",\"TP\",\"RB\",\"RBL\",\"RP\",\"NULL\"]");
+        }
+
+
+        @Test
+        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
+        {
+            final String contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/goods/Logs", String.class);
+
+
+            assertThat(contentAsString).isEqualTo("");
+        }
+
+        @Test
+        public void should_returnCarTypeByAARType() throws Exception
+        {
+            final String contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/XM", String.class);
+
+            assertThat(contentAsString).isEqualTo("{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
+                    "\",\"null\":false}");
+        }
+
+        @Test
+        public void should_notReturnCarTypeByAARType() throws Exception
+        {
+            final String contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/QR", String.class);
+
+            assertThat(contentAsString).isEqualTo("{\"null\":true}");
+        }
+
     }
 }

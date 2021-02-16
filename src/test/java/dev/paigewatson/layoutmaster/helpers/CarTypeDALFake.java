@@ -52,6 +52,12 @@ public class CarTypeDALFake implements CarTypeDAL
         return returnedCarTypes;
     }
 
+    @Override
+    public List<AARDesignation> getAllAARDesignations()
+    {
+        return null;
+    }
+
     public CarType savedEntity()
     {
         return carTypeSavedEntity;

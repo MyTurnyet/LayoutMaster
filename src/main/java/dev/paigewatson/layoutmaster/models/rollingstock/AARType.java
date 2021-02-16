@@ -16,7 +16,6 @@ public class AARType implements CarType
 
     @Id
     public String id = "";
-    private UUID uuid;
 
 
     public AARType()
@@ -31,7 +30,6 @@ public class AARType implements CarType
     public AARType(UUID uuid, AARDesignation aarDesignation, List<GoodsType> carriedGoodsList)
     {
         this.id = uuid.toString();
-        this.uuid = uuid;
         this.aarDesignation = aarDesignation;
         this.carriedGoodsList = carriedGoodsList;
     }

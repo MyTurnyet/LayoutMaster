@@ -82,4 +82,11 @@ public class CarTypeMongoDAL implements CarTypeDAL
         final List<AARType> allAARTypes = mongoTemplate.findAll(AARType.class, collectionName);
         return Collections.unmodifiableList(allAARTypes);
     }
+
+    @Override
+    public List<AARDesignation> getAllAARDesignations()
+    {
+        final List<AARDesignation> aarDesignationList = mongoTemplate.findDistinct("aarDesignation", AARType.class, AARDesignation.class);
+        return aarDesignationList;
+    }
 }

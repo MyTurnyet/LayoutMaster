@@ -4,6 +4,7 @@ import dev.paigewatson.layoutmaster.client.services.CarTypeService;
 import dev.paigewatson.layoutmaster.models.goods.GoodsType;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
+import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,11 @@ public class CarTypeController
     @GetMapping(path = "/types/aar/{aarType}")
     public CarType getCarTypeByAAR(@PathVariable(value = "aarType") String expectedType)
     {
+        final List<AARDesignation> aarDesignationList = getAARDesignations();
+        if (!aarDesignationList.contains(AARDesignation.valueOf(expectedType)))
+        {
+            return new NullCarType();
+        }
         final AARDesignation aarDesignation = AARDesignation.valueOf(expectedType);
         final CarType carTypeForAAR = carTypeService.carTypeForAAR(aarDesignation);
         return carTypeForAAR;
