@@ -1,13 +1,10 @@
-package dev.paigewatson.layoutmaster;
+package dev.paigewatson.layoutmaster
 
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-public class LayoutMasterApplicationTests
-{
-//    @Test
-//    void contextLoads()
-//    {
-//    }
-
+class LayoutMasterApplicationTests { //    @Test
+    //    void contextLoads()
+    //    {
+    //    }
 }

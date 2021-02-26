@@ -1,49 +1,31 @@
-package dev.paigewatson.layoutmaster.helpers;
+package dev.paigewatson.layoutmaster.helpers
 
-import dev.paigewatson.layoutmaster.client.services.FreightCarService;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
+import dev.paigewatson.layoutmaster.client.services.FreightCarService
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
 
-import java.util.List;
-
-public class FreightCarServiceFake implements FreightCarService
-{
-    public RollingStock savedFreightCar;
-    private List<RollingStock> returnedFreightCarsList;
-
-    @Override
-    public List<RollingStock> allFreightCars()
-    {
-        return returnedFreightCarsList;
+class FreightCarServiceFake : FreightCarService {
+    var savedFreightCar: RollingStock? = null
+    private var returnedFreightCarsList: List<RollingStock>? = null
+    override fun allFreightCars(): List<RollingStock> {
+        return returnedFreightCarsList!!
     }
 
-    @Override
-    public List<RollingStock> allFreightCarsByAARType(AARDesignation aarDesignation)
-    {
-        return returnedFreightCarsList;
+    override fun allFreightCarsByAARType(aarDesignation: AARDesignation): List<RollingStock> {
+        return returnedFreightCarsList!!
     }
 
-    @Override
-    public void delete(RollingStock rollingStockToDelete)
-    {
-
+    override fun delete(rollingStockToDelete: RollingStock) {}
+    override fun allFreightCarsByRoadName(roadName: String): List<RollingStock> {
+        return returnedFreightCarsList!!
     }
 
-    @Override
-    public List<RollingStock> allFreightCarsByRoadName(String roadName)
-    {
-        return returnedFreightCarsList;
+    override fun saveFreightCarToDatabase(freightCarToSave: RollingStock): RollingStock {
+        savedFreightCar = freightCarToSave
+        return savedFreightCar!!
     }
 
-    @Override
-    public RollingStock saveFreightCarToDatabase(RollingStock freightCarToSave)
-    {
-        savedFreightCar = freightCarToSave;
-        return savedFreightCar;
-    }
-
-    public void setReturnedFreightCars(List<RollingStock> returnedFreightCarsList)
-    {
-        this.returnedFreightCarsList = returnedFreightCarsList;
+    fun setReturnedFreightCars(returnedFreightCarsList: List<RollingStock>?) {
+        this.returnedFreightCarsList = returnedFreightCarsList
     }
 }

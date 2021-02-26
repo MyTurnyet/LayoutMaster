@@ -1,137 +1,120 @@
-package dev.paigewatson.layoutmaster.client.services;
+package dev.paigewatson.layoutmaster.client.services
 
-import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
-import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator
+import dev.paigewatson.layoutmaster.models.goods.GoodsType
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType
+import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
+import java.util.*
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-public class CarTypeServiceTests
-{
+class CarTypeServiceTests {
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
-
-        private CarTypeService service;
-        private CarTypeDALFake carTypeDALFake;
+    internal inner class UnitTests {
+        private var service: CarTypeService? = null
+        private var carTypeDALFake: CarTypeDALFake? = null
 
         @BeforeEach
-        public void beforeEachTestRuns()
-        {
-            carTypeDALFake = new CarTypeDALFake();
-            service = new MongoCarTypeService(carTypeDALFake);
+        fun beforeEachTestRuns() {
+            carTypeDALFake = CarTypeDALFake()
+            service = MongoCarTypeService(carTypeDALFake!!)
         }
 
         @Test
-        public void should_returnAllAARDesignations()
-        {
+        fun should_returnAllAARDesignations() {
             //assign
-            carTypeDALFake.setReturnAARDesignationsList(Arrays.asList(XM, GS, FC));
+            carTypeDALFake!!.setReturnAARDesignationsList(
+                Arrays.asList(
+                    AARDesignation.XM,
+                    AARDesignation.GS,
+                    AARDesignation.FC
+                )
+            )
             //act
-            List<AARDesignation> aarDesignations = service.allAARDesignations();
+            val aarDesignations = service!!.allAARDesignations()
             //assert
-            assertThat(aarDesignations.size()).isEqualTo(3);
-        }
-
-
-        @Test
-        public void should_returnListOfAllExistingCarTypesFromDatabase()
-        {
-            //assign
-            //assign
-
-            final List<GoodsType> carriedGoods = Collections.singletonList(SheetMetal);
-            final CarType boxcarType = TestAARTypeCreator.boxcarType();
-            List<CarType> returnedCarTypes = Collections.singletonList(boxcarType);
-            carTypeDALFake.setReturnedEntityList(returnedCarTypes);
-
-            //act
-            List<CarType> allCarTypesList = service.allCarTypes();
-            //assert
-            assertThat(allCarTypesList.size()).isEqualTo(1);
-            assertThat(allCarTypesList.get(0)).isEqualTo(boxcarType);
+            AssertionsForClassTypes.assertThat(aarDesignations.size).isEqualTo(3)
         }
 
         @Test
-        public void should_updateOnSaveCarTypeToRepository()
-        {
+        fun should_returnListOfAllExistingCarTypesFromDatabase() {
             //assign
-            final CarType boxcarType = TestAARTypeCreator.boxcarType();
-            final CarType existingBoxcarType = TestAARTypeCreator.boxcarType();
-            carTypeDALFake.setCurrentSavedEntity(existingBoxcarType);
+            val boxcarType: CarType = TestAARTypeCreator.boxcarType()
+            val returnedCarTypes = listOf(boxcarType)
+            carTypeDALFake!!.setReturnedEntityList(returnedCarTypes)
 
             //act
-            final CarType returnedCarType = service.saveCarTypeToDatabase(boxcarType);
+            val allCarTypesList = service!!.allCarTypes()
             //assert
-            assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType);
-            assertThat(returnedCarType).isEqualTo(boxcarType);
+            AssertionsForClassTypes.assertThat(allCarTypesList.size).isEqualTo(1)
+            AssertionsForClassTypes.assertThat(allCarTypesList[0]).isEqualTo(boxcarType)
         }
 
         @Test
-        public void should_insertOnSaveCarTypeToRepository()
-        {
+        fun should_updateOnSaveCarTypeToRepository() {
             //assign
-            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            val boxcarType: CarType = TestAARTypeCreator.boxcarType()
+            val existingBoxcarType: CarType = TestAARTypeCreator.boxcarType()
+            carTypeDALFake!!.setCurrentSavedEntity(existingBoxcarType)
 
             //act
-            final CarType returnedCarTypeDto = service.saveCarTypeToDatabase(boxcarType);
+            val returnedCarType = service!!.saveCarTypeToDatabase(boxcarType)
             //assert
-            assertThat(carTypeDALFake.savedEntity().toString()).isEqualTo(returnedCarTypeDto.toString());
+            AssertionsForClassTypes.assertThat(carTypeDALFake!!.savedEntity()).isEqualTo(boxcarType)
+            AssertionsForClassTypes.assertThat(returnedCarType).isEqualTo(boxcarType)
         }
 
         @Test
-        public void should_getExistingCarTypeByAAR()
-        {
+        fun should_insertOnSaveCarTypeToRepository() {
             //assign
-            final CarType existingCarType = TestAARTypeCreator.gondolaType();
-            carTypeDALFake.setEntityToReturn(existingCarType);
-            //act
-            final CarType carTypeForAAR = service.carTypeForAAR(GS);
-            //assert
+            val boxcarType: CarType = TestAARTypeCreator.boxcarType()
 
-            assertThat(carTypeForAAR).isEqualTo(existingCarType);
+            //act
+            val returnedCarTypeDto = service!!.saveCarTypeToDatabase(boxcarType)
+            //assert
+            AssertionsForClassTypes.assertThat(carTypeDALFake!!.savedEntity().toString())
+                .isEqualTo(returnedCarTypeDto.toString())
         }
 
         @Test
-        public void should_getNullCarType_whenNonExistent_AAR()
-        {
+        fun should_getExistingCarTypeByAAR() {
             //assign
+            val existingCarType: CarType = TestAARTypeCreator.gondolaType()
+            carTypeDALFake!!.setEntityToReturn(existingCarType)
             //act
-            final CarType carTypeForAAR = service.carTypeForAAR(GS);
+            val carTypeForAAR = service!!.carTypeForAAR(AARDesignation.GS)
             //assert
-
-            assertThat(carTypeForAAR.isNull()).isTrue();
+            AssertionsForClassTypes.assertThat(carTypeForAAR).isEqualTo(existingCarType)
         }
 
         @Test
-        public void should_getCarTypesThatCarry_goods()
-        {
+        fun should_getNullCarType_whenNonExistent_AAR() {
             //assign
-            final CarType boxcarType = TestAARTypeCreator.boxcarType();
-            final CarType gondolaCarType = TestAARTypeCreator.gondolaType();
-            carTypeDALFake.setReturnedEntityList(Arrays.asList(boxcarType, gondolaCarType));
             //act
-            final List<CarType> carTypesThatCarryGoods = service.carTypesThatCarryGoodsType(Parts);
+            val carTypeForAAR = service!!.carTypeForAAR(AARDesignation.GS)
             //assert
-            assertThat(carTypesThatCarryGoods.size()).isEqualTo(2);
-            assertThat(carTypesThatCarryGoods.stream().anyMatch(carType -> carType == boxcarType));
-            assertThat(carTypesThatCarryGoods.stream().anyMatch(carType -> carType == gondolaCarType));
+            AssertionsForClassTypes.assertThat(carTypeForAAR.isNull).isTrue
+        }
+
+        @Test
+        fun should_getCarTypesThatCarry_goods() {
+            //assign
+            val boxcarType: CarType = TestAARTypeCreator.boxcarType()
+            val gondolaCarType: CarType = TestAARTypeCreator.gondolaType()
+            carTypeDALFake!!.setReturnedEntityList(Arrays.asList(boxcarType, gondolaCarType))
+            //act
+            val carTypesThatCarryGoods = service!!.carTypesThatCarryGoodsType(GoodsType.Parts)
+            //assert
+            AssertionsForClassTypes.assertThat(carTypesThatCarryGoods.size).isEqualTo(2)
+            AssertionsForClassTypes.assertThat(
+                carTypesThatCarryGoods.stream().anyMatch { carType: CarType -> carType === boxcarType })
+            AssertionsForClassTypes.assertThat(
+                carTypesThatCarryGoods.stream().anyMatch { carType: CarType -> carType === gondolaCarType })
         }
     }
 }

@@ -1,113 +1,103 @@
-package dev.paigewatson.layoutmaster.client.services;
+package dev.paigewatson.layoutmaster.client.services
 
-import dev.paigewatson.layoutmaster.helpers.RollingStockDALFake;
-import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import dev.paigewatson.layoutmaster.helpers.RollingStockDALFake
+import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
+import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-public class FreightCarServiceTests
-{
+class FreightCarServiceTests {
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
-        private FreightCarService freightCarService;
-        private RollingStockDALFake rollingStockDALFake;
-
-        private RollingStock boxcarOne;
-        private RollingStock boxcarTwo;
-        private RollingStock boxcarThree;
-        private RollingStock gondolaOne;
-        private RollingStock gondolaTwo;
-        private RollingStock gondolaThree;
-        private RollingStock flatCarOne;
+    internal inner class UnitTests {
+        private var freightCarService: FreightCarService? = null
+        private var rollingStockDALFake: RollingStockDALFake? = null
+        private var boxcarOne: RollingStock? = null
+        private var boxcarTwo: RollingStock? = null
+        private var boxcarThree: RollingStock? = null
+        private var gondolaOne: RollingStock? = null
+        private var gondolaTwo: RollingStock? = null
+        private var gondolaThree: RollingStock? = null
+        private var flatCarOne: RollingStock? = null
 
         @BeforeEach
-        public void setupTests()
-        {
-            rollingStockDALFake = new RollingStockDALFake();
-
-            boxcarOne = TestFreightCarCreator.boxcar("PNWR", 2341);
-            boxcarTwo = TestFreightCarCreator.boxcar("BCR", 2342);
-            boxcarThree = TestFreightCarCreator.boxcar("PNWR", 2335);
-
-            flatCarOne = TestFreightCarCreator.flatcar("ATSF", 1232);
-            gondolaOne = TestFreightCarCreator.gondola("BNSF", 1234);
-            gondolaTwo = TestFreightCarCreator.gondola("PNWR", 1235);
-            gondolaThree = TestFreightCarCreator.gondola("BCR", 1237);
-
-            freightCarService = new MongoFreightCarService(rollingStockDALFake);
+        fun setupTests() {
+            rollingStockDALFake = RollingStockDALFake()
+            boxcarOne = TestFreightCarCreator.boxcar("PNWR", 2341)
+            boxcarTwo = TestFreightCarCreator.boxcar("BCR", 2342)
+            boxcarThree = TestFreightCarCreator.boxcar("PNWR", 2335)
+            flatCarOne = TestFreightCarCreator.flatcar("ATSF", 1232)
+            gondolaOne = TestFreightCarCreator.gondola("BNSF", 1234)
+            gondolaTwo = TestFreightCarCreator.gondola("PNWR", 1235)
+            gondolaThree = TestFreightCarCreator.gondola("BCR", 1237)
+            freightCarService = MongoFreightCarService(rollingStockDALFake!!)
         }
 
         @Test
-        public void should_getAllFreightCars_fromRepository()
-        {
+        fun should_getAllFreightCars_fromRepository() {
             //assign
-            rollingStockDALFake.setReturnedValuesList(Arrays.asList(
+            rollingStockDALFake!!.setReturnedValuesList(
+                listOfNotNull(
                     boxcarOne, boxcarTwo, boxcarThree,
                     gondolaOne, flatCarOne, gondolaTwo, gondolaThree
-            ));
+                )
+            )
             //act
-            final List<RollingStock> rollingStockList = freightCarService.allFreightCars();
+            val rollingStockList = freightCarService!!.allFreightCars()
             //assert
-            assertThat(rollingStockList.size()).isEqualTo(7);
+            AssertionsForClassTypes.assertThat(rollingStockList.size).isEqualTo(7)
         }
 
         @Test
-        public void should_getAllFreightCars_fromRepository_matchingAARType_XM()
-        {
+        fun should_getAllFreightCars_fromRepository_matchingAARType_XM() {
             //assign
-            rollingStockDALFake.setReturnedValuesList(Arrays.asList(
+            rollingStockDALFake!!.setReturnedValuesList(
+                listOfNotNull(
                     boxcarOne, boxcarTwo, boxcarThree
-            ));
+                )
+            )
 
             //act
-            final List<RollingStock> rollingStockList = freightCarService.allFreightCarsByAARType(AARDesignation.XM);
+            val rollingStockList = freightCarService!!.allFreightCarsByAARType(AARDesignation.XM)
             //assert
-            assertThat(rollingStockList.size()).isEqualTo(3);
+            AssertionsForClassTypes.assertThat(rollingStockList.size).isEqualTo(3)
         }
 
         @Test
-        public void should_getAllFreightCars_fromRepository_withBCR_roadName()
-        {
+        fun should_getAllFreightCars_fromRepository_withBCR_roadName() {
             //assign
-            rollingStockDALFake.setReturnedValuesList(Arrays.asList(
+            rollingStockDALFake!!.setReturnedValuesList(
+                listOfNotNull(
                     boxcarTwo, gondolaThree
-            ));
+                )
+            )
 
             //act
-            final List<RollingStock> rollingStockList = freightCarService.allFreightCarsByRoadName("BCR");
+            val rollingStockList = freightCarService!!.allFreightCarsByRoadName("BCR")
             //assert
-            assertThat(rollingStockList.size()).isEqualTo(2);
+            AssertionsForClassTypes.assertThat(rollingStockList.size).isEqualTo(2)
         }
 
         @Test
-        public void should_insertNewFreightCar_IntoRepository()
-        {
+        fun should_insertNewFreightCar_IntoRepository() {
             //act
-            final RollingStock savedRollingStock = freightCarService.saveFreightCarToDatabase(boxcarThree);
+            val savedRollingStock = freightCarService!!.saveFreightCarToDatabase(boxcarThree!!)
             //assert
-            assertThat(rollingStockDALFake.savedEntity).isEqualTo(boxcarThree);
-            assertThat(savedRollingStock).isEqualTo(boxcarThree);
+            AssertionsForClassTypes.assertThat(rollingStockDALFake!!.savedEntity).isEqualTo(boxcarThree)
+            AssertionsForClassTypes.assertThat(savedRollingStock).isEqualTo(boxcarThree)
         }
 
         @Test
-        public void should_deleteFreightCar_fromDatabase()
-        {
+        fun should_deleteFreightCar_fromDatabase() {
             //assign
-            freightCarService.delete(boxcarOne);
+            freightCarService!!.delete(boxcarOne!!)
 
             //assert
-            assertThat(rollingStockDALFake.deletedEntity).isEqualTo(boxcarOne);
+            AssertionsForClassTypes.assertThat(rollingStockDALFake!!.deletedEntity).isEqualTo(boxcarOne)
         }
     }
 }

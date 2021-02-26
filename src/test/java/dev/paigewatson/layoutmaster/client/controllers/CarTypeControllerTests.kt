@@ -1,366 +1,338 @@
-package dev.paigewatson.layoutmaster.client.controllers;
+package dev.paigewatson.layoutmaster.client.controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.paigewatson.layoutmaster.client.services.CarTypeService;
-import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake;
-import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
-import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import dev.paigewatson.layoutmaster.client.services.CarTypeService
+import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator
+import dev.paigewatson.layoutmaster.models.goods.GoodsType
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.AARType
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType
+import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType
+import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Query
+import org.springframework.http.MediaType
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.util.*
+import java.util.stream.IntStream
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.IntStream;
-
-import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType;
-import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.gondolaType;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FC;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-public class CarTypeControllerTests
-{
-
+class CarTypeControllerTests {
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
-        private CarTypeController carTypeController;
-        private CarTypeServiceFake carTypeServiceFake;
-        private CarType boxcarType;
-        private CarType gondolaCarType;
+    internal inner class UnitTests {
+        private lateinit var carTypeController: CarTypeController
+        private var carTypeServiceFake: CarTypeServiceFake = CarTypeServiceFake()
+        private var boxcarType: CarType = TestAARTypeCreator.boxcarType()
+        private var gondolaCarType: CarType = TestAARTypeCreator.gondolaType()
 
         @BeforeEach
-        public void setUp()
-        {
-            carTypeServiceFake = new CarTypeServiceFake();
-            carTypeController = new CarTypeController(carTypeServiceFake);
-            boxcarType = TestAARTypeCreator.boxcarType();
-            gondolaCarType = TestAARTypeCreator.gondolaType();
+        fun setUp() {
+            carTypeController = CarTypeController(carTypeServiceFake)
         }
 
         @Test
-        public void should_returnAllAARDesignations()
-        {
-            final List<AARDesignation> expectedList = Arrays.asList(XM, FC, GS);
-            carTypeServiceFake.setReturnAARTypes(expectedList);
-            final List<AARDesignation> aarDesignations = carTypeController.getAARDesignations();
-            assertThat(aarDesignations.size()).isEqualTo(3);
-            assertThat(aarDesignations).hasSameElementsAs(expectedList);
+        fun should_returnAllAARDesignations() {
+            val expectedList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
+            carTypeServiceFake.setReturnAARTypes(expectedList)
+            val aarDesignations = carTypeController.aARDesignations
+            Assertions.assertThat(aarDesignations.size).isEqualTo(3)
+            Assertions.assertThat(aarDesignations).hasSameElementsAs(expectedList)
         }
 
         @Test
-        public void should_returnAllCarTypesInDatabse()
-        {
+        fun should_returnAllCarTypesInDatabse() {
             //assign
-            List<CarType> returnedCarTypes = Arrays.asList(boxcarType, gondolaCarType);
-            final List<CarType> carTypeDtoList = Arrays.asList(boxcarType, gondolaCarType);
-            carTypeServiceFake.setReturnedCarTypeList(returnedCarTypes);
+            val returnedCarTypes = listOf(boxcarType, gondolaCarType)
+            val carTypeDtoList = listOf(boxcarType, gondolaCarType)
+            carTypeServiceFake.setReturnedCarTypeList(returnedCarTypes)
 
             //act
-            final List<CarType> allCarTypes = carTypeController.getAllCarTypes();
+            val allCarTypes = carTypeController.allCarTypes
             //assert
-            IntStream.range(0, allCarTypes.size()).forEachOrdered(i -> assertThat(allCarTypes.get(i).toString()).isEqualTo(carTypeDtoList.get(i).toString()));
+            IntStream.range(0, allCarTypes.size).forEachOrdered { i: Int ->
+                Assertions.assertThat(
+                    allCarTypes[i].toString()
+                ).isEqualTo(carTypeDtoList[i].toString())
+            }
         }
 
         @Test
-        public void should_returnCarTypeByAAR()
-        {
+        fun should_returnCarTypeByAAR() {
             //assign
-            carTypeServiceFake.setReturnedCarTypeWithAAR(boxcarType);
+            carTypeServiceFake.setReturnedCarTypeWithAAR(boxcarType)
 
             //act
-            final CarType carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+            val carTypeByAAR = carTypeController.getCarTypeByAAR("XM")
 
             //assert
-            assertThat(carTypeByAAR.toString()).isEqualTo(boxcarType.toString());
+            Assertions.assertThat(carTypeByAAR.toString()).isEqualTo(boxcarType.toString())
         }
 
         @Test
-        public void should_notReturnCarTypeByAAR()
-        {
+        fun should_notReturnCarTypeByAAR() {
             //assign
-            carTypeServiceFake.setReturnedCarTypeWithAAR(new NullCarType());
+            carTypeServiceFake.setReturnedCarTypeWithAAR(NullCarType())
 
             //act
-            final CarType carTypeByAAR = carTypeController.getCarTypeByAAR("XM");
+            val carTypeByAAR = carTypeController.getCarTypeByAAR("XM")
             //assert
-            assertThat(carTypeByAAR.isNull()).isTrue();
+            Assertions.assertThat(carTypeByAAR.isNull).isTrue
         }
 
         @Test
-        public void should_returnCarTypesT_thatCarry_goods()
-        {
+        fun should_returnCarTypesT_thatCarry_goods() {
             //assign
-            carTypeServiceFake.setReturnedCarTypeList(Arrays.asList(boxcarType, gondolaCarType));
+            carTypeServiceFake.setReturnedCarTypeList(listOfNotNull(boxcarType, gondolaCarType))
 
             //act
-            final List<CarType> carTypesThatCarryLogs = carTypeController.getCarTypesThatCarry("Logs");
+            val carTypesThatCarryLogs = carTypeController.getCarTypesThatCarry("Logs")
             //assert
-            assertThat(carTypesThatCarryLogs.size()).isEqualTo(2);
+            Assertions.assertThat(carTypesThatCarryLogs.size).isEqualTo(2)
         }
 
         @Test
-        public void should_saveCarTypeToRepository()
-        {
+        fun should_saveCarTypeToRepository() {
             //assign
-            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            val boxcarType: CarType = TestAARTypeCreator.boxcarType()
 
             //act
-            carTypeController.addNewCarType(boxcarType);
+            carTypeController.addNewCarType(boxcarType)
 
             //assert
-            assertThat(carTypeServiceFake.savedDtoEntity().toString()).isEqualTo(boxcarType.toString());
+            Assertions.assertThat(carTypeServiceFake.savedDtoEntity().toString()).isEqualTo(boxcarType.toString())
         }
     }
 
     @Nested
     @Tag("Integration")
-    @ExtendWith(SpringExtension.class)
-    @WebMvcTest(CarTypeController.class)
-    public class IntegrationTests
-    {
+    @ExtendWith(SpringExtension::class)
+    @WebMvcTest(
+        CarTypeController::class
+    )
+    inner class IntegrationTests {
         @Autowired
-        private MockMvc mockMvc;
+        private val mockMvc: MockMvc? = null
 
         @MockBean
-        private CarTypeService carTypeService;
-
-        private AARType boxcarType;
-        private AARType gondolaCarType;
-        private UUID boxCarUUID;
-        private UUID gondolaUUID;
+        private val carTypeService: CarTypeService? = null
+        private var boxcarType: AARType? = null
+        private var gondolaCarType: AARType? = null
+        private var boxCarUUID: UUID? = null
+        private var gondolaUUID: UUID? = null
 
         @BeforeEach
-        public void setupTests()
-        {
-            boxCarUUID = UUID.randomUUID();
-            gondolaUUID = UUID.randomUUID();
-            boxcarType = boxcarType(boxCarUUID);
-            gondolaCarType = gondolaType(gondolaUUID);
+        fun setupTests() {
+            boxCarUUID = UUID.randomUUID()
+            gondolaUUID = UUID.randomUUID()
+            boxcarType = TestAARTypeCreator.boxcarType(boxCarUUID)
+            gondolaCarType = TestAARTypeCreator.gondolaType(gondolaUUID)
         }
 
         @Test
-        public void should_returnAllAARDesignationsInDatabase() throws Exception
-        {
-            final List<AARDesignation> expectedList = Arrays.asList(XM, FC, GS);
-
-            when(carTypeService.allAARDesignations()).thenReturn(expectedList);
-
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/aar")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            final String contentAsString = result.getResponse().getContentAsString();
-
-            assertThat(contentAsString).isEqualTo("[\"XM\",\"FC\",\"GS\"]");
+        @Throws(Exception::class)
+        fun should_returnAllAARDesignationsInDatabase() {
+            val expectedList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
+            Mockito.`when`(carTypeService!!.allAARDesignations()).thenReturn(expectedList)
+            val result = mockMvc!!.perform(
+                MockMvcRequestBuilders.get("/models/aar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+            val contentAsString = result.response.contentAsString
+            Assertions.assertThat(contentAsString).isEqualTo("[\"XM\",\"FC\",\"GS\"]")
         }
 
         @Test
-        public void should_returnAllCarTypes() throws Exception
-        {
-            final List<CarType> aarTypes = Collections.singletonList(gondolaCarType);
-            when(carTypeService.allCarTypes()).thenReturn(aarTypes);
-
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            final String contentAsString = result.getResponse().getContentAsString();
-
-            assertThat(contentAsString).isEqualTo("[{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"" +
-                    gondolaUUID.toString() +
-                    "\",\"null\":false}]");
+        @Throws(Exception::class)
+        fun should_returnAllCarTypes() {
+            val aarTypes: ArrayList<AARType> = listOfNotNull(gondolaCarType) as ArrayList<AARType>
+            Mockito.`when`(carTypeService!!.allCarTypes()).thenReturn(aarTypes)
+            val result = mockMvc!!.perform(
+                MockMvcRequestBuilders.get("/models/types")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+            val contentAsString = result.response.contentAsString
+            Assertions.assertThat(contentAsString).isEqualTo(
+                "[{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"" +
+                        gondolaUUID.toString() +
+                        "\",\"null\":false}]"
+            )
         }
 
         @Test
-        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
-        {
-            List<CarType> returnedCarTypes = Arrays.asList(boxcarType, gondolaCarType);
-
-            when(carTypeService.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes);
-
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/goods/Logs")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            final String contentAsString = result.getResponse().getContentAsString();
-
-            assertThat(contentAsString).isEqualTo("[{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
-                    boxCarUUID.toString() +
-                    "\",\"null\":false},{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"" +
-                    gondolaUUID.toString() +
-                    "\",\"null\":false}]");
+        @Throws(Exception::class)
+        fun should_returnAllCarTypeThatCarry_ExpectedGoods() {
+            val returnedCarTypes: List<AARType> = listOfNotNull(boxcarType, gondolaCarType)
+            Mockito.`when`(carTypeService!!.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes)
+            val result = mockMvc!!.perform(
+                MockMvcRequestBuilders.get("/models/types/goods/Logs")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+            val contentAsString = result.response.contentAsString
+            Assertions.assertThat(contentAsString).isEqualTo(
+                "[{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
+                        boxCarUUID.toString() +
+                        "\",\"null\":false},{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"],\"id\":\"" +
+                        gondolaUUID.toString() +
+                        "\",\"null\":false}]"
+            )
         }
 
         @Test
-        public void should_returnCarTypeByAARType() throws Exception
-        {
-            when(carTypeService.allAARDesignations()).thenReturn(Arrays.asList(AARDesignation.values()));
-
-            when(carTypeService.carTypeForAAR(any())).thenReturn(boxcarType);
-
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            final String contentAsString = result.getResponse().getContentAsString();
-
-            assertThat(contentAsString).isEqualTo("{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
-                    boxCarUUID.toString() +
-                    "\",\"null\":false}");
+        @Throws(Exception::class)
+        fun should_returnCarTypeByAARType() {
+            Mockito.`when`(carTypeService!!.allAARDesignations()).thenReturn(listOf(*AARDesignation.values()))
+            Mockito.`when`(carTypeService.carTypeForAAR(ArgumentMatchers.any())).thenReturn(boxcarType)
+            val result = mockMvc!!.perform(
+                MockMvcRequestBuilders.get("/models/types/aar/XM")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+            val contentAsString = result.response.contentAsString
+            Assertions.assertThat(contentAsString).isEqualTo(
+                "{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"],\"id\":\"" +
+                        boxCarUUID.toString() +
+                        "\",\"null\":false}"
+            )
         }
 
         @Test
-        public void should_notReturnCarTypeByAARType() throws Exception
-        {
-            when(carTypeService.carTypeForAAR(any())).thenReturn(new NullCarType());
-            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/models/types/aar/XM")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            final String contentAsString = result.getResponse().getContentAsString();
-
-            assertThat(contentAsString).isEqualTo("{\"aarDesignation\":\"NULL\",\"carriedGoodsList\":[],\"id\":\"\",\"null\":true}");
+        @Throws(Exception::class)
+        fun should_notReturnCarTypeByAARType() {
+            Mockito.`when`(carTypeService!!.carTypeForAAR(ArgumentMatchers.any())).thenReturn(NullCarType())
+            val result = mockMvc!!.perform(
+                MockMvcRequestBuilders.get("/models/types/aar/XM")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+            val contentAsString = result.response.contentAsString
+            Assertions.assertThat(contentAsString)
+                .isEqualTo("{\"aarDesignation\":\"NULL\",\"carriedGoodsList\":[],\"id\":\"\",\"null\":true}")
         }
 
-//        @Test
-//        public void should_addCarTypeToDatabase() throws Exception
-//        {
-//
-//            //assign
-//            final CarType boxcarTypeDto = boxcarType;
-//            mockMvc.perform(MockMvcRequestBuilders.post("/models/types/add")
-//                    .content(asJsonString(boxcarTypeDto))
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .accept(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isOk());
-//
-//            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
-//
+        //        @Test
+        //        public void should_addCarTypeToDatabase() throws Exception
+        //        {
+        //
+        //            //assign
+        //            final CarType boxcarTypeDto = boxcarType;
+        //            mockMvc.perform(MockMvcRequestBuilders.post("/models/types/add")
+        //                    .content(asJsonString(boxcarTypeDto))
+        //                    .contentType(MediaType.APPLICATION_JSON)
+        //                    .accept(MediaType.APPLICATION_JSON))
+        //                    .andExpect(status().isOk());
+        //
+        //            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
+        //
+        //        }
+//        private fun asJsonString(obj: Any): String {
+//            return try {
+//                ObjectMapper().writeValueAsString(obj)
+//            } catch (e: Exception) {
+//                throw RuntimeException(e)
+//            }
 //        }
-
-        private String asJsonString(final Object obj)
-        {
-            try
-            {
-                return new ObjectMapper().writeValueAsString(obj);
-            } catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     @Nested
     @Tag("Data")
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-    public class FunctionalTests
-    {
-        private final String collectionName = "AARTypes";
+    inner class FunctionalTests(@param:Autowired private val mongoTemplate: MongoTemplate) {
+        private val collectionName = "AARTypes"
 
-        private final MongoTemplate mongoTemplate;
         @LocalServerPort
-        private int port;
+        private val port = 0
 
         @Autowired
-        private TestRestTemplate restTemplate;
-        private AARType boxcar;
-        private AARType gondola;
-        private AARType flatcar;
-
-        public FunctionalTests(@Autowired MongoTemplate mongoTemplate)
-        {
-            this.mongoTemplate = mongoTemplate;
-        }
+        private val restTemplate: TestRestTemplate? = null
+        private var boxcar: AARType = TestAARTypeCreator.boxcarType(boxcarUUID)
+        private var gondola: AARType = TestAARTypeCreator.gondolaType()
+        private var flatcar: AARType = TestAARTypeCreator.flatcarType()
 
         @BeforeEach
-        public void setup()
-        {
-            mongoTemplate.remove(new Query(), collectionName);
-            insertCarTypesForTesting();
+        fun setup() {
+            mongoTemplate.remove(Query(), collectionName)
+            insertCarTypesForTesting()
         }
 
         @Test
-        public void should_returnAllCarTypes() throws Exception
-        {
-            final AARType[] aarTypesArray = this.restTemplate.getForObject("http://localhost:" + port + "/models/types", AARType[].class);
-            assertThat(aarTypesArray.length).isEqualTo(3);
+        @Throws(Exception::class)
+        fun should_returnAllCarTypes() {
+            val aarTypesArray =
+                restTemplate!!.getForObject("http://localhost:$port/models/types", Array<AARType>::class.java)
+            Assertions.assertThat(aarTypesArray.size).isEqualTo(3)
         }
 
         @Test
-        public void should_returnAllAARDesignations()
-        {
-            final AARDesignation[] returnedAARList = this.restTemplate.getForObject("http://localhost:" + port + "/models/aar", AARDesignation[].class);
-            final List<AARDesignation> expectedAarDesignationList = Arrays.asList(XM, FC, GS);
-            assertThat(returnedAARList).hasSameElementsAs(expectedAarDesignationList);
-        }
-
-
-        @Test
-        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
-        {
-            final AARType[] contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/goods/Parts", AARType[].class);
-
-            assertThat(contentAsString.length).isEqualTo(2);
-            assertThat(contentAsString[0]).isEqualTo(boxcar);
-            assertThat(contentAsString[1]).isEqualTo(flatcar);
+        fun should_returnAllAARDesignations() {
+            val returnedAARList =
+                restTemplate!!.getForObject("http://localhost:$port/models/aar", Array<AARDesignation>::class.java)
+            val expectedAarDesignationList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
+            Assertions.assertThat(returnedAARList).hasSameElementsAs(expectedAarDesignationList)
         }
 
         @Test
-        public void should_returnCarTypeByAARType() throws Exception
-        {
-            final AARType contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/XM", AARType.class);
-
-            assertThat(contentAsString).isEqualTo(boxcar);
+        @Throws(Exception::class)
+        fun should_returnAllCarTypeThatCarry_ExpectedGoods() {
+            val contentAsString = restTemplate!!.getForObject(
+                "http://localhost:$port/models/types/goods/Parts",
+                Array<AARType>::class.java
+            )
+            Assertions.assertThat(contentAsString.size).isEqualTo(2)
+            Assertions.assertThat(contentAsString[0]).isEqualTo(boxcar)
+            Assertions.assertThat(contentAsString[1]).isEqualTo(flatcar)
         }
 
         @Test
-        public void should_notReturnCarTypeByAARType() throws Exception
-        {
-            final NullCarType contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/QR", NullCarType.class);
-
-            assertThat(contentAsString.isNull()).isTrue();
+        @Throws(Exception::class)
+        fun should_returnCarTypeByAARType() {
+            val contentAsString =
+                restTemplate!!.getForObject("http://localhost:$port/models/types/aar/XM", AARType::class.java)
+            Assertions.assertThat(contentAsString).isEqualTo(boxcar)
         }
 
-        private void insertCarTypesForTesting()
-        {
-            final UUID boxcarUUID = UUID.randomUUID();
-            boxcar = TestAARTypeCreator.boxcarType(boxcarUUID);
-            gondola = TestAARTypeCreator.gondolaType();
-            flatcar = TestAARTypeCreator.flatcarType();
-            final List<AARType> aarTypes = Arrays.asList(boxcar, gondola, flatcar);
-            for (AARType aarType : aarTypes)
-            {
-                mongoTemplate.insert(aarType, collectionName);
+        @Test
+        @Throws(Exception::class)
+        fun should_notReturnCarTypeByAARType() {
+            val contentAsString =
+                restTemplate!!.getForObject("http://localhost:$port/models/types/aar/QR", NullCarType::class.java)
+            Assertions.assertThat(contentAsString.isNull).isTrue
+        }
+
+        private val boxcarUUID: UUID
+            get() {
+                return UUID.randomUUID()
+            }
+
+        private fun insertCarTypesForTesting() {
+            val aarTypes: List<AARType> = listOfNotNull(boxcar, gondola, flatcar)
+            for (aarType in aarTypes) {
+                mongoTemplate.insert(aarType, collectionName)
             }
         }
-
     }
 }
+

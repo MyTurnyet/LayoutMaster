@@ -1,49 +1,38 @@
-package dev.paigewatson.layoutmaster.helpers;
+package dev.paigewatson.layoutmaster.helpers
 
-import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.flatcarType
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.gondolaType
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar
+import java.util.*
 
-import java.util.UUID;
-
-public class TestFreightCarCreator
-{
-    public static FreightCar gondola(String roadName, int roadNumber)
-    {
-        return gondola(UUID.randomUUID(), roadName, roadNumber);
+object TestFreightCarCreator {
+    fun gondola(roadName: String?, roadNumber: Int): FreightCar {
+        return gondola(UUID.randomUUID(), roadName, roadNumber)
     }
 
-    public static FreightCar gondola(UUID uuid, String roadName, int roadNumber)
-    {
-        return gondola(uuid, roadName, roadNumber, UUID.randomUUID());
+    @JvmOverloads
+    fun gondola(uuid: UUID?, roadName: String?, roadNumber: Int, carTypeUUID: UUID? = UUID.randomUUID()): FreightCar {
+        return FreightCar(uuid!!, roadName, roadNumber, gondolaType(carTypeUUID))
     }
 
-    public static FreightCar gondola(UUID uuid, String roadName, int roadNumber, UUID carTypeUUID)
-    {
-        return new FreightCar(uuid, roadName, roadNumber, TestAARTypeCreator.gondolaType(carTypeUUID));
+    fun flatcar(roadName: String?, roadNumber: Int): FreightCar {
+        return flatcar(UUID.randomUUID(), roadName, roadNumber)
     }
 
-    public static FreightCar flatcar(String roadName, int roadNumber)
-    {
-        return flatcar(UUID.randomUUID(), roadName, roadNumber);
+    fun flatcar(flatcarUUID: UUID?, roadName: String?, roadNumber: Int): FreightCar {
+        return FreightCar(flatcarUUID!!, roadName, roadNumber, flatcarType())
     }
 
-    public static FreightCar flatcar(UUID flatcarUUID, String roadName, int roadNumber)
-    {
-        return new FreightCar(flatcarUUID, roadName, roadNumber, TestAARTypeCreator.flatcarType());
+    fun flatcar(flatcarUUID: UUID?, roadName: String?, roadNumber: Int, carTypeUUID: UUID?): FreightCar {
+        return FreightCar(flatcarUUID!!, roadName, roadNumber, flatcarType(carTypeUUID))
     }
 
-    public static FreightCar flatcar(UUID flatcarUUID, String roadName, int roadNumber, UUID carTypeUUID)
-    {
-        return new FreightCar(flatcarUUID, roadName, roadNumber, TestAARTypeCreator.flatcarType(carTypeUUID));
+    fun boxcar(roadName: String?, roadNumber: Int): FreightCar {
+        return boxcar(UUID.randomUUID(), roadName, roadNumber, UUID.randomUUID())
     }
 
-    public static FreightCar boxcar(String roadName, int roadNumber)
-    {
-        return boxcar(UUID.randomUUID(), roadName, roadNumber, UUID.randomUUID());
+    fun boxcar(uuid: UUID?, roadName: String?, roadNumber: Int, carTypeUUID: UUID?): FreightCar {
+        return FreightCar(uuid!!, roadName, roadNumber, boxcarType(carTypeUUID))
     }
-
-    public static FreightCar boxcar(UUID uuid, String roadName, int roadNumber, UUID carTypeUUID)
-    {
-        return new FreightCar(uuid, roadName, roadNumber, TestAARTypeCreator.boxcarType(carTypeUUID));
-    }
-
 }

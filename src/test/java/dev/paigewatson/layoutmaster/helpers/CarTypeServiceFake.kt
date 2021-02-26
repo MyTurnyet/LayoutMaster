@@ -1,69 +1,49 @@
-package dev.paigewatson.layoutmaster.helpers;
+package dev.paigewatson.layoutmaster.helpers
 
-import dev.paigewatson.layoutmaster.client.services.CarTypeService;
-import dev.paigewatson.layoutmaster.models.goods.GoodsType;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.CarType;
+import dev.paigewatson.layoutmaster.client.services.CarTypeService
+import dev.paigewatson.layoutmaster.models.goods.GoodsType
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.CarType
 
-import java.util.Collections;
-import java.util.List;
-
-public class CarTypeServiceFake implements CarTypeService
-{
-    private List<CarType> returnedCarTypeList;
-    private CarType savedEntity;
-    private CarType returnedCarTypeWithAAR;
-    private List<AARDesignation> returnedAARTypes = Collections.emptyList();
-
-    @Override
-    public List<AARDesignation> allAARDesignations()
-    {
-        return returnedAARTypes;
+class CarTypeServiceFake : CarTypeService {
+    private var returnedCarTypeList: List<CarType>? = null
+    private var savedEntity: CarType? = null
+    private var returnedCarTypeWithAAR: CarType? = null
+    private var returnedAARTypes: List<AARDesignation> = emptyList()
+    override fun allAARDesignations(): List<AARDesignation> {
+        return returnedAARTypes
     }
 
-
-    @Override
-    public CarType saveCarTypeToDatabase(CarType carTypeToSave)
-    {
-        this.savedEntity = carTypeToSave;
-        return carTypeToSave;
+    override fun saveCarTypeToDatabase(carTypeToSave: CarType): CarType {
+        savedEntity = carTypeToSave
+        return carTypeToSave
     }
 
-    @Override
-    public List<CarType> allCarTypes()
-    {
-        return this.returnedCarTypeList;
+    override fun allCarTypes(): List<CarType> {
+        return returnedCarTypeList!!
     }
 
-    @Override
-    public CarType carTypeForAAR(AARDesignation expectedAARDesignation)
-    {
-        return this.returnedCarTypeWithAAR;
+    override fun carTypeForAAR(expectedAARDesignation: AARDesignation): CarType {
+        return returnedCarTypeWithAAR!!
     }
 
-    @Override
-    public List<CarType> carTypesThatCarryGoodsType(GoodsType expectedGoodsType)
-    {
-        return returnedCarTypeList;
+    override fun carTypesThatCarryGoodsType(expectedGoodsType: GoodsType): List<CarType> {
+        return returnedCarTypeList!!
     }
 
-    public void setReturnedCarTypeList(List<CarType> returnedCarTypeList)
-    {
-        this.returnedCarTypeList = returnedCarTypeList;
+    fun setReturnedCarTypeList(returnedCarTypeList: List<CarType>?) {
+        this.returnedCarTypeList = returnedCarTypeList
     }
 
-    public CarType savedDtoEntity()
-    {
-        return this.savedEntity;
+    fun savedDtoEntity(): CarType? {
+        return savedEntity
     }
 
-    public void setReturnedCarTypeWithAAR(CarType carType)
-    {
-        returnedCarTypeWithAAR = carType;
+    fun setReturnedCarTypeWithAAR(carType: CarType?) {
+        returnedCarTypeWithAAR = carType
     }
 
-    public void setReturnAARTypes(List<AARDesignation> returnedAARTypes)
-    {
-        this.returnedAARTypes = returnedAARTypes;
+    fun setReturnAARTypes(returnedAARTypes: List<AARDesignation>) {
+        this.returnedAARTypes = returnedAARTypes
     }
 }

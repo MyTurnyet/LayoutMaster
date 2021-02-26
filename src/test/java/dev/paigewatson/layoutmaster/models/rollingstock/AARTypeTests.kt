@@ -1,99 +1,81 @@
-package dev.paigewatson.layoutmaster.models.rollingstock;
+package dev.paigewatson.layoutmaster.models.rollingstock
 
-import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake;
-import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType
+import dev.paigewatson.layoutmaster.models.goods.GoodsType
+import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
+import java.util.*
 
-import java.util.Arrays;
-import java.util.UUID;
-
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Ingredients;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Paper;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.FA;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.NULL;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-public class AARTypeTests
-{
+class AARTypeTests {
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
-        private UUID boxcarUUID;
-        private CarType boxcarType;
+    internal inner class UnitTests {
+        private var boxcarUUID: UUID? = null
+        private var boxcarType: CarType? = null
 
         @BeforeEach
-        public void setup()
-        {
-            boxcarUUID = UUID.randomUUID();
-            boxcarType = TestAARTypeCreator.boxcarType(boxcarUUID);
+        fun setup() {
+            boxcarUUID = UUID.randomUUID()
+            boxcarType = boxcarType(boxcarUUID)
         }
 
         @Test
-        public void should_evaluateTo_NullCarType()
-        {
+        fun should_evaluateTo_NullCarType() {
             //assign
-            CarType nullCarType = new NullCarType();
+            val nullCarType: CarType = NullCarType()
             //act
             //assert
-            final boolean ofType = nullCarType.isOfType(XM);
-            final boolean canCarry = nullCarType.canCarry(Ingredients);
-            final AARDesignation displayName = nullCarType.displayName();
-            final boolean isNull = nullCarType.isNull();
-
-            assertThat(isNull).isTrue();
-            assertThat(displayName).isEqualTo(NULL);
-            assertThat(canCarry).isFalse();
-            assertThat(ofType).isFalse();
-
+            val ofType = nullCarType.isOfType(AARDesignation.XM)
+            val canCarry = nullCarType.canCarry(GoodsType.Ingredients)
+            val displayName = nullCarType.displayName()
+            val isNull = nullCarType.isNull
+            AssertionsForClassTypes.assertThat(isNull).isTrue
+            AssertionsForClassTypes.assertThat(displayName).isEqualTo(AARDesignation.NULL)
+            AssertionsForClassTypes.assertThat(canCarry).isFalse
+            AssertionsForClassTypes.assertThat(ofType).isFalse
         }
 
         @Test
-        public void should_haveTypeName_andGoodsCarried()
-        {
+        fun should_haveTypeName_andGoodsCarried() {
             //assign
 
             //act
             //assert
-            assertThat(boxcarType.canCarry(Ingredients)).isTrue();
-            assertThat(boxcarType.canCarry(ScrapMetal)).isFalse();
-            assertThat(boxcarType.isOfType(XM)).isTrue();
-            assertThat(boxcarType.isOfType(FA)).isFalse();
-            assertThat(boxcarType.displayName()).isEqualTo(XM);
+            AssertionsForClassTypes.assertThat(boxcarType!!.canCarry(GoodsType.Ingredients)).isTrue
+            AssertionsForClassTypes.assertThat(boxcarType!!.canCarry(GoodsType.ScrapMetal)).isFalse
+            AssertionsForClassTypes.assertThat(boxcarType!!.isOfType(AARDesignation.XM)).isTrue
+            AssertionsForClassTypes.assertThat(boxcarType!!.isOfType(AARDesignation.FA)).isFalse
+            AssertionsForClassTypes.assertThat(boxcarType!!.displayName()).isEqualTo(AARDesignation.XM)
         }
 
         @Test
-        public void should_saveItselfToRepository()
-        {
+        fun should_saveItselfToRepository() {
             //assign
-            final CarTypeDALFake carTypeDALFake = new CarTypeDALFake();
-            carTypeDALFake.setEntityToReturn(new NullCarType());
+            val carTypeDALFake = CarTypeDALFake()
+            carTypeDALFake.setEntityToReturn(NullCarType())
             //act
-            final CarType savedCarType = boxcarType.saveToDatabase(carTypeDALFake);
-
-            assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType);
-            assertThat(savedCarType).isEqualTo(boxcarType);
+            val savedCarType = boxcarType!!.saveToDatabase(carTypeDALFake)
+            AssertionsForClassTypes.assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType)
+            AssertionsForClassTypes.assertThat(savedCarType).isEqualTo(boxcarType)
         }
 
         @Test
-        public void should_updateItselfToRepository_ifAARType_exists()
-        {
+        fun should_updateItselfToRepository_ifAARType_exists() {
             //assign
-            final CarTypeDALFake carTypeDALFake = new CarTypeDALFake();
-            carTypeDALFake.setEntityToReturn(boxcarType);
-            UUID boxcarUUID2 = UUID.randomUUID();
-            CarType boxcarType2 = new AARType(boxcarUUID2, XM, Arrays.asList(Ingredients, Paper));
+            val carTypeDALFake = CarTypeDALFake()
+            carTypeDALFake.setEntityToReturn(boxcarType!!)
+            val boxcarUUID2 = UUID.randomUUID()
+            val boxcarType2: CarType =
+                AARType(boxcarUUID2, AARDesignation.XM, listOfNotNull(GoodsType.Ingredients, GoodsType.Paper))
 
             //act
-            final CarType savedCarType = boxcarType2.saveToDatabase(carTypeDALFake);
-
-            assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType2);
-            assertThat(savedCarType).isEqualTo(boxcarType2);
+            val savedCarType = boxcarType2.saveToDatabase(carTypeDALFake)
+            AssertionsForClassTypes.assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType2)
+            AssertionsForClassTypes.assertThat(savedCarType).isEqualTo(boxcarType2)
         }
     }
 }

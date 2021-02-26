@@ -1,51 +1,44 @@
-package dev.paigewatson.layoutmaster.models.goods;
+package dev.paigewatson.layoutmaster.models.goods
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Oil;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-public class RequiredGoodTests
-{
+class RequiredGoodTests {
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
+    internal inner class UnitTests {
         @Test
-        public void should_haveGoodsType_andReturnNeedsTrue_ifMatchedType_andNotAssigned()
-        {
+        fun should_haveGoodsType_andReturnNeedsTrue_ifMatchedType_andNotAssigned() {
             //assign
-            final RequiredGood requiredGood = new RequiredGood(Parts);
+            val requiredGood = RequiredGood(GoodsType.Parts)
 
             //act
             //assert
-            assertThat(requiredGood.needs(Parts)).isTrue();
+            AssertionsForClassTypes.assertThat(requiredGood.needs(GoodsType.Parts)).isTrue
         }
 
         @Test
-        public void should_returnNeeds_asFalseIfAssigned_orNotMatchingType()
-        {
+        fun should_returnNeeds_asFalseIfAssigned_orNotMatchingType() {
             //assign
             //act
-            final RequiredGood requiredGood = new RequiredGood(Parts, true);
+            val requiredGood = RequiredGood(GoodsType.Parts, true)
 
             //assert
-            assertThat(requiredGood.needs(Parts)).isFalse();
-            assertThat(requiredGood.needs(Oil)).isFalse();
+            AssertionsForClassTypes.assertThat(requiredGood.needs(GoodsType.Parts)).isFalse
+            AssertionsForClassTypes.assertThat(requiredGood.needs(GoodsType.Oil)).isFalse
         }
 
         @Test
-        public void should_representItselfAsString()
-        {
+        fun should_representItselfAsString() {
             //assign
-            final RequiredGood requiredGood = new RequiredGood(Parts);
+            val requiredGood = RequiredGood(GoodsType.Parts)
 
             //act
             //assert
-            assertThat(requiredGood.toString()).isEqualTo("RequiredGood{neededGoodsType=Parts, isAssigned=false}");
+            AssertionsForClassTypes.assertThat(requiredGood.toString())
+                .isEqualTo("RequiredGood{neededGoodsType=Parts, isAssigned=false}")
         }
     }
 }

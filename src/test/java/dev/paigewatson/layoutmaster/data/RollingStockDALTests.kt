@@ -1,225 +1,187 @@
-package dev.paigewatson.layoutmaster.data;
+package dev.paigewatson.layoutmaster.data
 
-import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
-import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
-import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
+import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.flatcarType;
-import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-public class RollingStockDALTests
-{
-    private final String collectionName = "FreightCars";
+class RollingStockDALTests {
+    private val collectionName = "FreightCars"
 
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
-        private final MongoTemplate mongoTemplate;
-        private final RollingStockDAL rollingStockMongoDAL;
-        private FreightCar boxCar1234;
-        private FreightCar boxCar1245;
-        private FreightCar flatcar3345;
-        private FreightCar gondola3225;
+    internal inner class UnitTests {
+        private val mongoTemplate: MongoTemplate = Mockito.mock(MongoTemplate::class.java)
+        private val rollingStockMongoDAL: RollingStockDAL
+        private var boxCar1234: FreightCar =
+            FreightCar(UUID.randomUUID(), "PNWR", 1234, TestAARTypeCreator.boxcarType())
+        private var boxCar1245: FreightCar = FreightCar(UUID.randomUUID(), "BCR", 1245, TestAARTypeCreator.boxcarType())
+        private var flatcar3345: FreightCar =
+            FreightCar(UUID.randomUUID(), "BCR", 3345, TestAARTypeCreator.flatcarType())
+//        private var gondola3225: FreightCar = FreightCar(UUID.randomUUID(), "BNSF", 3225, TestAARTypeCreator.gondolaType())
 
-        public UnitTests()
-        {
-
-            mongoTemplate = mock(MongoTemplate.class);
-            rollingStockMongoDAL = new RollingStockMongoDAL(mongoTemplate);
-        }
-
-        @BeforeEach
-        public void setup()
-        {
-            boxCar1234 = new FreightCar(UUID.randomUUID(), "PNWR", 1234, TestAARTypeCreator.boxcarType());
-            boxCar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, TestAARTypeCreator.boxcarType());
-            flatcar3345 = new FreightCar(UUID.randomUUID(), "BCR", 3345, TestAARTypeCreator.flatcarType());
-            gondola3225 = new FreightCar(UUID.randomUUID(), "BNSF", 3225, TestAARTypeCreator.gondolaType());
+        @Test
+        fun should_addRollingStockToDatabase() {
+            Mockito.`when`(mongoTemplate.insert(flatcar3345, collectionName)).thenReturn(flatcar3345)
+            val savedRollingStock = rollingStockMongoDAL.insertRollingStock(flatcar3345)
+            Mockito.verify(mongoTemplate).insert(flatcar3345, collectionName)
+            AssertionsForClassTypes.assertThat(savedRollingStock).isEqualTo(flatcar3345)
         }
 
         @Test
-        public void should_addRollingStockToDatabase()
-        {
-            when(mongoTemplate.insert(flatcar3345, collectionName)).thenReturn(flatcar3345);
-
-            RollingStock savedRollingStock = rollingStockMongoDAL.insertRollingStock(flatcar3345);
-            verify(mongoTemplate).insert(flatcar3345, collectionName);
-            assertThat(savedRollingStock).isEqualTo(flatcar3345);
-        }
-
-        @Test
-        public void should_returnAllInCollection()
-        {
+        fun should_returnAllInCollection() {
             //assign
-            when(mongoTemplate.findAll(FreightCar.class, collectionName)).thenReturn(Arrays.asList(boxCar1234, boxCar1245));
+            Mockito.`when`(mongoTemplate.findAll(FreightCar::class.java, collectionName))
+                .thenReturn(listOfNotNull(boxCar1234, boxCar1245))
             //act
-            final List<RollingStock> allRollingStock = rollingStockMongoDAL.getAllRollingStock();
+            val allRollingStock = rollingStockMongoDAL.allRollingStock
             //assert
-            assertThat(allRollingStock.size()).isEqualTo(2);
+            AssertionsForClassTypes.assertThat(allRollingStock.size).isEqualTo(2)
         }
 
         @Test
-        public void should_deleteAllDocumentsInCollection()
-        {
+        fun should_deleteAllDocumentsInCollection() {
             //assign
-            rollingStockMongoDAL.deleteAll();
+            rollingStockMongoDAL.deleteAll()
 
             //act
             //assert
-            verify(mongoTemplate).remove(new Query(), collectionName);
+            Mockito.verify(mongoTemplate).remove(Query(), collectionName)
         }
 
         @Test
-        public void should_deleteRollingStock()
-        {
+        fun should_deleteRollingStock() {
             //assign
-            rollingStockMongoDAL.delete(boxCar1234);
+            rollingStockMongoDAL.delete(boxCar1234)
 
             //act
             //assert
-            verify(mongoTemplate).remove(boxCar1234, collectionName);
+            Mockito.verify(mongoTemplate).remove(boxCar1234, collectionName)
         }
 
         @Test
-        public void should_returnAllFreightCarsWihRoaName_BCR()
-        {
-            when(mongoTemplate.find(
-                    query(
-                            where("roadName").is("BCR")
+        fun should_returnAllFreightCarsWihRoaName_BCR() {
+            Mockito.`when`(
+                mongoTemplate.find(
+                    Query.query(
+                        Criteria.where("roadName").`is`("BCR")
                     ),
-                    FreightCar.class,
+                    FreightCar::class.java,
                     collectionName
-            )).thenReturn(Arrays.asList(flatcar3345, boxCar1245));
-            final List<RollingStock> allOfAARDesignation = rollingStockMongoDAL.getAllOfRoadName("BCR");
-
-            assertThat(allOfAARDesignation.size()).isEqualTo(2);
+                )
+            ).thenReturn(listOfNotNull(flatcar3345, boxCar1245))
+            val allOfAARDesignation = rollingStockMongoDAL.getAllOfRoadName("BCR")
+            AssertionsForClassTypes.assertThat(allOfAARDesignation.size).isEqualTo(2)
         }
 
         @Test
-        public void should_returnAllFreightCarOfType()
-        {
-            when(mongoTemplate.find(
-                    query(
-                            where("carType.aarDesignation").is("XM")
+        fun should_returnAllFreightCarOfType() {
+            Mockito.`when`(
+                mongoTemplate.find(
+                    Query.query(
+                        Criteria.where("carType.aarDesignation").`is`("XM")
                     ),
-                    FreightCar.class,
+                    FreightCar::class.java,
                     collectionName
-            )).thenReturn(Arrays.asList(boxCar1234, boxCar1245));
-            final List<RollingStock> allOfAARDesignation = rollingStockMongoDAL.getAllOfAARDesignation(XM);
+                )
+            ).thenReturn(listOfNotNull(boxCar1234, boxCar1245))
+            val allOfAARDesignation = rollingStockMongoDAL.getAllOfAARDesignation(AARDesignation.XM)
+            AssertionsForClassTypes.assertThat(allOfAARDesignation.size).isEqualTo(2)
+        }
 
-            assertThat(allOfAARDesignation.size()).isEqualTo(2);
+        init {
+            rollingStockMongoDAL = RollingStockMongoDAL(mongoTemplate)
         }
     }
 
-    @DataMongoTest()
-    @ExtendWith(SpringExtension.class)
+    @DataMongoTest
+    @ExtendWith(SpringExtension::class)
     @Tag("Mongo")
     @Nested
-    public class DataTests
-    {
-        private final MongoTemplate mongoTemplate;
-        private final RollingStockDAL rollingStockMongoDAL;
-        private UUID boxcar1234uuid;
-        private FreightCar boxcar1234;
-        private FreightCar boxcar1245;
-        private FreightCar flatcar2234;
-        private FreightCar gondola4453;
-
-        public DataTests(@Autowired MongoTemplate mongoTemplate)
-        {
-            rollingStockMongoDAL = new RollingStockMongoDAL(mongoTemplate);
-            this.mongoTemplate = mongoTemplate;
-        }
+    inner class DataTests(@Autowired mongoTemplate: MongoTemplate) {
+        private val mongoTemplate: MongoTemplate
+        private val rollingStockMongoDAL: RollingStockDAL
+        private var boxcar1234uuid: UUID = UUID.randomUUID()
+        private var boxcar1234: FreightCar = FreightCar(boxcar1234uuid, "PNWR", 1234, TestAARTypeCreator.boxcarType())
+        private var boxcar1245: FreightCar = FreightCar(UUID.randomUUID(), "BCR", 1245, TestAARTypeCreator.boxcarType())
+        private var flatcar2234: FreightCar =
+            FreightCar(UUID.randomUUID(), "PNWR", 2234, TestAARTypeCreator.flatcarType())
+        private var gondola4453: FreightCar =
+            FreightCar(UUID.randomUUID(), "BNSF", 4453, TestAARTypeCreator.gondolaType())
 
         @BeforeEach
-        public void setUp()
-        {
-            mongoTemplate.remove(new Query(), collectionName);
-            boxcar1234uuid = UUID.randomUUID();
-            boxcar1234 = new FreightCar(boxcar1234uuid, "PNWR", 1234, TestAARTypeCreator.boxcarType());
-            boxcar1245 = new FreightCar(UUID.randomUUID(), "BCR", 1245, TestAARTypeCreator.boxcarType());
-            flatcar2234 = new FreightCar(UUID.randomUUID(), "PNWR", 2234, flatcarType());
-            gondola4453 = new FreightCar(UUID.randomUUID(), "BNSF", 4453, TestAARTypeCreator.gondolaType());
-
+        fun setUp() {
+            mongoTemplate.remove(Query(), collectionName)
         }
 
         @Test
-        public void should_returnAllRollingStock()
-        {
-            insertRollingStockForTesting();
-
-            final List<RollingStock> allRollingStock = rollingStockMongoDAL.getAllRollingStock();
-            assertThat(allRollingStock.size()).isEqualTo(4);
+        fun should_returnAllRollingStock() {
+            insertRollingStockForTesting()
+            val allRollingStock = rollingStockMongoDAL.allRollingStock
+            AssertionsForClassTypes.assertThat(allRollingStock.size).isEqualTo(4)
         }
 
         @Test
-        public void should_returnAllFreightCars_ofTypeXM()
-        {
+        fun should_returnAllFreightCars_ofTypeXM() {
             //assign
-            insertRollingStockForTesting();
+            insertRollingStockForTesting()
 
             //act
-            final List<RollingStock> allOfAARDesignation = rollingStockMongoDAL.getAllOfAARDesignation(XM);
+            val allOfAARDesignation = rollingStockMongoDAL.getAllOfAARDesignation(AARDesignation.XM)
             //assert
-            assertThat(allOfAARDesignation.size()).isEqualTo(2);
-            assertThat(allOfAARDesignation.stream().allMatch(rollingStock -> rollingStock.isAARType(XM))).isTrue();
+            AssertionsForClassTypes.assertThat(allOfAARDesignation.size).isEqualTo(2)
+            AssertionsForClassTypes.assertThat(
+                allOfAARDesignation.stream()
+                    .allMatch { rollingStock: RollingStock -> rollingStock.isAARType(AARDesignation.XM) }).isTrue
         }
 
         @Test
-        public void should_returnAllFreightCars_withRoadName_PNWR()
-        {
+        fun should_returnAllFreightCars_withRoadName_PNWR() {
             //assign
-            insertRollingStockForTesting();
+            insertRollingStockForTesting()
 
             //act
-            final List<RollingStock> allOfAARDesignation = rollingStockMongoDAL.getAllOfRoadName("PNWR");
+            val allOfAARDesignation = rollingStockMongoDAL.getAllOfRoadName("PNWR")
             //assert
-            assertThat(allOfAARDesignation.size()).isEqualTo(2);
+            AssertionsForClassTypes.assertThat(allOfAARDesignation.size).isEqualTo(2)
         }
 
         @Test
-        public void should_insertRollingStock_intoDatabase()
-        {
+        fun should_insertRollingStock_intoDatabase() {
             //act
-            final RollingStock rollingStock = rollingStockMongoDAL.insertRollingStock(flatcar2234);
-
-            final List<FreightCar> freightCarList = mongoTemplate.findAll(FreightCar.class, collectionName);
-            assertThat(rollingStock.toString()).isEqualTo(flatcar2234.toString());
-            assertThat(freightCarList.size()).isEqualTo(1);
-            assertThat(freightCarList.get(0).toString()).isEqualTo(flatcar2234.toString());
+            val rollingStock = rollingStockMongoDAL.insertRollingStock(flatcar2234)
+            val freightCarList = mongoTemplate.findAll(FreightCar::class.java, collectionName)
+            AssertionsForClassTypes.assertThat(rollingStock.toString()).isEqualTo(flatcar2234.toString())
+            AssertionsForClassTypes.assertThat(freightCarList.size).isEqualTo(1)
+            AssertionsForClassTypes.assertThat(freightCarList[0].toString()).isEqualTo(flatcar2234.toString())
         }
 
-        private void insertRollingStockForTesting()
-        {
-
-            {
-                final List<FreightCar> freightCarList = Arrays.asList(boxcar1234, boxcar1245, flatcar2234, gondola4453);
-                for (FreightCar freightCar : freightCarList)
-                {
-                    mongoTemplate.insert(freightCar, collectionName);
+        private fun insertRollingStockForTesting() {
+            run {
+                val freightCarList: List<FreightCar> = listOfNotNull(boxcar1234, boxcar1245, flatcar2234, gondola4453)
+                for (freightCar in freightCarList) {
+                    mongoTemplate.insert(freightCar, collectionName)
                 }
             }
+        }
+
+        init {
+            rollingStockMongoDAL = RollingStockMongoDAL(mongoTemplate)
+            this.mongoTemplate = mongoTemplate
         }
     }
 }

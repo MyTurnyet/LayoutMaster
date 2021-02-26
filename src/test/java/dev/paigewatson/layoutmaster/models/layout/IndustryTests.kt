@@ -1,89 +1,71 @@
-package dev.paigewatson.layoutmaster.models.layout;
+package dev.paigewatson.layoutmaster.models.layout
 
-import dev.paigewatson.layoutmaster.models.goods.ProducedGood;
-import dev.paigewatson.layoutmaster.models.goods.RequiredGood;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import dev.paigewatson.layoutmaster.models.goods.GoodsType
+import dev.paigewatson.layoutmaster.models.goods.ProducedGood
+import dev.paigewatson.layoutmaster.models.goods.RequiredGood
+import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
+import java.util.*
 
-import java.util.ArrayList;
-
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Chemicals;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.MetalParts;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Oil;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.Parts;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.ScrapMetal;
-import static dev.paigewatson.layoutmaster.models.goods.GoodsType.SheetMetal;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-public class IndustryTests
-{
+class IndustryTests {
     @Nested
     @Tag("Unit")
-    class UnitTests
-    {
-
-        private Industry cogFactory;
+    internal inner class UnitTests {
+        private var cogFactory: Industry? = null
 
         @BeforeEach
-        public void setUp()
-        {
-            createCogFactoryForTests();
+        fun setUp() {
+            createCogFactoryForTests()
         }
 
         @Test
-        public void should_haveName_andListOfAcceptedGoods()
-        {
-            createCogFactoryForTests();
+        fun should_haveName_andListOfAcceptedGoods() {
+            createCogFactoryForTests()
 
             //act
             //assert
-            assertThat(cogFactory.needs(Parts)).isTrue();
-            assertThat(cogFactory.needs(SheetMetal)).isFalse();
-            assertThat(cogFactory.needs(MetalParts)).isFalse();
-            assertThat(cogFactory.produces(ScrapMetal)).isTrue();
-            assertThat(cogFactory.produces(Oil)).isFalse();
-            assertThat(cogFactory.name()).isEqualTo("Cog Factory");
+            AssertionsForClassTypes.assertThat(cogFactory!!.needs(GoodsType.Parts)).isTrue
+            AssertionsForClassTypes.assertThat(cogFactory!!.needs(GoodsType.SheetMetal)).isFalse
+            AssertionsForClassTypes.assertThat(cogFactory!!.needs(GoodsType.MetalParts)).isFalse
+            AssertionsForClassTypes.assertThat(cogFactory!!.produces(GoodsType.ScrapMetal)).isTrue
+            AssertionsForClassTypes.assertThat(cogFactory!!.produces(GoodsType.Oil)).isFalse
+            AssertionsForClassTypes.assertThat(cogFactory!!.name()).isEqualTo("Cog Factory")
         }
-
 
         @Test
-        public void should_representItselfAsString()
-        {
-            assertThat(cogFactory.toString()).isEqualTo(
-                    "Industry{" +
-                            "id='null', industryName='Cog Factory', " +
-                            "acceptedGoodsList=[" +
-                            "RequiredGood{neededGoodsType=Chemicals, isAssigned=false}, " +
-                            "RequiredGood{neededGoodsType=Parts, isAssigned=false}, " +
-                            "RequiredGood{neededGoodsType=SheetMetal, isAssigned=true}], " +
-                            "producedGoods=[" +
-                            "ProducedGood{goodsType=MetalParts, isAssigned=false}, " +
-                            "ProducedGood{goodsType=ScrapMetal, isAssigned=false}], " +
-                            "industryTracks=[" +
-                            "IndustryTrack{trackName='Lone Siding', maximumNumberOfCars=2, carsAtIndustry=[]}" +
-                            "]}");
+        fun should_representItselfAsString() {
+            AssertionsForClassTypes.assertThat(cogFactory.toString()).isEqualTo(
+                "Industry{" +
+                        "id='null', industryName='Cog Factory', " +
+                        "acceptedGoodsList=[" +
+                        "RequiredGood{neededGoodsType=Chemicals, isAssigned=false}, " +
+                        "RequiredGood{neededGoodsType=Parts, isAssigned=false}, " +
+                        "RequiredGood{neededGoodsType=SheetMetal, isAssigned=true}], " +
+                        "producedGoods=[" +
+                        "ProducedGood{goodsType=MetalParts, isAssigned=false}, " +
+                        "ProducedGood{goodsType=ScrapMetal, isAssigned=false}], " +
+                        "industryTracks=[" +
+                        "IndustryTrack{trackName='Lone Siding', maximumNumberOfCars=2, carsAtIndustry=[]}" +
+                        "]}"
+            )
         }
 
-        private void createCogFactoryForTests()
-        {
+        private fun createCogFactoryForTests() {
             //assign
-            final ArrayList<RequiredGood> acceptedGoodsList = new ArrayList<>();
-            acceptedGoodsList.add(new RequiredGood(Chemicals));
-            acceptedGoodsList.add(new RequiredGood(Parts));
-            acceptedGoodsList.add(new RequiredGood(SheetMetal, true));
-
-            final ArrayList<ProducedGood> returnedGoodsList = new ArrayList<>();
-            returnedGoodsList.add(new ProducedGood(MetalParts));
-            returnedGoodsList.add(new ProducedGood(ScrapMetal));
-            final IndustryTrack siding = new IndustryTrack("Lone Siding", 2);
-
-            ArrayList<IndustryTrack> industryTracks = new ArrayList<>();
-            industryTracks.add(siding);
-
-            cogFactory = new Industry("Cog Factory", acceptedGoodsList, returnedGoodsList, industryTracks);
+            val acceptedGoodsList = ArrayList<RequiredGood>()
+            acceptedGoodsList.add(RequiredGood(GoodsType.Chemicals))
+            acceptedGoodsList.add(RequiredGood(GoodsType.Parts))
+            acceptedGoodsList.add(RequiredGood(GoodsType.SheetMetal, true))
+            val returnedGoodsList = ArrayList<ProducedGood>()
+            returnedGoodsList.add(ProducedGood(GoodsType.MetalParts))
+            returnedGoodsList.add(ProducedGood(GoodsType.ScrapMetal))
+            val siding = IndustryTrack("Lone Siding", 2)
+            val industryTracks = ArrayList<IndustryTrack>()
+            industryTracks.add(siding)
+            cogFactory = Industry("Cog Factory", acceptedGoodsList, returnedGoodsList, industryTracks)
         }
-
     }
 }

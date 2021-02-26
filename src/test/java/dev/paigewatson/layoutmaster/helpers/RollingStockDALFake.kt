@@ -1,63 +1,41 @@
-package dev.paigewatson.layoutmaster.helpers;
+package dev.paigewatson.layoutmaster.helpers
 
-import dev.paigewatson.layoutmaster.data.RollingStockDAL;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
+import dev.paigewatson.layoutmaster.data.RollingStockDAL
+import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
+import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
 
-import java.util.List;
-
-public class RollingStockDALFake implements RollingStockDAL
-{
-    public RollingStock savedEntity;
-    public RollingStock deletedEntity;
-    private List<RollingStock> returnedFreightCarsList;
-    private int deleteAllCalledCount;
-
-    @Override
-    public List<RollingStock> getAllRollingStock()
-    {
-        return returnedFreightCarsList;
+class RollingStockDALFake : RollingStockDAL {
+    var savedEntity: RollingStock? = null
+    var deletedEntity: RollingStock? = null
+    override var allRollingStock: List<RollingStock> = emptyList()
+        private set
+    private var deleteAllCalledCount = 0
+    override fun deleteAll() {
+        deleteAllCalledCount++
     }
 
-    @Override
-    public void deleteAll()
-    {
-        deleteAllCalledCount++;
+    override fun delete(rollingStockToDelete: RollingStock) {
+        deletedEntity = rollingStockToDelete
     }
 
-    @Override
-    public void delete(RollingStock rollingStockToDelete)
-    {
-        deletedEntity = rollingStockToDelete;
+    override fun getAllOfAARDesignation(aarDesignation: AARDesignation): List<RollingStock> {
+        return allRollingStock
     }
 
-    @Override
-    public List<RollingStock> getAllOfAARDesignation(AARDesignation aarDesignation)
-    {
-        return returnedFreightCarsList;
+    override fun getAllOfRoadName(roadName: String): List<RollingStock> {
+        return allRollingStock
     }
 
-    @Override
-    public List<RollingStock> getAllOfRoadName(String roadName)
-    {
-        return returnedFreightCarsList;
+    override fun insertRollingStock(rollingStockToSave: RollingStock): RollingStock {
+        savedEntity = rollingStockToSave
+        return savedEntity!!
     }
 
-    @Override
-    public RollingStock insertRollingStock(RollingStock rollingStockToSave)
-    {
-        savedEntity = rollingStockToSave;
-        return savedEntity;
+    fun setReturnedValuesList(returnedFreightCarsList: List<RollingStock>) {
+        allRollingStock = returnedFreightCarsList
     }
 
-    public void setReturnedValuesList(List<RollingStock> returnedFreightCarsList)
-    {
-
-        this.returnedFreightCarsList = returnedFreightCarsList;
-    }
-
-    public int deleteAllCalledCount()
-    {
-        return deleteAllCalledCount;
+    fun deleteAllCalledCount(): Int {
+        return deleteAllCalledCount
     }
 }
