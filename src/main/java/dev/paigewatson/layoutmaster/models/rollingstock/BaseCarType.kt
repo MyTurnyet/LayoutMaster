@@ -24,7 +24,7 @@ abstract class BaseCarType : CarType {
         this.carriedGoodsList = carriedGoodsList
     }
 
-    override fun isOfType(expectedTypeDesignation: AARDesignation): Boolean {
-        return expectedTypeDesignation == aarDesignation
+    override fun isOfType(designation: AARDesignation): Boolean {
+        return designation == aarDesignation
     }
 }

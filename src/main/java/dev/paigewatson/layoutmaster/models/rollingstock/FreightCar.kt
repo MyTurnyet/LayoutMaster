@@ -12,31 +12,22 @@ import java.util.*
  * if loaded or not
  */
 @Document(collection = "FreightCars")
-class FreightCar : RollingStock {
+class FreightCar(uuid: UUID, var roadName: String?, var roadNumber: Int, var carType: AARType?) : RollingStock {
     @Id
-    var id: String? = null
-    private var uuid: UUID? = null
-    var roadName: String? = null
-    var roadNumber = 0
-    var carType: AARType? = null
+    var id: String = ""
     var currentlyCarriedGoods = GoodsType.EMPTY
 
-    constructor()
-    constructor(uuid: UUID, roadName: String?, roadNumber: Int, carType: AARType?) {
-        this.uuid = uuid
+    init {
         id = uuid.toString()
-        this.roadName = roadName
-        this.roadNumber = roadNumber
-        this.carType = carType
     }
 
     fun canCarry(expectedGood: GoodsType?): Boolean {
         return carType!!.canCarry(expectedGood!!)
     }
 
-    override fun load(goodsToLoad: GoodsType) {
-        if (!canCarry(goodsToLoad)) return
-        currentlyCarriedGoods = goodsToLoad
+    override fun load(goodsType: GoodsType) {
+        if (!canCarry(goodsType)) return
+        currentlyCarriedGoods = goodsType
     }
 
     override val isNull: Boolean

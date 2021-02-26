@@ -7,7 +7,6 @@ import java.util.*
 
 @Document(collection = "AARTypes")
 class AARType : BaseCarType {
-    constructor()
     constructor(aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>) : super(
         UUID.randomUUID(),
         aarDesignation,
@@ -20,8 +19,8 @@ class AARType : BaseCarType {
         carriedGoodsList
     )
 
-    override fun canCarry(expectedGoodsType: GoodsType): Boolean {
-        return carriedGoodsList.contains(expectedGoodsType)
+    override fun canCarry(goodsType: GoodsType): Boolean {
+        return carriedGoodsList.contains(goodsType)
     }
 
     override fun displayName(): AARDesignation {
@@ -49,11 +48,10 @@ class AARType : BaseCarType {
                 "}"
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o !is AARType) return false
-        val aarType = o
-        return aarDesignation == aarType.aarDesignation && carriedGoodsList == aarType.carriedGoodsList && id == aarType.id
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AARType) return false
+        return aarDesignation == other.aarDesignation && carriedGoodsList == other.carriedGoodsList && id == other.id
     }
 
     override fun hashCode(): Int {
