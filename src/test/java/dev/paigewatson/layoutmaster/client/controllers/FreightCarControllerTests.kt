@@ -12,11 +12,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -112,7 +109,7 @@ class FreightCarControllerTests {
     )
     inner class IntegrationTests(
         @Autowired private val mockMvc: MockMvc,
-        @MockBean private val freightCarService: FreightCarService
+        @MockkBean private val freightCarService: FreightCarService
     ) {
 
         private var boxcarTypeUUID: UUID = UUID.randomUUID()

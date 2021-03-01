@@ -16,7 +16,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude((module = "junit") as Map<String, String>)
+        exclude((module = "junit-vintage-engine") as Map<String, String>)
+        exclude((module = "mockito-core") as Map<String, String>)
+    }
     testImplementation 'org.assertj:assertj-core:3.4.1'
     testImplementation 'com.lordofthejars:nosqlunit-mongodb:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
