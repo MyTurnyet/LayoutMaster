@@ -6,13 +6,13 @@ import dev.paigewatson.layoutmaster.models.rollingstock.AARType
 import java.util.*
 
 object TestAARTypeCreator {
-    fun getLoadedCarType(uuid: UUID?, aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>): AARType {
+    fun getLoadedCarType(uuid: UUID, aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>): AARType {
         return AARType(uuid, aarDesignation, carriedGoodsList)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun boxcarType(uuid: UUID? = UUID.randomUUID()): AARType {
+    fun boxcarType(uuid: UUID = UUID.randomUUID()): AARType {
         return getLoadedCarType(
             uuid,
             AARDesignation.XM,
@@ -22,7 +22,7 @@ object TestAARTypeCreator {
 
     @JvmStatic
     @JvmOverloads
-    fun gondolaType(uuid: UUID? = UUID.randomUUID()): AARType {
+    fun gondolaType(uuid: UUID = UUID.randomUUID()): AARType {
         return getLoadedCarType(
             uuid,
             AARDesignation.GS,
@@ -35,7 +35,7 @@ object TestAARTypeCreator {
     }
 
     @JvmStatic
-    fun flatcarType(uuid: UUID?): AARType {
+    fun flatcarType(uuid: UUID): AARType {
         return getLoadedCarType(
             uuid,
             AARDesignation.FC,

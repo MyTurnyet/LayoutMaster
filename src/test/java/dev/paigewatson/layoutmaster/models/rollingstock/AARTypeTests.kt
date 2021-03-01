@@ -4,7 +4,6 @@ import dev.paigewatson.layoutmaster.helpers.CarTypeDALFake
 import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator.boxcarType
 import dev.paigewatson.layoutmaster.models.goods.GoodsType
 import org.assertj.core.api.AssertionsForClassTypes
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -14,14 +13,8 @@ class AARTypeTests {
     @Nested
     @Tag("Unit")
     internal inner class UnitTests {
-        private var boxcarUUID: UUID? = null
-        private var boxcarType: CarType? = null
-
-        @BeforeEach
-        fun setup() {
-            boxcarUUID = UUID.randomUUID()
-            boxcarType = boxcarType(boxcarUUID)
-        }
+        private var boxcarUUID: UUID = UUID.randomUUID()
+        private var boxcarType: CarType = boxcarType(boxcarUUID)
 
         @Test
         fun should_evaluateTo_NullCarType() {
@@ -45,11 +38,11 @@ class AARTypeTests {
 
             //act
             //assert
-            AssertionsForClassTypes.assertThat(boxcarType!!.canCarry(GoodsType.Ingredients)).isTrue
-            AssertionsForClassTypes.assertThat(boxcarType!!.canCarry(GoodsType.ScrapMetal)).isFalse
-            AssertionsForClassTypes.assertThat(boxcarType!!.isOfType(AARDesignation.XM)).isTrue
-            AssertionsForClassTypes.assertThat(boxcarType!!.isOfType(AARDesignation.FA)).isFalse
-            AssertionsForClassTypes.assertThat(boxcarType!!.displayName()).isEqualTo(AARDesignation.XM)
+            AssertionsForClassTypes.assertThat(boxcarType.canCarry(GoodsType.Ingredients)).isTrue
+            AssertionsForClassTypes.assertThat(boxcarType.canCarry(GoodsType.ScrapMetal)).isFalse
+            AssertionsForClassTypes.assertThat(boxcarType.isOfType(AARDesignation.XM)).isTrue
+            AssertionsForClassTypes.assertThat(boxcarType.isOfType(AARDesignation.FA)).isFalse
+            AssertionsForClassTypes.assertThat(boxcarType.displayName()).isEqualTo(AARDesignation.XM)
         }
 
         @Test
@@ -58,7 +51,7 @@ class AARTypeTests {
             val carTypeDALFake = CarTypeDALFake()
             carTypeDALFake.setEntityToReturn(NullCarType())
             //act
-            val savedCarType = boxcarType!!.saveToDatabase(carTypeDALFake)
+            val savedCarType = boxcarType.saveToDatabase(carTypeDALFake)
             AssertionsForClassTypes.assertThat(carTypeDALFake.savedEntity()).isEqualTo(boxcarType)
             AssertionsForClassTypes.assertThat(savedCarType).isEqualTo(boxcarType)
         }
@@ -67,7 +60,7 @@ class AARTypeTests {
         fun should_updateItselfToRepository_ifAARType_exists() {
             //assign
             val carTypeDALFake = CarTypeDALFake()
-            carTypeDALFake.setEntityToReturn(boxcarType!!)
+            carTypeDALFake.setEntityToReturn(boxcarType)
             val boxcarUUID2 = UUID.randomUUID()
             val boxcarType2: CarType =
                 AARType(boxcarUUID2, AARDesignation.XM, listOfNotNull(GoodsType.Ingredients, GoodsType.Paper))

@@ -7,13 +7,10 @@ import java.util.*
 
 @Document(collection = "AARTypes")
 abstract class BaseCarType : CarType {
-    @JvmField
     var aarDesignation: AARDesignation = AARDesignation.NULL
 
-    @JvmField
     var carriedGoodsList: List<GoodsType> = Collections.emptyList()
 
-    @JvmField
     @Id
     var id = ""
 

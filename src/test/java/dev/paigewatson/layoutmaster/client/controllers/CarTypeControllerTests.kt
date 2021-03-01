@@ -125,31 +125,26 @@ class CarTypeControllerTests {
     @WebMvcTest(
         CarTypeController::class
     )
-    inner class IntegrationTests {
-        @Autowired
-        private val mockMvc: MockMvc? = null
+    inner class IntegrationTests(
+        @MockBean private val carTypeService: CarTypeService,
+        @Autowired private val mockMvc: MockMvc
+    ) {
 
-        @MockBean
-        private val carTypeService: CarTypeService? = null
-        private var boxcarType: AARType? = null
-        private var gondolaCarType: AARType? = null
-        private var boxCarUUID: UUID? = null
-        private var gondolaUUID: UUID? = null
+        private var boxCarUUID: UUID = UUID.randomUUID()
+        private var gondolaUUID: UUID = UUID.randomUUID()
+        private var boxcarType: AARType = TestAARTypeCreator.boxcarType(boxCarUUID)
+        private var gondolaCarType: AARType = TestAARTypeCreator.gondolaType(gondolaUUID)
 
         @BeforeEach
         fun setupTests() {
-            boxCarUUID = UUID.randomUUID()
-            gondolaUUID = UUID.randomUUID()
-            boxcarType = TestAARTypeCreator.boxcarType(boxCarUUID)
-            gondolaCarType = TestAARTypeCreator.gondolaType(gondolaUUID)
         }
 
         @Test
         @Throws(Exception::class)
         fun should_returnAllAARDesignationsInDatabase() {
             val expectedList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
-            Mockito.`when`(carTypeService!!.allAARDesignations()).thenReturn(expectedList)
-            val result = mockMvc!!.perform(
+            Mockito.`when`(carTypeService.allAARDesignations()).thenReturn(expectedList)
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/aar")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -163,8 +158,8 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnAllCarTypes() {
             val aarTypes: ArrayList<AARType> = listOfNotNull(gondolaCarType) as ArrayList<AARType>
-            Mockito.`when`(carTypeService!!.allCarTypes()).thenReturn(aarTypes)
-            val result = mockMvc!!.perform(
+            Mockito.`when`(carTypeService.allCarTypes()).thenReturn(aarTypes)
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -182,8 +177,8 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnAllCarTypeThatCarry_ExpectedGoods() {
             val returnedCarTypes: List<AARType> = listOfNotNull(boxcarType, gondolaCarType)
-            Mockito.`when`(carTypeService!!.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes)
-            val result = mockMvc!!.perform(
+            Mockito.`when`(carTypeService.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes)
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types/goods/Logs")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -202,9 +197,9 @@ class CarTypeControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnCarTypeByAARType() {
-            Mockito.`when`(carTypeService!!.allAARDesignations()).thenReturn(listOf(*AARDesignation.values()))
+            Mockito.`when`(carTypeService.allAARDesignations()).thenReturn(listOf(*AARDesignation.values()))
             Mockito.`when`(carTypeService.carTypeForAAR(ArgumentMatchers.any())).thenReturn(boxcarType)
-            val result = mockMvc!!.perform(
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -221,8 +216,8 @@ class CarTypeControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_notReturnCarTypeByAARType() {
-            Mockito.`when`(carTypeService!!.carTypeForAAR(ArgumentMatchers.any())).thenReturn(NullCarType())
-            val result = mockMvc!!.perform(
+            Mockito.`when`(carTypeService.carTypeForAAR(ArgumentMatchers.any())).thenReturn(NullCarType())
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON)
             )

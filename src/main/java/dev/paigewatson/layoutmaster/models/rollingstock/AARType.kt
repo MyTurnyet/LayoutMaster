@@ -6,18 +6,16 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
 @Document(collection = "AARTypes")
-class AARType : BaseCarType {
-    constructor(aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>) : super(
-        UUID.randomUUID(),
-        aarDesignation,
-        carriedGoodsList
-    )
-
-    constructor(uuid: UUID?, aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>) : super(
-        uuid!!,
-        aarDesignation,
-        carriedGoodsList
-    )
+class AARType(uuid: UUID, aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>) : BaseCarType(
+    uuid,
+    aarDesignation,
+    carriedGoodsList
+) {
+//    constructor(aarDesignation: AARDesignation, carriedGoodsList: List<GoodsType>) : super(
+//        UUID.randomUUID(),
+//        aarDesignation,
+//        carriedGoodsList
+//    )
 
     override fun canCarry(goodsType: GoodsType): Boolean {
         return carriedGoodsList.contains(goodsType)

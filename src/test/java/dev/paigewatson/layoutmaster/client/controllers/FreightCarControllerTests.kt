@@ -3,7 +3,6 @@ package dev.paigewatson.layoutmaster.client.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import dev.paigewatson.layoutmaster.client.services.FreightCarService
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake
-import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator
 import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
@@ -46,7 +45,6 @@ class FreightCarControllerTests {
         fun should_saveFreightCar_toDatabase() {
             //assign
             val gondolaTypeUUID = UUID.randomUUID()
-            val gondolaTypeDto = TestAARTypeCreator.gondolaType()
             val gondolaToSaveUUID = UUID.randomUUID()
             val gondolaToSave = TestFreightCarCreator.gondola(gondolaToSaveUUID, "FOO", 2345, gondolaTypeUUID)
 
@@ -112,48 +110,36 @@ class FreightCarControllerTests {
     @WebMvcTest(
         FreightCarController::class
     )
-    inner class IntegrationTests {
-        @Autowired
-        private val mockMvc: MockMvc? = null
+    inner class IntegrationTests(
+        @Autowired private val mockMvc: MockMvc,
+        @MockBean private val freightCarService: FreightCarService
+    ) {
 
-        @MockBean
-        private val freightCarService: FreightCarService? = null
-        private var boxcarOneUUID: UUID? = null
-        private var boxcarOne: RollingStock? = null
-        private var boxcarTwo: RollingStock? = null
-        private var gondolaOne: RollingStock? = null
-        private var flatCarOne: RollingStock? = null
-        private var gondolaUUID: UUID? = null
-        private var flatcarUUID: UUID? = null
-        private var gondolaTypeUUID: UUID? = null
-        private var flatcarTypeUUID: UUID? = null
-        private var boxcarTypeUUID: UUID? = null
-        private var boxcarTwoUUID: UUID? = null
+        private var boxcarTypeUUID: UUID = UUID.randomUUID()
+        private var boxcarOneUUID: UUID = UUID.randomUUID()
+        private var boxcarTwoUUID: UUID = UUID.randomUUID()
+        private var flatcarTypeUUID: UUID = UUID.randomUUID()
+        private var flatcarUUID: UUID = UUID.randomUUID()
+        private var gondolaTypeUUID: UUID = UUID.randomUUID()
+        private var gondolaUUID: UUID = UUID.randomUUID()
+        private var boxcarOne: RollingStock = TestFreightCarCreator.boxcar(boxcarOneUUID, "PNWR", 2341, boxcarTypeUUID)
+        private var boxcarTwo: RollingStock = TestFreightCarCreator.boxcar(boxcarTwoUUID, "BCR", 2342, boxcarTypeUUID)
+        private var gondolaOne: RollingStock = TestFreightCarCreator.gondola(gondolaUUID, "BNSF", 1234, gondolaTypeUUID)
+        private var flatCarOne: RollingStock = TestFreightCarCreator.flatcar(flatcarUUID, "ATSF", 1232, flatcarTypeUUID)
 
         @BeforeEach
         fun setupTests() {
-            boxcarOneUUID = UUID.randomUUID()
-            boxcarTwoUUID = UUID.randomUUID()
-            boxcarTypeUUID = UUID.randomUUID()
-            boxcarOne = TestFreightCarCreator.boxcar(boxcarOneUUID, "PNWR", 2341, boxcarTypeUUID)
-            boxcarTwo = TestFreightCarCreator.boxcar(boxcarTwoUUID, "BCR", 2342, boxcarTypeUUID)
-            flatcarTypeUUID = UUID.randomUUID()
-            flatcarUUID = UUID.randomUUID()
-            flatCarOne = TestFreightCarCreator.flatcar(flatcarUUID, "ATSF", 1232, flatcarTypeUUID)
-            gondolaTypeUUID = UUID.randomUUID()
-            gondolaUUID = UUID.randomUUID()
-            gondolaOne = TestFreightCarCreator.gondola(gondolaUUID, "BNSF", 1234, gondolaTypeUUID)
         }
 
         @Test
         @Throws(Exception::class)
         fun should_returnAllFreightCars() {
-            Mockito.`when`(freightCarService!!.allFreightCars()).thenReturn(
+            Mockito.`when`(freightCarService.allFreightCars()).thenReturn(
                 listOf(
                     boxcarOne, gondolaOne, flatCarOne
-                ) as List<RollingStock>
+                )
             )
-            val result = mockMvc!!.perform(
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -188,9 +174,9 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_addFreightCarToDatabase() {
-            Mockito.`when`(freightCarService!!.saveFreightCarToDatabase(ArgumentMatchers.any())).thenReturn(boxcarOne)
+            Mockito.`when`(freightCarService.saveFreightCarToDatabase(ArgumentMatchers.any())).thenReturn(boxcarOne)
             val content = asJsonString(boxcarOne)
-            mockMvc!!.perform(
+            mockMvc.perform(
                 MockMvcRequestBuilders.post("/inventory/freightcars/add")
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -215,12 +201,12 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllFreightCarsByAARType() {
-            Mockito.`when`(freightCarService!!.allFreightCarsByAARType(ArgumentMatchers.any())).thenReturn(
+            Mockito.`when`(freightCarService.allFreightCarsByAARType(ArgumentMatchers.any())).thenReturn(
                 listOf(
                     boxcarOne, boxcarTwo
-                ) as List<RollingStock>
+                )
             )
-            val result = mockMvc!!.perform(
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -249,12 +235,12 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllFreightCarsWithRoadName_PNWR() {
-            Mockito.`when`(freightCarService!!.allFreightCarsByRoadName(ArgumentMatchers.any())).thenReturn(
+            Mockito.`when`(freightCarService.allFreightCarsByRoadName(ArgumentMatchers.any())).thenReturn(
                 listOf(
                     boxcarOne, boxcarTwo
-                ) as List<RollingStock>
+                )
             )
-            val result = mockMvc!!.perform(
+            val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars/PNWR")
                     .contentType(MediaType.APPLICATION_JSON)
             )
