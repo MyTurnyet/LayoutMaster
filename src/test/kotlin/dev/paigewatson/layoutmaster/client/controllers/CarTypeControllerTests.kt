@@ -1,5 +1,6 @@
 package dev.paigewatson.layoutmaster.client.controllers
 
+import com.ninjasquad.springmockk.MockkBean
 import dev.paigewatson.layoutmaster.client.services.CarTypeService
 import dev.paigewatson.layoutmaster.helpers.CarTypeServiceFake
 import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator
@@ -8,18 +9,16 @@ import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
 import dev.paigewatson.layoutmaster.models.rollingstock.AARType
 import dev.paigewatson.layoutmaster.models.rollingstock.CarType
 import dev.paigewatson.layoutmaster.models.rollingstock.NullCarType
+import io.mockk.every
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -126,7 +125,7 @@ class CarTypeControllerTests {
         CarTypeController::class
     )
     inner class IntegrationTests(
-        @MockBean private val carTypeService: CarTypeService,
+        @MockkBean private val carTypeService: CarTypeService,
         @Autowired private val mockMvc: MockMvc
     ) {
 
@@ -143,7 +142,7 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnAllAARDesignationsInDatabase() {
             val expectedList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
-            Mockito.`when`(carTypeService.allAARDesignations()).thenReturn(expectedList)
+            every { carTypeService.allAARDesignations() }.returns(expectedList)
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/aar")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -158,7 +157,7 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnAllCarTypes() {
             val aarTypes: ArrayList<AARType> = listOfNotNull(gondolaCarType) as ArrayList<AARType>
-            Mockito.`when`(carTypeService.allCarTypes()).thenReturn(aarTypes)
+            every { carTypeService.allCarTypes() }.returns(aarTypes)
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -177,7 +176,7 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnAllCarTypeThatCarry_ExpectedGoods() {
             val returnedCarTypes: List<AARType> = listOfNotNull(boxcarType, gondolaCarType)
-            Mockito.`when`(carTypeService.carTypesThatCarryGoodsType(GoodsType.Logs)).thenReturn(returnedCarTypes)
+            every { carTypeService.carTypesThatCarryGoodsType(GoodsType.Logs) }.returns(returnedCarTypes)
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types/goods/Logs")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -197,8 +196,8 @@ class CarTypeControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnCarTypeByAARType() {
-            Mockito.`when`(carTypeService.allAARDesignations()).thenReturn(listOf(*AARDesignation.values()))
-            Mockito.`when`(carTypeService.carTypeForAAR(ArgumentMatchers.any())).thenReturn(boxcarType)
+            every { carTypeService.allAARDesignations() }.returns(listOf(*AARDesignation.values()))
+            every { carTypeService.carTypeForAAR(any()) }.returns(boxcarType)
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -216,7 +215,8 @@ class CarTypeControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_notReturnCarTypeByAARType() {
-            Mockito.`when`(carTypeService.carTypeForAAR(ArgumentMatchers.any())).thenReturn(NullCarType())
+            every { carTypeService.carTypeForAAR(any()) }.returns(NullCarType())
+
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON)

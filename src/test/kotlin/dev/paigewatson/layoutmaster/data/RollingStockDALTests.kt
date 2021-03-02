@@ -4,13 +4,16 @@ import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.AssertionsForClassTypes
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -25,7 +28,9 @@ class RollingStockDALTests {
     @Nested
     @Tag("Unit")
     internal inner class UnitTests {
-        private val mongoTemplate: MongoTemplate = Mockito.mock(MongoTemplate::class.java)
+
+        private val mongoTemplate: MongoTemplate = mockk<MongoTemplate>(relaxed = true)
+
         private val rollingStockMongoDAL: RollingStockDAL
         private var boxCar1234: FreightCar =
             FreightCar(UUID.randomUUID(), "PNWR", 1234, TestAARTypeCreator.boxcarType())
@@ -36,17 +41,21 @@ class RollingStockDALTests {
 
         @Test
         fun should_addRollingStockToDatabase() {
-            Mockito.`when`(mongoTemplate.insert(flatcar3345, collectionName)).thenReturn(flatcar3345)
+            every { mongoTemplate.insert(flatcar3345, collectionName) }.returns(flatcar3345)
             val savedRollingStock = rollingStockMongoDAL.insertRollingStock(flatcar3345)
-            Mockito.verify(mongoTemplate).insert(flatcar3345, collectionName)
-            AssertionsForClassTypes.assertThat(savedRollingStock).isEqualTo(flatcar3345)
+            verify { mongoTemplate.insert(flatcar3345, collectionName) }
+            assertThat(savedRollingStock).isEqualTo(flatcar3345)
         }
 
         @Test
         fun should_returnAllInCollection() {
             //assign
-            Mockito.`when`(mongoTemplate.findAll(FreightCar::class.java, collectionName))
-                .thenReturn(listOfNotNull(boxCar1234, boxCar1245))
+            every { mongoTemplate.findAll(FreightCar::class.java, collectionName) }.returns(
+                listOfNotNull(
+                    boxCar1234,
+                    boxCar1245
+                )
+            )
             //act
             val allRollingStock = rollingStockMongoDAL.allRollingStock
             //assert
@@ -60,7 +69,7 @@ class RollingStockDALTests {
 
             //act
             //assert
-            Mockito.verify(mongoTemplate).remove(Query(), collectionName)
+            verify { mongoTemplate.remove(Query(), collectionName) }
         }
 
         @Test
@@ -70,12 +79,12 @@ class RollingStockDALTests {
 
             //act
             //assert
-            Mockito.verify(mongoTemplate).remove(boxCar1234, collectionName)
+            verify { mongoTemplate.remove(boxCar1234, collectionName) }
         }
 
         @Test
         fun should_returnAllFreightCarsWihRoaName_BCR() {
-            Mockito.`when`(
+            every {
                 mongoTemplate.find(
                     Query.query(
                         Criteria.where("roadName").`is`("BCR")
@@ -83,14 +92,14 @@ class RollingStockDALTests {
                     FreightCar::class.java,
                     collectionName
                 )
-            ).thenReturn(listOfNotNull(flatcar3345, boxCar1245))
+            }.returns(listOfNotNull(flatcar3345, boxCar1245))
             val allOfAARDesignation = rollingStockMongoDAL.getAllOfRoadName("BCR")
             AssertionsForClassTypes.assertThat(allOfAARDesignation.size).isEqualTo(2)
         }
 
         @Test
         fun should_returnAllFreightCarOfType() {
-            Mockito.`when`(
+            every {
                 mongoTemplate.find(
                     Query.query(
                         Criteria.where("carType.aarDesignation").`is`("XM")
@@ -98,7 +107,7 @@ class RollingStockDALTests {
                     FreightCar::class.java,
                     collectionName
                 )
-            ).thenReturn(listOfNotNull(boxCar1234, boxCar1245))
+            }.returns(listOfNotNull(boxCar1234, boxCar1245))
             val allOfAARDesignation = rollingStockMongoDAL.getAllOfAARDesignation(AARDesignation.XM)
             AssertionsForClassTypes.assertThat(allOfAARDesignation.size).isEqualTo(2)
         }

@@ -10,15 +10,15 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.core.MongoTemplate
 
 @Configuration
-open class MongoConfig {
-    @Value("\${spring.data.mongodb.uri}")
-    var connectionString: String? = null
+class MongoConfig {
+    @Value(value = "\${spring.data.mongodb.uri}")
+    lateinit var connectionString: String
 
     @Value("\${spring.data.mongodb.database}")
-    private val mongoDatabaseName: String? = null
+    lateinit var mongoDatabaseName: String
 
     @Bean
-    open fun mongo(): MongoClient {
+    fun mongo(): MongoClient {
         val connectionString = ConnectionString(connectionString)
         val clientSettings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
@@ -28,7 +28,7 @@ open class MongoConfig {
 
     @Bean
     @Throws(Exception::class)
-    open fun template(): MongoTemplate {
+    fun template(): MongoTemplate {
         return MongoTemplate(mongo(), mongoDatabaseName)
     }
 }

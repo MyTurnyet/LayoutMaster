@@ -1,11 +1,14 @@
 package dev.paigewatson.layoutmaster.client.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
 import dev.paigewatson.layoutmaster.client.services.FreightCarService
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake
 import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock
+import io.mockk.every
+import io.mockk.verify
 import org.assertj.core.api.AssertionsForClassTypes
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -131,7 +134,7 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllFreightCars() {
-            Mockito.`when`(freightCarService.allFreightCars()).thenReturn(
+            every { freightCarService.allFreightCars() }.returns(
                 listOf(
                     boxcarOne, gondolaOne, flatCarOne
                 )
@@ -171,7 +174,7 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_addFreightCarToDatabase() {
-            Mockito.`when`(freightCarService.saveFreightCarToDatabase(ArgumentMatchers.any())).thenReturn(boxcarOne)
+            every { freightCarService.saveFreightCarToDatabase(any()) }.returns(boxcarOne)
             val content = asJsonString(boxcarOne)
             mockMvc.perform(
                 MockMvcRequestBuilders.post("/inventory/freightcars/add")
@@ -180,11 +183,7 @@ class FreightCarControllerTests {
                     .accept(MediaType.APPLICATION_JSON)
             )
                 .andExpect(MockMvcResultMatchers.status().isOk)
-            Mockito.verify(freightCarService, Mockito.times(1)).saveFreightCarToDatabase(
-                ArgumentMatchers.any(
-                    RollingStock::class.java
-                )
-            )
+            verify { freightCarService.saveFreightCarToDatabase(any()) }
         }
 
         private fun asJsonString(obj: Any?): String {
@@ -198,7 +197,7 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllFreightCarsByAARType() {
-            Mockito.`when`(freightCarService.allFreightCarsByAARType(ArgumentMatchers.any())).thenReturn(
+            every { freightCarService.allFreightCarsByAARType(any()) }.returns(
                 listOf(
                     boxcarOne, boxcarTwo
                 )
@@ -232,7 +231,7 @@ class FreightCarControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllFreightCarsWithRoadName_PNWR() {
-            Mockito.`when`(freightCarService.allFreightCarsByRoadName(ArgumentMatchers.any())).thenReturn(
+            every { freightCarService.allFreightCarsByRoadName(any()) }.returns(
                 listOf(
                     boxcarOne, boxcarTwo
                 )
