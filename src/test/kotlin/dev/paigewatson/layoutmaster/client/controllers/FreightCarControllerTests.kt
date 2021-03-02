@@ -111,9 +111,11 @@ class FreightCarControllerTests {
         FreightCarController::class
     )
     inner class IntegrationTests(
-        @Autowired private val mockMvc: MockMvc,
-        @MockkBean private val freightCarService: FreightCarService
+        @Autowired private val mockMvc: MockMvc
     ) {
+
+        @MockkBean
+        private lateinit var freightCarService: FreightCarService
 
         private var boxcarTypeUUID: UUID = UUID.randomUUID()
         private var boxcarOneUUID: UUID = UUID.randomUUID()

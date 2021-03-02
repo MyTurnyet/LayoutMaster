@@ -125,18 +125,16 @@ class CarTypeControllerTests {
         CarTypeController::class
     )
     inner class IntegrationTests(
-        @MockkBean private val carTypeService: CarTypeService,
         @Autowired private val mockMvc: MockMvc
     ) {
+
+        @MockkBean
+        private lateinit var carTypeService: CarTypeService
 
         private var boxCarUUID: UUID = UUID.randomUUID()
         private var gondolaUUID: UUID = UUID.randomUUID()
         private var boxcarType: AARType = TestAARTypeCreator.boxcarType(boxCarUUID)
         private var gondolaCarType: AARType = TestAARTypeCreator.gondolaType(gondolaUUID)
-
-        @BeforeEach
-        fun setupTests() {
-        }
 
         @Test
         @Throws(Exception::class)
@@ -156,7 +154,7 @@ class CarTypeControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllCarTypes() {
-            val aarTypes: ArrayList<AARType> = listOfNotNull(gondolaCarType) as ArrayList<AARType>
+            val aarTypes: List<AARType> = listOf(gondolaCarType)
             every { carTypeService.allCarTypes() }.returns(aarTypes)
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/models/types")
