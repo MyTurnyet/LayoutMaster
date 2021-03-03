@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class MongoFreightCarService(@param:Autowired private val rollingStockDAL: RollingStockDAL) : FreightCarService {
+class MongoFreightCarService(@Autowired private val rollingStockDAL: RollingStockDAL) : FreightCarService {
     override fun allFreightCars(): List<RollingStock> {
         return rollingStockDAL.allRollingStock
     }

@@ -144,7 +144,7 @@ class FreightCarControllerTests {
                 )
             )
 
-            val result = mockMvc.perform(
+            mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -193,7 +193,7 @@ class FreightCarControllerTests {
                     boxcarOne, boxcarTwo
                 )
             )
-            val result = mockMvc.perform(
+            mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars/aar/XM")
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -218,7 +218,7 @@ class FreightCarControllerTests {
                     boxcarOne, flatCarTwo
                 )
             )
-            val result = mockMvc.perform(
+            mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars/PNWR")
                     .contentType(MediaType.APPLICATION_JSON)
             )

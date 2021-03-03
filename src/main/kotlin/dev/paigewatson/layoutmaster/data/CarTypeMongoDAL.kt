@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class CarTypeMongoDAL(@param:Autowired private val mongoTemplate: MongoTemplate) : CarTypeDAL {
+class CarTypeMongoDAL(@Autowired private val mongoTemplate: MongoTemplate) : CarTypeDAL {
     private val collectionName = "AARTypes"
     override fun findAllByCarTypesThatCanCarry(expectedGoods: GoodsType): List<CarType> {
         val carTypesThatCarryGoods = mongoTemplate

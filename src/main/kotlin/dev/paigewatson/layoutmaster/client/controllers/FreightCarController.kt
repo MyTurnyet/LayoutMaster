@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/inventory")
-class FreightCarController(@param:Autowired private val freightCarService: FreightCarService) {
+class FreightCarController(@Autowired private val freightCarService: FreightCarService) {
     @get:GetMapping(value = ["/freightcars"])
     val allFreightCars: List<RollingStock>
         get() = freightCarService.allFreightCars()
