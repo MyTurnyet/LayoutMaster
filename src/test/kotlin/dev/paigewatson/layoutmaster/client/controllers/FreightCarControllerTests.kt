@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.util.*
 
 class FreightCarControllerTests {
@@ -128,6 +129,7 @@ class FreightCarControllerTests {
         private var boxcarTwo: RollingStock = TestFreightCarCreator.boxcar(boxcarTwoUUID, "BCR", 2342, boxcarTypeUUID)
         private var gondolaOne: RollingStock = TestFreightCarCreator.gondola(gondolaUUID, "BNSF", 1234, gondolaTypeUUID)
         private var flatCarOne: RollingStock = TestFreightCarCreator.flatcar(flatcarUUID, "ATSF", 1232, flatcarTypeUUID)
+        private var flatCarTwo: RollingStock = TestFreightCarCreator.flatcar("PNWR", 1266)
 
         @BeforeEach
         fun setupTests() {
@@ -141,36 +143,23 @@ class FreightCarControllerTests {
                     boxcarOne, gondolaOne, flatCarOne
                 )
             )
+
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/inventory/freightcars")
                     .contentType(MediaType.APPLICATION_JSON)
             )
                 .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(jsonPath("$").isArray)
+                .andExpect(jsonPath("$[0].id").value(boxcarOneUUID.toString()))
+                .andExpect(jsonPath("$[0].roadName").value("PNWR"))
+                .andExpect(jsonPath("$[0].roadNumber").value(2341))
+                .andExpect(jsonPath("$[1].id").value(gondolaUUID.toString()))
+                .andExpect(jsonPath("$[1].roadName").value("BNSF"))
+                .andExpect(jsonPath("$[1].roadNumber").value(1234))
+                .andExpect(jsonPath("$[2].id").value(flatcarUUID.toString()))
+                .andExpect(jsonPath("$[2].roadName").value("ATSF"))
+                .andExpect(jsonPath("$[2].roadNumber").value(1232))
                 .andReturn()
-            val contentAsString = result.response.contentAsString
-            AssertionsForClassTypes.assertThat(contentAsString).isEqualTo(
-                "[{\"id\":\"" +
-                        boxcarOneUUID.toString() +
-                        "\",\"roadName\":\"PNWR\",\"roadNumber\":2341," +
-                        "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
-                        "\"id\":\"" +
-                        boxcarTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
-                        "{\"id\":\"" +
-                        gondolaUUID.toString() +
-                        "\",\"roadName\":\"BNSF\",\"roadNumber\":1234," +
-                        "\"carType\":{\"aarDesignation\":\"GS\",\"carriedGoodsList\":[\"ScrapMetal\",\"MetalScraps\",\"Logs\",\"Aggregates\"]," +
-                        "\"id\":\"" +
-                        gondolaTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
-                        "{\"id\":\"" +
-                        flatcarUUID.toString() +
-                        "\",\"roadName\":\"ATSF\",\"roadNumber\":1232," +
-                        "\"carType\":{\"aarDesignation\":\"FC\",\"carriedGoodsList\":[\"Logs\",\"Lumber\",\"Parts\"]," +
-                        "\"id\":\"" +
-                        flatcarTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}]"
-            )
         }
 
         @Test
@@ -209,25 +198,16 @@ class FreightCarControllerTests {
                     .contentType(MediaType.APPLICATION_JSON)
             )
                 .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(jsonPath("$").isArray)
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].id").value(boxcarOneUUID.toString()))
+                .andExpect(jsonPath("$[0].roadName").value("PNWR"))
+                .andExpect(jsonPath("$[0].roadNumber").value(2341))
+                .andExpect(jsonPath("$[1].id").value(boxcarTwoUUID.toString()))
+                .andExpect(jsonPath("$[1].roadName").value("BCR"))
+                .andExpect(jsonPath("$[1].roadNumber").value(2342))
+                .andExpect(jsonPath("$[*].carType.aarDesignation").value(listOfNotNull("XM", "XM")))
                 .andReturn()
-            val contentAsString = result.response.contentAsString
-            AssertionsForClassTypes.assertThat(contentAsString).isEqualTo(
-                "[" +
-                        "{\"id\":\"" +
-                        boxcarOneUUID.toString() +
-                        "\",\"roadName\":\"PNWR\",\"roadNumber\":2341," +
-                        "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
-                        "\"id\":\"" +
-                        boxcarTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
-                        "{\"id\":\"" +
-                        boxcarTwoUUID.toString() +
-                        "\",\"roadName\":\"BCR\",\"roadNumber\":2342," +
-                        "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
-                        "\"id\":\"" +
-                        boxcarTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}]"
-            )
         }
 
         @Test
@@ -235,7 +215,7 @@ class FreightCarControllerTests {
         fun should_returnAllFreightCarsWithRoadName_PNWR() {
             every { freightCarService.allFreightCarsByRoadName(any()) }.returns(
                 listOf(
-                    boxcarOne, boxcarTwo
+                    boxcarOne, flatCarTwo
                 )
             )
             val result = mockMvc.perform(
@@ -243,25 +223,14 @@ class FreightCarControllerTests {
                     .contentType(MediaType.APPLICATION_JSON)
             )
                 .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(jsonPath("$").isArray)
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].id").value(boxcarOneUUID.toString()))
+                .andExpect(jsonPath("$[0].roadName").value("PNWR"))
+                .andExpect(jsonPath("$[0].roadNumber").value(2341))
+                .andExpect(jsonPath("$[1].roadName").value("PNWR"))
+                .andExpect(jsonPath("$[1].roadNumber").value(1266))
                 .andReturn()
-            val contentAsString = result.response.contentAsString
-            AssertionsForClassTypes.assertThat(contentAsString).isEqualTo(
-                "[" +
-                        "{\"id\":\"" +
-                        boxcarOneUUID.toString() +
-                        "\",\"roadName\":\"PNWR\",\"roadNumber\":2341," +
-                        "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
-                        "\"id\":\"" +
-                        boxcarTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}," +
-                        "{\"id\":\"" +
-                        boxcarTwoUUID.toString() +
-                        "\",\"roadName\":\"BCR\",\"roadNumber\":2342," +
-                        "\"carType\":{\"aarDesignation\":\"XM\",\"carriedGoodsList\":[\"Ingredients\",\"Logs\",\"Parts\"]," +
-                        "\"id\":\"" +
-                        boxcarTypeUUID.toString() +
-                        "\",\"null\":false},\"currentlyCarriedGoods\":\"EMPTY\",\"null\":false}]"
-            )
         }
     }
 }

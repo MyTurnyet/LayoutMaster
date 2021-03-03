@@ -35,21 +35,17 @@ class CarTypeControllerTests {
     @Nested
     @Tag("Unit")
     internal inner class UnitTests {
-        private lateinit var carTypeController: CarTypeController
         private var carTypeServiceFake: CarTypeServiceFake = CarTypeServiceFake()
+        private val carTypeController: CarTypeController = CarTypeController(carTypeServiceFake)
         private var boxcarType: CarType = TestAARTypeCreator.boxcarType()
         private var gondolaCarType: CarType = TestAARTypeCreator.gondolaType()
 
-        @BeforeEach
-        fun setUp() {
-            carTypeController = CarTypeController(carTypeServiceFake)
-        }
 
         @Test
         fun should_returnAllAARDesignations() {
             val expectedList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
             carTypeServiceFake.setReturnAARTypes(expectedList)
-            val aarDesignations = carTypeController.aARDesignations
+            val aarDesignations = carTypeController.getAARDesignations()
             Assertions.assertThat(aarDesignations.size).isEqualTo(3)
             Assertions.assertThat(aarDesignations).hasSameElementsAs(expectedList)
         }
@@ -62,7 +58,7 @@ class CarTypeControllerTests {
             carTypeServiceFake.setReturnedCarTypeList(returnedCarTypes)
 
             //act
-            val allCarTypes = carTypeController.allCarTypes
+            val allCarTypes = carTypeController.allCarTypes()
             //assert
             IntStream.range(0, allCarTypes.size).forEachOrdered { i: Int ->
                 Assertions.assertThat(
@@ -253,14 +249,18 @@ class CarTypeControllerTests {
     @Nested
     @Tag("Data")
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-    inner class FunctionalTests(@param:Autowired private val mongoTemplate: MongoTemplate) {
+    inner class FunctionalTests {
+        @Autowired
+        private lateinit var mongoTemplate: MongoTemplate
+
         private val collectionName = "AARTypes"
 
         @LocalServerPort
         private val port = 0
 
         @Autowired
-        private val restTemplate: TestRestTemplate? = null
+        private lateinit var restTemplate: TestRestTemplate
+
         private var boxcar: AARType = TestAARTypeCreator.boxcarType(boxcarUUID)
         private var gondola: AARType = TestAARTypeCreator.gondolaType()
         private var flatcar: AARType = TestAARTypeCreator.flatcarType()
@@ -275,14 +275,14 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnAllCarTypes() {
             val aarTypesArray =
-                restTemplate!!.getForObject("http://localhost:$port/models/types", Array<AARType>::class.java)
+                restTemplate.getForObject("http://localhost:$port/models/types", Array<AARType>::class.java)
             Assertions.assertThat(aarTypesArray.size).isEqualTo(3)
         }
 
         @Test
         fun should_returnAllAARDesignations() {
             val returnedAARList =
-                restTemplate!!.getForObject("http://localhost:$port/models/aar", Array<AARDesignation>::class.java)
+                restTemplate.getForObject("http://localhost:$port/models/aar", Array<AARDesignation>::class.java)
             val expectedAarDesignationList = listOf(AARDesignation.XM, AARDesignation.FC, AARDesignation.GS)
             Assertions.assertThat(returnedAARList).hasSameElementsAs(expectedAarDesignationList)
         }
@@ -290,7 +290,7 @@ class CarTypeControllerTests {
         @Test
         @Throws(Exception::class)
         fun should_returnAllCarTypeThatCarry_ExpectedGoods() {
-            val contentAsString = restTemplate!!.getForObject(
+            val contentAsString = restTemplate.getForObject(
                 "http://localhost:$port/models/types/goods/Parts",
                 Array<AARType>::class.java
             )
@@ -303,7 +303,7 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_returnCarTypeByAARType() {
             val contentAsString =
-                restTemplate!!.getForObject("http://localhost:$port/models/types/aar/XM", AARType::class.java)
+                restTemplate.getForObject("http://localhost:$port/models/types/aar/XM", AARType::class.java)
             Assertions.assertThat(contentAsString).isEqualTo(boxcar)
         }
 
@@ -311,7 +311,7 @@ class CarTypeControllerTests {
         @Throws(Exception::class)
         fun should_notReturnCarTypeByAARType() {
             val contentAsString =
-                restTemplate!!.getForObject("http://localhost:$port/models/types/aar/QR", NullCarType::class.java)
+                restTemplate.getForObject("http://localhost:$port/models/types/aar/QR", NullCarType::class.java)
             Assertions.assertThat(contentAsString.isNull).isTrue
         }
 

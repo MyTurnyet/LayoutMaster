@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/models")
-class CarTypeController(@param:Autowired private val carTypeService: CarTypeService) {
-    @get:GetMapping(path = ["/aar"])
-    val aARDesignations: List<AARDesignation>
-        get() = carTypeService.allAARDesignations()
+class CarTypeController(@Autowired val carTypeService: CarTypeService) {
 
-    @get:GetMapping(path = ["/types"])
-    val allCarTypes: List<CarType>
-        get() = carTypeService.allCarTypes()
+    @GetMapping(path = ["/aar"])
+    fun getAARDesignations(): List<AARDesignation> {
+        return carTypeService.allAARDesignations()
+    }
+
+    @GetMapping(path = ["/types"])
+    fun allCarTypes(): List<CarType> {
+        return carTypeService.allCarTypes()
+    }
 
     @PostMapping(path = ["/types/add"])
     fun addNewCarType(@RequestBody carType: CarType) {

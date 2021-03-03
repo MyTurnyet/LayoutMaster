@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class MongoCarTypeService(@param:Autowired private val carTypeDAL: CarTypeDAL) : CarTypeService {
+class MongoCarTypeService(@Autowired private val carTypeDAL: CarTypeDAL) : CarTypeService {
     override fun allAARDesignations(): List<AARDesignation> {
         return carTypeDAL.allAARDesignations
     }

@@ -12,13 +12,22 @@ import java.util.*
  * if loaded or not
  */
 @Document(collection = "FreightCars")
-class FreightCar(uuid: UUID, var roadName: String?, var roadNumber: Int, var carType: AARType?) : RollingStock {
+class FreightCar(var roadName: String?, var roadNumber: Int, var carType: AARType?) : RollingStock {
+
+    constructor(uuid: UUID, roadName: String?, roadNumber: Int, carType: AARType?) : this(
+        roadName,
+        roadNumber,
+        carType
+    ) {
+        id = uuid.toString()
+    }
+
     @Id
     var id: String = ""
     var currentlyCarriedGoods = GoodsType.EMPTY
 
     init {
-        id = uuid.toString()
+        id = UUID.randomUUID().toString()
     }
 
     fun canCarry(expectedGood: GoodsType?): Boolean {
