@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class RollingStockMongoDAL(@Autowired private val mongoTemplate: MongoTemplate) : RollingStockDAL {
+class RollingStockMongoDAL(@param:Autowired private val mongoTemplate: MongoTemplate) : RollingStockDAL {
     private val collectionName = "FreightCars"
     override val allRollingStock: List<RollingStock>
         get() {
