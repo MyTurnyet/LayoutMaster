@@ -159,7 +159,7 @@ public class CarTypeDALTests
 
     @DataMongoTest()
     @ExtendWith(SpringExtension.class)
-    @Tag("Mongo")
+    @Tag("Functional")
     @Nested
     public class DataTests
     {
