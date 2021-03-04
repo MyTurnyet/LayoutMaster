@@ -11,10 +11,10 @@ import org.springframework.data.mongodb.core.MongoTemplate
 
 @Configuration
 class MongoConfig {
-    @Value(value = "\${spring.data.mongodb.uri}")
+    @Value("\${spring.data.mongodb.uri:}")
     lateinit var connectionString: String
 
-    @Value("\${spring.data.mongodb.database}")
+    @Value("\${spring.data.mongodb.database:}")
     lateinit var mongoDatabaseName: String
 
     @Bean
