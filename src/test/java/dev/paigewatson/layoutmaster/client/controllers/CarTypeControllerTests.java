@@ -279,7 +279,7 @@ public class CarTypeControllerTests
     }
 
     @Nested
-    @Tag("Data")
+    @Tag("Functional")
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     public class FunctionalTests
     {
