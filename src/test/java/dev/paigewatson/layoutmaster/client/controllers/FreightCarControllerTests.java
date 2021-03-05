@@ -3,10 +3,8 @@ package dev.paigewatson.layoutmaster.client.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.paigewatson.layoutmaster.client.services.FreightCarService;
 import dev.paigewatson.layoutmaster.helpers.FreightCarServiceFake;
-import dev.paigewatson.layoutmaster.helpers.TestAARTypeCreator;
 import dev.paigewatson.layoutmaster.helpers.TestFreightCarCreator;
 import dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation;
-import dev.paigewatson.layoutmaster.models.rollingstock.AARType;
 import dev.paigewatson.layoutmaster.models.rollingstock.FreightCar;
 import dev.paigewatson.layoutmaster.models.rollingstock.RollingStock;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +65,6 @@ public class FreightCarControllerTests
         {
             //assign
             final UUID gondolaTypeUUID = UUID.randomUUID();
-            AARType gondolaTypeDto = TestAARTypeCreator.gondolaType();
             final UUID gondolaToSaveUUID = UUID.randomUUID();
             final FreightCar gondolaToSave = TestFreightCarCreator.gondola(gondolaToSaveUUID, "FOO", 2345, gondolaTypeUUID);
 

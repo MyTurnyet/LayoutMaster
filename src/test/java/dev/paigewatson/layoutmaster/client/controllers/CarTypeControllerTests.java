@@ -41,6 +41,7 @@ import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.GS
 import static dev.paigewatson.layoutmaster.models.rollingstock.AARDesignation.XM;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -130,7 +131,7 @@ public class CarTypeControllerTests
         public void should_saveCarTypeToRepository()
         {
             //assign
-            final CarType boxcarType = TestAARTypeCreator.boxcarType();
+            final AARType boxcarType = TestAARTypeCreator.boxcarType();
 
             //act
             carTypeController.addNewCarType(boxcarType);
@@ -250,21 +251,21 @@ public class CarTypeControllerTests
             assertThat(contentAsString).isEqualTo("{\"aarDesignation\":\"NULL\",\"carriedGoodsList\":[],\"id\":\"\",\"null\":true}");
         }
 
-//        @Test
-//        public void should_addCarTypeToDatabase() throws Exception
-//        {
-//
-//            //assign
-//            final CarType boxcarTypeDto = boxcarType;
-//            mockMvc.perform(MockMvcRequestBuilders.post("/models/types/add")
-//                    .content(asJsonString(boxcarTypeDto))
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .accept(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isOk());
-//
-//            verify(carTypeService, times(1)).saveCarTypeToDatabase(any());
-//
-//        }
+        @Test
+        public void should_addCarTypeToDatabase() throws Exception
+        {
+
+            //assign
+            final AARType boxcarTypeDto = boxcarType;
+            mockMvc.perform(MockMvcRequestBuilders.post("/models/types/add")
+                    .content(asJsonString(boxcarTypeDto))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(carTypeService).saveCarTypeToDatabase(any());
+
+        }
 
         private String asJsonString(final Object obj)
         {
@@ -292,7 +293,6 @@ public class CarTypeControllerTests
         @Autowired
         private TestRestTemplate restTemplate;
         private AARType boxcar;
-        private AARType gondola;
         private AARType flatcar;
 
         public FunctionalTests(@Autowired MongoTemplate mongoTemplate)
@@ -308,7 +308,7 @@ public class CarTypeControllerTests
         }
 
         @Test
-        public void should_returnAllCarTypes() throws Exception
+        public void should_returnAllCarTypes()
         {
             final AARType[] aarTypesArray = this.restTemplate.getForObject("http://localhost:" + port + "/models/types", AARType[].class);
             assertThat(aarTypesArray.length).isEqualTo(3);
@@ -324,7 +324,7 @@ public class CarTypeControllerTests
 
 
         @Test
-        public void should_returnAllCarTypeThatCarry_ExpectedGoods() throws Exception
+        public void should_returnAllCarTypeThatCarry_ExpectedGoods()
         {
             final AARType[] contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/goods/Parts", AARType[].class);
 
@@ -334,7 +334,7 @@ public class CarTypeControllerTests
         }
 
         @Test
-        public void should_returnCarTypeByAARType() throws Exception
+        public void should_returnCarTypeByAARType()
         {
             final AARType contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/XM", AARType.class);
 
@@ -342,7 +342,7 @@ public class CarTypeControllerTests
         }
 
         @Test
-        public void should_notReturnCarTypeByAARType() throws Exception
+        public void should_notReturnCarTypeByAARType()
         {
             final NullCarType contentAsString = this.restTemplate.getForObject("http://localhost:" + port + "/models/types/aar/QR", NullCarType.class);
 
@@ -353,7 +353,7 @@ public class CarTypeControllerTests
         {
             final UUID boxcarUUID = UUID.randomUUID();
             boxcar = TestAARTypeCreator.boxcarType(boxcarUUID);
-            gondola = TestAARTypeCreator.gondolaType();
+            AARType gondola = TestAARTypeCreator.gondolaType();
             flatcar = TestAARTypeCreator.flatcarType();
             final List<AARType> aarTypes = Arrays.asList(boxcar, gondola, flatcar);
             for (AARType aarType : aarTypes)
